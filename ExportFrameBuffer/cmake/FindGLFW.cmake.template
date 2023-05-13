@@ -1,0 +1,39 @@
+SET(GLFW_FOUND "NO")
+IF (WIN32)
+    find_path(GLFW_INCLUDE_DIR
+        NAMES GLFW
+        PATHS
+        $ENV{3rd-party}/glfw-3.2.1/include
+        )
+    message(STATUS "GLFW_INCLUDE_DIR => ${GLFW_INCLUDE_DIR}")
+    find_path(GLFW_LIB_DIR
+        NAMES glfw3.lib
+        PATHS
+        $ENV{3rd-party}/glfw-3.2.1/lib
+        )
+    message(STATUS "GLFW_LIB_DIR => ${GLFW_LIB_DIR}")
+    find_library(GLFW_LIBRARY
+            NAMES glfw3
+            PATHS
+            $ENV{3rd-party}/glfw-3.2.1/lib
+            )
+    message(STATUS "GLFW_LIBRARY => ${GLFW_LIBRARY}")
+    # debug release same library
+    find_library(GLFW_LIBRARY_DEBUG
+            NAMES glfw3d
+            PATHS
+            $ENV{3rd-party}/glfw-3.2.1/lib
+            )
+    message(STATUS "GLFW_LIBRARY_DEBUG => ${GLFW_LIBRARY_DEBUG}")
+ELSE (WIN32)
+# I have not touched any Linux or Mac OS projects, however a explicit framework or architecture is prevailing
+
+#    find_path(GLUT_INCLUDE_DIR
+#        
+#    ...    
+ENDIF (WIN32)
+
+
+IF(GLFW_INCLUDE_DIR AND GLFW_LIB_DIR AND GLFW_LIBRARY AND GLFW_LIBRARY_DEBUG)
+  SET(GLFW_FOUND "YES")
+ENDIF(GLFW_INCLUDE_DIR AND GLFW_LIB_DIR AND GLFW_LIBRARY AND GLFW_LIBRARY_DEBUG)

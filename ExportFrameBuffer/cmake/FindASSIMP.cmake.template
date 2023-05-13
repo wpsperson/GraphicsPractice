@@ -1,0 +1,32 @@
+SET(ASSIMP_FOUND "NO")
+IF (WIN32)
+    find_path(ASSIMP_INCLUDE_DIR
+        NAMES assimp
+        PATHS
+        $ENV{3rd-party}/assimp-4.1.0/include
+        )
+    message(STATUS "ASSIMP_INCLUDE_DIR => ${ASSIMP_INCLUDE_DIR}")
+    find_path(ASSIMP_LIB_DIR
+        NAMES assimp-vc140-mt.lib
+        PATHS
+        $ENV{3rd-party}/assimp-4.1.0/lib
+        )
+    message(STATUS "ASSIMP_LIB_DIR => ${ASSIMP_LIB_DIR}")
+    find_library(ASSIMP_LIBRARY
+            NAMES assimp-vc140-mt
+            PATHS
+            $ENV{3rd-party}/assimp-4.1.0/lib
+            )
+    message(STATUS "ASSIMP_LIBRARY => ${ASSIMP_LIBRARY}")
+ELSE (WIN32)
+# I have not touched any Linux or Mac OS projects, however a explicit framework or architecture is prevailing
+
+#    find_path(GLUT_INCLUDE_DIR
+#        
+#    ...    
+ENDIF (WIN32)
+
+
+IF(ASSIMP_INCLUDE_DIR AND ASSIMP_LIB_DIR AND ASSIMP_LIBRARY)
+  SET(ASSIMP_FOUND "YES")
+ENDIF(ASSIMP_INCLUDE_DIR AND ASSIMP_LIB_DIR AND ASSIMP_LIBRARY)
