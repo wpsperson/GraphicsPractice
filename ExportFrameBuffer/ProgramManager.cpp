@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 
 #include "ShaderDefine.h"
-
+#include "Const.h"
 
 ProgramManager::ProgramManager()
 {
@@ -45,7 +45,7 @@ void ProgramManager::applyProgram(bool useNormal, bool useTexture, const std::ar
         int locLightDir = glGetUniformLocation(program, "lightDir");
         glUniform3f(locLightDir, sqrt3_3, sqrt3_3, sqrt3_3);
         int locBaseColor = glGetUniformLocation(program, "baseColor");
-        glUniform4f(locBaseColor, 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(locBaseColor, kBaseColor[0], kBaseColor[1], kBaseColor[2], 1.0f);
     }
     else if (useNormal)
     {
@@ -57,7 +57,7 @@ void ProgramManager::applyProgram(bool useNormal, bool useTexture, const std::ar
         int locLightDir = glGetUniformLocation(program, "lightDir");
         glUniform3f(locLightDir, sqrt3_3, sqrt3_3, sqrt3_3);
         int locBaseColor = glGetUniformLocation(program, "baseColor");
-        glUniform4f(locBaseColor, 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(locBaseColor, kBaseColor[0], kBaseColor[1], kBaseColor[2], 1.0f);
     }
     else if (useTexture)
     {
@@ -71,7 +71,7 @@ void ProgramManager::applyProgram(bool useNormal, bool useTexture, const std::ar
         program = vertexProgram();
         glUseProgram(program);
         int locBaseColor = glGetUniformLocation(program, "baseColor");
-        glUniform4f(locBaseColor, 1.0f, 1.0f, 1.0f, 1.0f);
+        glUniform4f(locBaseColor, kBaseColor[0], kBaseColor[1], kBaseColor[2], 1.0f);
     }
 
     int locModel = glGetUniformLocation(program, "model");

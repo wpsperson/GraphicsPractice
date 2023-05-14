@@ -53,6 +53,10 @@ ModelData* AssimpAdaptor::createModelDataByMesh(aiMesh* pMesh)
                 useTexture = false;
             }
         }
+        else
+        {
+            useTexture = false;
+        }
     }
 
 

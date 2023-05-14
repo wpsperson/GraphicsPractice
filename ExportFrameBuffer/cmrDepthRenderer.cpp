@@ -9,6 +9,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include "Const.h"
 #include "GLObject.h"
 #include "ModelData.h"
 #include "AssimpAdaptor.h"
@@ -210,7 +211,7 @@ void cmrDepthRenderer::render(int width, int height, const std::array<float, 16>
     glDepthRangef(0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(kBGColor[0], kBGColor[1], kBGColor[2], 1.0f);
     if (useReverseZ)
     {
         glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
