@@ -5,10 +5,11 @@
 #include <vector>
 #include <tuple>
 #include "ProgramManager.h"
+#include "LibExport.h"
 
 class GLObject;
 
-class cmrDepthRenderer
+class DEPTHR_ENDERER_EXPORT cmrDepthRenderer
 {
 public:
     cmrDepthRenderer(const std::string &modelURL);
