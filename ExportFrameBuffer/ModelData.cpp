@@ -69,9 +69,10 @@ const std::string& ModelData::imageFile() const
     return m_imageFile;
 }
 
-std::size_t ModelData::vertexArrayBufferSize()
+std::size_t ModelData::vertexCount()
 {
-    return m_vertexBuffer.size() * sizeof(float);
+    int oneVertexSize = GLObject::oneVertexFloatCount(m_useNormal, m_useTexture);
+    return m_vertexBuffer.size() / oneVertexSize;
 }
 
 float* ModelData::vertexBuffer()
@@ -79,12 +80,26 @@ float* ModelData::vertexBuffer()
     return m_vertexBuffer.data();
 }
 
-std::size_t ModelData::indexArrayBufferSize()
+std::size_t ModelData::indexCount()
 {
-    return m_indexBuffer.size() * sizeof(unsigned int);
+    return m_indexBuffer.size();
 }
 
 unsigned int *ModelData::indexBuffer()
 {
+    if (m_indexBuffer.empty())
+    {
+        return nullptr;
+    }
     return m_indexBuffer.data();
+}
+
+bool ModelData::hasNormal() const
+{
+    return m_useNormal;
+}
+
+bool ModelData::hasTexture() const
+{
+    return m_useTexture;
 }

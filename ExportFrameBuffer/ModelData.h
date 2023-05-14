@@ -25,13 +25,17 @@ public:
     void setImageFile(const std::string& imageFile);
     const std::string& imageFile() const;
 
-    std::size_t vertexArrayBufferSize();
+    std::size_t vertexCount();
 
     float* vertexBuffer();
 
-    std::size_t indexArrayBufferSize();
+    std::size_t indexCount();
 
     unsigned int *indexBuffer();
+
+    bool hasNormal() const;
+
+    bool hasTexture() const;
 
 private:
     bool m_useNormal = false;

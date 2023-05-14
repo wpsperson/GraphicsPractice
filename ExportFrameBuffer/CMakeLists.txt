@@ -17,6 +17,8 @@ add_executable(${TARGET_NAME}
     ModelData.h
     GLObject.cpp
     GLObject.h
+    Box.cpp
+    Box.h
     AssimpAdaptor.cpp
     AssimpAdaptor.h
     ProgramManager.cpp

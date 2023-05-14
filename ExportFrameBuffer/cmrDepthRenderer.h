@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <vector>
 #include <tuple>
 #include "ProgramManager.h"
 
@@ -34,10 +35,13 @@ private:
 
     unsigned char* readColorBuffer(int width, int height);
 
+    void freeGLObjects();
+
 private:
     unsigned int m_frameBuffer = 0;
     unsigned int m_depthRenderBuffer = 0;
     unsigned int m_colorRenderBuffer = 0;
     ProgramManager m_programMgr;
     GLObject* m_globject = nullptr;
+    std::vector<GLObject*> m_objects;
 };

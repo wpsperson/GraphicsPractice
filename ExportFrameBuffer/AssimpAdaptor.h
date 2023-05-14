@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "Box.h"
 
 class ModelData;
 struct aiMesh;
@@ -18,4 +19,5 @@ private:
 private:
     std::string m_directory;
     const aiScene* m_scene = nullptr;
+    Box m_box;
 };

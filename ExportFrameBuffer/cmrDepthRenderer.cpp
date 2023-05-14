@@ -10,9 +10,13 @@
 #include "GLFW/glfw3.h"
 
 #include "GLObject.h"
+#include "ModelData.h"
+#include "AssimpAdaptor.h"
 
 static const int g_OpenGLVersionMajor = 4;
 static const int g_OpenGLVersionMinor = 6;
+
+std::array<float, 16> view = { 1,0,0,0,  0,1,0,0,  0,0,1,0, 0,0,0,1 };
 
 unsigned int g_quadIndeces[] = {
     0, 1, 2,
@@ -36,11 +40,7 @@ cmrDepthRenderer::cmrDepthRenderer(const std::string& modelURL)
 
 cmrDepthRenderer::~cmrDepthRenderer()
 {
-    if (m_globject)
-    {
-        delete m_globject;
-    }
-
+    freeGLObjects();
     if (m_depthRenderBuffer)
     {
         glDeleteRenderbuffers(1, &m_depthRenderBuffer);
@@ -104,60 +104,32 @@ bool cmrDepthRenderer::initOpenGLContext(std::string& errorMsg)
 
 bool cmrDepthRenderer::load3dModel(const std::string& fileName, std::string& errorMsg)
 {
-    int debugFlag = 0;
-    if (0 == debugFlag)
+    AssimpAdaptor adaptor;
+    std::vector<ModelData*> modelDatas;
+    if (!adaptor.load3DModel(fileName, modelDatas, errorMsg))
     {
-        float quadVertice[] = {
-            -0.5f, -1.0f, -1.0f,
-              0.5f, -1.0f, -1.0f,
-              1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-        };
-        m_globject = new GLObject;
-        m_globject->createVertexArrayObject();
-        m_globject->createVertexBufferObject(quadVertice, 4, false, false);
-        m_globject->createElementBufferObject(g_quadIndeces, 6);
+        return false;
     }
-    else if (1 == debugFlag)
+    for (ModelData* data : modelDatas)
     {
-        float quadVerticeUV[] = {
-        -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 1.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        };
-        m_globject = new GLObject;
-        m_globject->createVertexArrayObject();
-        m_globject->createVertexBufferObject(quadVerticeUV, 4, false, true);
-        m_globject->createElementBufferObject(g_quadIndeces, 6);
-        m_globject->createTexture("D:/WorkSpace/cube.png");
-    }
-    else if (2 == debugFlag) // vertex + normal
-    {
-        float quadVerticeNormal[] = {
-        -0.5f, -0.5f, -1.0f,    0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 1.0f,      0.707f, 0.0f,0.707f,
-        0.5f, 0.5f, 0.0f,       0.0f, 0.707f,0.707f,
-        -0.5f, 0.5f, 0.0f,      0.0f, 0.707f,0.707f,
-        };
-        m_globject = new GLObject;
-        m_globject->createVertexArrayObject();
-        m_globject->createVertexBufferObject(quadVerticeNormal, 4, true, false);
-        m_globject->createElementBufferObject(g_quadIndeces, 6);
-    }
-    else if (3 == debugFlag) // vertex + normal
-    {
-        float quadVerticeNormal[] = {
-        -0.5f, -0.5f, -1.0f,    0.0f, 0.0f, 1.0f,       0.0f, 0.0f,
-        0.5f, -0.5f, 1.0f,      0.707f, 0.0f,0.707f,    1.0f, 0.0f,
-        0.5f, 0.5f, 0.0f,       0.0f, 0.707f,0.707f,    1.0f, 1.0f,
-        -0.5f, 0.5f, 0.0f,      0.0f, 0.707f,0.707f,    0.0f, 1.0f,
-        };
-        m_globject = new GLObject;
-        m_globject->createVertexArrayObject();
-        m_globject->createVertexBufferObject(quadVerticeNormal, 4, true, true);
-        m_globject->createElementBufferObject(g_quadIndeces, 6);
-        m_globject->createTexture("D:/WorkSpace/cube.png");
+        GLObject* obj = new GLObject;
+        m_objects.emplace_back(obj);
+        // convert;
+        bool hasNormal = data->hasNormal();
+        bool hasTexture = data->hasTexture();
+        float *vertexBuffer = data->vertexBuffer();
+        std::size_t vertexCount = data->vertexCount();
+        unsigned int* indexBuffer = data->indexBuffer();
+        std::size_t indexCount = data->indexCount();
+
+        obj->createVertexArrayObject();
+        obj->createVertexBufferObject(vertexBuffer, vertexCount, hasNormal, hasTexture);
+        if (indexCount)
+        {
+            obj->createElementBufferObject(indexBuffer, indexCount);
+        }
+
+        delete data;
     }
     return true;
 }
@@ -253,11 +225,13 @@ void cmrDepthRenderer::render(int width, int height, const std::array<float, 16>
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    bool hasNormal = m_globject->hasNormal();
-    bool hasTexture = m_globject->hasTexture();
-    std::array<float, 16> view = { 1,0,0,0,  0,1,0,0,  0,0,1,0, 0,0,0,1 };
-    m_programMgr.applyProgram(hasNormal, hasTexture, model, view, projection);
-    m_globject->draw();
+    for (GLObject* object : m_objects)
+    {
+        bool hasNormal = object->hasNormal();
+        bool hasTexture = object->hasTexture();
+        m_programMgr.applyProgram(hasNormal, hasTexture, model, view, projection);
+        object->draw();
+    }
 }
 
 float* cmrDepthRenderer::readDepthBuffer(int width, int height)
@@ -274,6 +248,19 @@ unsigned char* cmrDepthRenderer::readColorBuffer(int width, int height)
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorBuffer);
     return colorBuffer;
+}
+
+void cmrDepthRenderer::freeGLObjects()
+{
+    if (m_globject)
+    {
+        delete m_globject;
+    }
+    for (GLObject* obj : m_objects)
+    {
+        delete obj;
+    }
+    m_objects.clear();
 }
 
 

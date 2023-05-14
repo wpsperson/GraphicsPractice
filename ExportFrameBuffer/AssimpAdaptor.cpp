@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>
 
 #include "ModelData.h"
+#include "Box.h"
 
 bool AssimpAdaptor::load3DModel(const std::string& fileName, std::vector<ModelData*>& output, std::string& errorMsg)
 {
@@ -85,6 +86,7 @@ ModelData* AssimpAdaptor::createModelDataByMesh(aiMesh* pMesh)
         {
             model->addVertex(pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z);
         }
+        m_box.mergePt(pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z);
     }
 
     for (unsigned int i = 0; i < pMesh->mNumFaces; i++)

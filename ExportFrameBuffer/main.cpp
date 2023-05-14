@@ -2,27 +2,39 @@
 #include <iostream>
 #include <vector>
 
+
+#pragma warning( push )
+#pragma warning( disable : 4996)
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#pragma warning( pop ) 
 #include "cmrDepthRenderer.h"
 
 int main(int argc, char *argv[])
 {
-    std::string modelURL = "D:/WorkSpace/cat.dae";
+    //minx - 3.00000000
+    //maxx	3.42963004
+    //miny	0.00000000
+    //maxy	3.15000010
+    //minz - 2.00000000
+    //maxz	2.00000000
+    std::string modelURL = "D:/WorkSpace/teapot.obj";
     cmrDepthRenderer renderer(modelURL);
-    double offset_z = -2;
+    double offset_x = 0.0;
+    double offset_y = -1.5;
+    double offset_z = -5;
     double pose[16] = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
+        1, 0, 0, offset_x,
+        0, 1, 0, offset_y,
         0, 0, 1, offset_z,
         0, 0, 0, 1
     };
     int imageWidth = 400;
     int imageHeight = 400;
-    double intrinsics[4] = { imageWidth/2, imageHeight/2, imageWidth/2, imageHeight/2 };
-    double zNear = 1;
-    double zFar = 3;
-    bool useReverseZ = false;
+    double intrinsics[4] = { static_cast<double>(imageWidth/2), static_cast<double>(imageHeight/2), static_cast<double>(imageWidth/2), static_cast<double>(imageHeight/2) };
+    double zNear = 3;
+    double zFar = 7;
+    bool useReverseZ = true;
 
     // float* depthBuffer = renderer.getDepthData(pose, imageWidth, imageWidth, intrinsics, zNear, zFar, useReverseZ);
     auto [depthBuffer, colorBuffer] = renderer.getDepthColorData(pose, imageWidth, imageWidth, intrinsics, zNear, zFar, useReverseZ);

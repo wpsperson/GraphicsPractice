@@ -99,13 +99,13 @@ void GLObject::setVertexAttribute(bool useNormal, bool useTexture)
     if (useNormal)
     {
         glEnableVertexAttribArray(NormalLayoutIndex);
-        glVertexAttribPointer(NormalLayoutIndex, 3, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+        glVertexAttribPointer(NormalLayoutIndex, 3, GL_FLOAT, GL_FALSE, stride, (void*)(long long)offset);
         offset += 3 * sizeof(float);
     }
     if (useTexture)
     {
         glEnableVertexAttribArray(TextureLayoutIndex);
-        glVertexAttribPointer(TextureLayoutIndex, 2, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+        glVertexAttribPointer(TextureLayoutIndex, 2, GL_FLOAT, GL_FALSE, stride, (void*)(long long)offset);
         offset += 2 * sizeof(float);
     }
 }
