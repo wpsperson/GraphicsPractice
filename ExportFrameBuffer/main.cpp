@@ -10,17 +10,18 @@ int main(int argc, char *argv[])
 {
     std::string modelURL = "D:/WorkSpace/cat.dae";
     cmrDepthRenderer renderer(modelURL);
+    double offset_z = -2;
     double pose[16] = {
         1, 0, 0, 0,
         0, 1, 0, 0,
-        0, 0, 1, 0,
+        0, 0, 1, offset_z,
         0, 0, 0, 1
     };
     int imageWidth = 400;
     int imageHeight = 400;
-    double intrinsics[4] = { 1, 1, 0,0 };
+    double intrinsics[4] = { imageWidth/2, imageHeight/2, imageWidth/2, imageHeight/2 };
     double zNear = 1;
-    double zFar = 100;
+    double zFar = 3;
     bool useReverseZ = false;
 
     // float* depthBuffer = renderer.getDepthData(pose, imageWidth, imageWidth, intrinsics, zNear, zFar, useReverseZ);

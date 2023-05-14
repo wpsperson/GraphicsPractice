@@ -58,8 +58,8 @@ cmrDepthRenderer::~cmrDepthRenderer()
 float* cmrDepthRenderer::getDepthData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ)
 {
     createFBO(imageWidth, imageHeight, false);
-    std::array<float, 16> model;
-    std::array<float, 16> projection;
+    std::array<float, 16> model = computeModelMatrix(pose);
+    std::array<float, 16> projection = computeProjectionMatrix(imageWidth, imageHeight, intrinsics, zNear, zFar, useReverseZ);
     render(imageWidth, imageHeight, model, projection, useReverseZ);
     float *depthBuffer = readDepthBuffer(imageWidth, imageHeight);
     return depthBuffer;
@@ -68,8 +68,8 @@ float* cmrDepthRenderer::getDepthData(double pose[16], int imageWidth, int image
 std::tuple<float*, unsigned char*> cmrDepthRenderer::getDepthColorData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ)
 {
     createFBO(imageWidth, imageHeight, true);
-    std::array<float, 16> model;
-    std::array<float, 16> projection;
+    std::array<float, 16> model = computeModelMatrix(pose);
+    std::array<float, 16> projection = computeProjectionMatrix(imageWidth, imageHeight, intrinsics, zNear, zFar, useReverseZ);
     render(imageWidth, imageHeight, model, projection, useReverseZ);
     float* depthBuffer = readDepthBuffer(imageWidth, imageHeight);
     unsigned char* colorBuffer = readColorBuffer(imageWidth, imageHeight);
@@ -181,18 +181,67 @@ void cmrDepthRenderer::createFBO(int width, int height, bool useColorBuffer)
     }
 }
 
+std::array<float, 16> cmrDepthRenderer::computeModelMatrix(double pose[16])
+{
+    // make it column-major
+    std::array<float, 16> modelMatrix = { 
+        static_cast<float>(pose[0]), static_cast<float>(pose[4]), static_cast<float>(pose[8]), static_cast<float>(pose[12]), 
+        static_cast<float>(pose[1]), static_cast<float>(pose[5]), static_cast<float>(pose[9]), static_cast<float>(pose[13]),
+        static_cast<float>(pose[2]), static_cast<float>(pose[6]), static_cast<float>(pose[10]),static_cast<float>(pose[14]),
+        static_cast<float>(pose[3]), static_cast<float>(pose[7]), static_cast<float>(pose[11]),static_cast<float>(pose[15])
+    };
+    return modelMatrix;
+}
+
+std::array<float, 16> cmrDepthRenderer::computeProjectionMatrix(int width, int height, double intrinsics[4], double n, double f, bool useReverseZ)
+{
+    double ax = intrinsics[0];
+    double ay = intrinsics[1];
+    double u0 = intrinsics[2];
+    double v0 = intrinsics[3];
+
+    float m00 = static_cast<float>(2 * ax / width);
+    float m11 = static_cast<float>(2 * ay / height);
+    float m02 = static_cast<float>(1 - 2 * u0 / width);
+    float m12 = static_cast<float>(2 * v0 / height - 1);
+    float A = static_cast<float>(-(f + n) / (f - n));
+    float B = static_cast<float>(-2 * f * n / (f - n));
+    if (useReverseZ)
+    {
+        float A = static_cast<float>(n / (f - n));
+        float B = static_cast<float>(f * n / (f - n));
+        std::array<float, 16> projectionMatrix = {
+        m00,    0.0f,   0.0f,   0.0f,
+        0.0f,   m11,    0.0f,   0.0f,
+        m02,    m12,    A,      -1,
+        0.0f,   0.0f,   B,      0.0f
+        };
+        return projectionMatrix;
+    }
+    else
+    {
+        std::array<float, 16> projectionMatrix = {
+        m00,    0.0f,   0.0f,   0.0f,
+        0.0f,   m11,    0.0f,   0.0f,
+        m02,    m12,    A,      -1,
+        0.0f,   0.0f,   B,      0.0f
+        };
+        return projectionMatrix;
+    }
+}
+
 void cmrDepthRenderer::render(int width, int height, const std::array<float, 16>& model, const std::array<float, 16>& projection, bool useReverseZ)
 {
     glBindFramebuffer(GL_DRAW_BUFFER, m_frameBuffer);
     // setup window coordinate
     glViewport(0, 0, width, height);
     glDepthRangef(0.0f, 1.0f);
-    glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
     glEnable(GL_DEPTH_TEST);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     if (useReverseZ)
     {
+        glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
         glClearDepth(0.0);
         glDepthFunc(GL_GREATER);
     }

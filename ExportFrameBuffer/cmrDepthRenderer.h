@@ -24,6 +24,10 @@ private:
 
     void createFBO(int width, int height, bool useColorBuffer);
 
+    std::array<float, 16> computeModelMatrix(double pose[16]);
+
+    std::array<float, 16> computeProjectionMatrix(int width, int height, double intrinsics[4], double zNear, double zFar, bool useReverseZ);
+
     void render(int width, int height, const std::array<float, 16>& model, const std::array<float, 16>& projection, bool useReverseZ);
 
     float* readDepthBuffer(int width, int height);
