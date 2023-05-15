@@ -31,7 +31,9 @@ void CanvasWidget::resizeGL(int w, int h)
     m_width = w;
     m_height = h;
     glViewport(0, 0, w, h);
-    gluOrtho2D(0, w, 0, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, m_width, 0, m_height, -1, 1);
 }
 
 void CanvasWidget::paintGL()
