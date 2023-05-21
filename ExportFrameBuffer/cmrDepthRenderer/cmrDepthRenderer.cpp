@@ -84,16 +84,22 @@ bool cmrDepthRenderer::initOpenGLContext(std::string& errorMsg)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, g_OpenGLVersionMinor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-
-    int windowWidth = 4096;
-    int windwoHeight = 4096;
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windwoHeight, "virtual window", NULL, NULL);
+    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);
+    // in my computer 16384 * 16384 is the max window size.
+    int windowWidth = 16384;
+    int windowHeight = 16384;
+    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "virtual window", NULL, NULL);
     if (!window)
     {
         errorMsg = "Failed to create GLFW window!";
         glfwTerminate();
         return false;
     }
+    glfwSetWindowSizeLimits(window, windowWidth, windowHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    int realWidth = 0;
+    int realHeight = 0;
+    glfwGetWindowSize(window, &realWidth, &realHeight);
+
     glfwMakeContextCurrent(window);
     if (!gladLoadGL())
     {
@@ -210,6 +216,7 @@ void cmrDepthRenderer::render(int width, int height, const std::array<float, 16>
     glViewport(0, 0, width, height);
     glDepthRangef(0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_CLAMP);
 
     glClearColor(kBGColor[0], kBGColor[1], kBGColor[2], 1.0f);
     if (useReverseZ)
