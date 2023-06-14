@@ -13,6 +13,7 @@ set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(FreeType REQUIRED)
 
+
 add_executable(${TARGET_NAME}
 	main.cpp 
 	OpenGLWidget.h
@@ -23,6 +24,8 @@ add_executable(${TARGET_NAME}
 	GLObject2D.cpp
 	ProgramManager.cpp
 	ProgramManager.h
+	FontManager.cpp
+	FontManager.h
 	Const.h
     ShaderSource.h
 	Geometry.h
@@ -34,6 +37,6 @@ add_executable(${TARGET_NAME}
 	glad.c
 )
 
+target_include_directories(${TARGET_NAME} PRIVATE ${FREETYPE_INCLUDE_DIR})
 target_link_libraries(${TARGET_NAME} Qt5::Widgets ${CMAKE_DL_LIBS})
-
-
+target_link_libraries(${TARGET_NAME} debug "${FREETYPE_LIBRARY_DEBUG}" optimized "${FREETYPE_LIBRARY}")

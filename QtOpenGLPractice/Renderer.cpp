@@ -8,18 +8,21 @@
 #include "ProgramManager.h"
 #include "Operation.h"
 #include "DemoOperation.h"
+#include "FontManager.h"
 
 extern std::string g_argument;
 
 Renderer::Renderer()
 {
     m_programMgr = new ProgramManager;
+    m_fontMgr = new FontManager;
     m_viewBox = new ViewBox;
 }
 
 Renderer::~Renderer()
 {
     delete m_viewBox;
+    delete m_fontMgr;
     delete m_programMgr;
 }
 
@@ -31,6 +34,10 @@ bool Renderer::initialize(std::string& err)
         return false;
     }
     if (!m_programMgr->initialize(err))
+    {
+        return false;
+    }
+    if (!m_fontMgr->loadAsciiCharInfo(err))
     {
         return false;
     }

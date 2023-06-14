@@ -6,6 +6,7 @@
 
 class GLObject2D;
 class ProgramManager;
+class FontManager;
 class Operation;
 
 class Renderer
@@ -33,6 +34,7 @@ public:
 
 private:
     ProgramManager* m_programMgr = nullptr;
+    FontManager* m_fontMgr = nullptr;
     ViewBox* m_viewBox = nullptr;
     std::vector<Operation*> m_operations;
 };
