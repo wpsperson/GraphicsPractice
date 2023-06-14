@@ -5,15 +5,12 @@
 #include <GL/GL.h>
 #include <GL/GLU.h>
 
-#include "freetype/freetype.h"
-
 static int Width = 300;
 static int Height = 300;
 
 CanvasWidget::CanvasWidget()
 {
-    FT_Library ft;
-    FT_Error ret = FT_Init_FreeType(&ft);
+
 }
 
 CanvasWidget::~CanvasWidget()
