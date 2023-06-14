@@ -18,22 +18,22 @@ ProgramManager::~ProgramManager()
 bool ProgramManager::initialize(std::string& err) noexcept
 {
     unsigned int program = 0;
-    if (!createProgram(kBaseColorVertexSource, kBaseColorFragmentSource, program, err))
+    AttribLoc basicAttribs;
+    basicAttribs.emplace_back(std::make_pair(0, "aPos"));
+    if (!createProgram(kBaseColorVertexSource, kBaseColorFragmentSource, basicAttribs, program, err))
     {
         return false;
     }
     m_programs[ProgramType::BaseColor] = program;
-    if (!createProgram(kFontVertexSource, kFontFragmentSource, program, err))
+    AttribLoc fontAttribs;
+    fontAttribs.emplace_back(std::make_pair(0, "aPos"));
+    fontAttribs.emplace_back(std::make_pair(1, "aUV"));
+    if (!createProgram(kFontVertexSource, kFontFragmentSource, fontAttribs, program, err))
     {
         return false;
     }
-
-    glBindAttribLocation(program, 0, "aPos");
-    glBindAttribLocation(program, 1, "aUV");
-    glLinkProgram(program);
-    GLint aPos = glGetAttribLocation(program, "aPos");
-    GLint aUV = glGetAttribLocation(program, "aUV");
-
+    //GLint aPos = glGetAttribLocation(program, "aPos");
+    //GLint aUV = glGetAttribLocation(program, "aUV");
     m_programs[ProgramType::TextureFont] = program;
     return true;
 }
@@ -61,7 +61,7 @@ void ProgramManager::releaseProgram() noexcept
     glUseProgram(0);
 }
 
-bool ProgramManager::createProgram(const char* vert, const char* frag, unsigned int& program, std::string& errorMsg) noexcept
+bool ProgramManager::createProgram(const char* vert, const char* frag, const AttribLoc& attribs, unsigned int& program, std::string& errorMsg) noexcept
 {
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -90,6 +90,10 @@ bool ProgramManager::createProgram(const char* vert, const char* frag, unsigned 
     unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
+    for (const auto& [pos, name] : attribs)
+    {
+        glBindAttribLocation(shaderProgram, pos, name);
+    }
     glLinkProgram(shaderProgram);
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {

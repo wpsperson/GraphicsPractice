@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include <string>
 #include "Const.h"
 
@@ -9,6 +10,8 @@ enum class ProgramType : unsigned char
     BaseColor = 0,
     TextureFont,
 };
+
+using AttribLoc = std::vector<std::pair<int, const char*>>;
 
 class ProgramManager
 {
@@ -26,7 +29,7 @@ public:
     void releaseProgram() noexcept;
 
 private:
-    bool createProgram(const char* vs, const char* fs, unsigned int& program, std::string& err) noexcept;
+    bool createProgram(const char* vs, const char* fs, const AttribLoc &attribs, unsigned int& program, std::string& err) noexcept;
 
 private:
     std::map<ProgramType, unsigned int> m_programs;
