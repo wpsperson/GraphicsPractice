@@ -24,6 +24,8 @@ public:
 
     ProgramManager* programMgr() noexcept;
 
+    FontManager* fontMgr() noexcept;
+
     void setViewBox(float left, float right, float bttm, float top) noexcept;
 
     ViewBox* viewBox() const noexcept;
@@ -31,6 +33,8 @@ public:
     void addOperation(Operation* operation) noexcept;
 
     void paintObject(GLObject2D* object) noexcept;
+
+    void paintFont(GLObject2D* object) noexcept;
 
 private:
     ProgramManager* m_programMgr = nullptr;

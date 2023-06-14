@@ -14,17 +14,19 @@ public:
     void setColor(const Color3f& color) noexcept;
     const Color3f& color() const noexcept;
 
-    void setOpaque(unsigned char opaque) noexcept;
-    unsigned char opaque() const noexcept;
+    void setOpaque(float opaque) noexcept;
+    float opaque() const noexcept;
 
     void upload(Point *buffer, int count);
 
     void draw();
+
+    void drawAsFont();
 
 private:
     Renderer* m_renderer = nullptr;
     unsigned int m_vbo = 0;
     int m_point_count = 0;
     Color3f m_color = kColorBlue;
-    unsigned char m_opaque = 255;
+    float m_opaque = 1.0f;
 };

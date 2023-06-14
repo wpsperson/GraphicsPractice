@@ -21,7 +21,7 @@ public:
 
     unsigned int program(ProgramType type) const noexcept;
 
-    void applyProgram(ProgramType type, const Color3f &color, unsigned char opaque, ViewBox *view) noexcept;
+    void applyProgram(ProgramType type, const Color3f &color, float opaque, ViewBox *view) noexcept;
 
     void releaseProgram() noexcept;
 

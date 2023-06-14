@@ -56,7 +56,7 @@ bool FontManager::loadAsciiCharInfo(std::string& error) noexcept
         return false;
     }
     int oneDimensionCharNum = 16; // ascii char num less than 256;
-    int fontSize = 64;  // 64 pixel is accuracy
+    int fontSize = 256;  // 64 pixel is accuracy
     int textureSize = fontSize * oneDimensionCharNum;
     GLint maxTextureSize = 0;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);

@@ -18,3 +18,15 @@ private:
     GLObject2D* m_object = nullptr;
 };
 
+class FontOperation : public Operation
+{
+public:
+    ~FontOperation();
+
+    virtual void initialize(Renderer* renderer) noexcept;
+
+    virtual void paint(Renderer* renderer) noexcept;
+
+private:
+    GLObject2D* m_object = nullptr;
+};

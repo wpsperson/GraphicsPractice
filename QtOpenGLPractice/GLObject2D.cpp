@@ -9,6 +9,7 @@
 #include "ShaderSource.h"
 
 static constexpr int TwoDim = 2;
+static constexpr int Four = 4;
 
 
 GLObject2D::GLObject2D(Renderer* renderer) : m_renderer(renderer)
@@ -31,12 +32,12 @@ const Color3f& GLObject2D::color() const noexcept
     return m_color;
 }
 
-void GLObject2D::setOpaque(unsigned char opaque) noexcept
+void GLObject2D::setOpaque(float opaque) noexcept
 {
     m_opaque = opaque;
 }
 
-unsigned char GLObject2D::opaque() const noexcept
+float GLObject2D::opaque() const noexcept
 {
     return m_opaque;
 }
@@ -57,6 +58,20 @@ void GLObject2D::draw()
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glVertexAttribPointer(0, TwoDim, GL_FLOAT, GL_FALSE, TwoDim * sizeof(float), (void*)0);
     glDrawArrays(GL_TRIANGLES, 0, m_point_count);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void GLObject2D::drawAsFont()
+{
+    assert(m_vbo > 0);
+    int text_pt_count = m_point_count / 2;
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, TwoDim, GL_FLOAT, GL_FALSE, Four * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, TwoDim, GL_FLOAT, GL_FALSE, Four * sizeof(float), (void*)(TwoDim *sizeof(float)));
+    glDrawArrays(GL_TRIANGLES, 0, text_pt_count);
+    glDisableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

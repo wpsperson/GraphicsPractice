@@ -87,6 +87,11 @@ ProgramManager* Renderer::programMgr() noexcept
     return m_programMgr;
 }
 
+FontManager* Renderer::fontMgr() noexcept
+{
+    return m_fontMgr;
+}
+
 void Renderer::setViewBox(float left, float right, float bttm, float top) noexcept
 {
     m_viewBox->left = left;
@@ -108,9 +113,21 @@ void Renderer::addOperation(Operation* operation) noexcept
 void Renderer::paintObject(GLObject2D* object) noexcept
 {
     const Color3f& color = object->color();
-    unsigned char opaque = object->opaque();
+    float opaque = object->opaque();
     m_programMgr->applyProgram(ProgramType::BaseColor, color, opaque, m_viewBox);
     object->draw();
+    m_programMgr->releaseProgram();
+}
+
+void Renderer::paintFont(GLObject2D* object) noexcept
+{
+    const Color3f& color = object->color();
+    float opaque = object->opaque();
+    m_programMgr->applyProgram(ProgramType::TextureFont, color, opaque, m_viewBox);
+    unsigned int texture_id = m_fontMgr->fontTexutre();
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    object->drawAsFont();
+    glBindTexture(GL_TEXTURE_2D, 0);
     m_programMgr->releaseProgram();
 }
 
