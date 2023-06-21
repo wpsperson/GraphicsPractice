@@ -11,7 +11,6 @@ const char* svgPathString =
 // heart
 "M300 300 C 100 400,100 200,300 100,500 200,500 400,300 300Z";
 
-
 const char* const word = "OpenGL";
 
 
@@ -81,6 +80,8 @@ void Renderer::render()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 500, 0, 400, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     glPathColorGenNV(GL_PRIMARY_COLOR, GL_NONE, GL_NONE, nullptr);
     glStencilFillPathNV(path_object_, GL_COUNT_UP_NV, 0x1F);
     glColor3f(1, 1, 0);
@@ -97,9 +98,18 @@ void Renderer::render()
     glGetPathSpacingNV(GL_ACCUM_ADJACENT_PAIRS_NV, wordLen + 1, GL_UNSIGNED_BYTE, "OpenGLL", font_base_, 1.0f, 1.0f, GL_TRANSLATE_X_NV, xtranslate + 1);
     GLfloat yMinMax[2];
     glGetPathMetricRangeNV(GL_FONT_Y_MIN_BOUNDS_BIT_NV | GL_FONT_Y_MAX_BOUNDS_BIT_NV, font_base_, /*count*/1, 2 * sizeof(GLfloat), yMinMax);
-    glMatrixLoadIdentityEXT(GL_PROJECTION);
-    glMatrixOrthoEXT(GL_PROJECTION, 0, xtranslate[6], yMinMax[0], yMinMax[1], -1, 1);
-    glMatrixLoadIdentityEXT(GL_MODELVIEW);
+
+    float angle = 10;
+    float center_x = (0 + xtranslate[6]) / 2;
+    float center_y = (yMinMax[0] + yMinMax[1]) / 2;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, xtranslate[6], yMinMax[0], yMinMax[1], -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(center_x, center_y, 0);
+    glRotated(angle, 0, 0, 1);
+    glTranslatef(-center_x, -center_y, 0);
     const GLfloat rgbGen[3][3] = {
     { 0, 0, 0 }, // red = constant zero
     { 0, 1, 0 }, // green = varies with y from bottom (0) to top (1)
@@ -107,7 +117,5 @@ void Renderer::render()
         };
     glPathColorGenNV(GL_PRIMARY_COLOR, GL_PATH_OBJECT_BOUNDING_BOX_NV, GL_RGB, &rgbGen[0][0]);
     glStencilFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "OpenGL", font_base_, GL_PATH_FILL_MODE_NV, 0xFF, GL_TRANSLATE_X_NV, xtranslate);
-    glColor3f(0.5, 0.5, 0.5); // 50% gray
     glCoverFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "OpenGL", font_base_, GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV, GL_TRANSLATE_X_NV, xtranslate);
-
 }
