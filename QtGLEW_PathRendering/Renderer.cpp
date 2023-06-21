@@ -72,6 +72,7 @@ void Renderer::render()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 500, 0, 400, -1, 1);
+    glPathColorGenNV(GL_PRIMARY_COLOR, GL_NONE, GL_NONE, nullptr);
     glStencilFillPathNV(path_object_, GL_COUNT_UP_NV, 0x1F);
     glColor3f(1, 1, 0);
     glCoverFillPathNV(path_object_, GL_BOUNDING_BOX_NV);
@@ -90,6 +91,12 @@ void Renderer::render()
     glMatrixLoadIdentityEXT(GL_PROJECTION);
     glMatrixOrthoEXT(GL_PROJECTION, 0, xtranslate[6], yMinMax[0], yMinMax[1], -1, 1);
     glMatrixLoadIdentityEXT(GL_MODELVIEW);
+    const GLfloat rgbGen[3][3] = {
+    { 0, 0, 0 }, // red = constant zero
+    { 0, 1, 0 }, // green = varies with y from bottom (0) to top (1)
+    { 0, -1, 1 } // blue = varies with y from bottom (1) to top (0)
+        };
+    glPathColorGenNV(GL_PRIMARY_COLOR, GL_PATH_OBJECT_BOUNDING_BOX_NV, GL_RGB, &rgbGen[0][0]);
     glStencilFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "\000\001\002\003\004\005", glyph_base_, GL_PATH_FILL_MODE_NV, 0xFF, GL_TRANSLATE_X_NV, xtranslate);
     glColor3f(0.5, 0.5, 0.5); // 50% gray
     glCoverFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "\000\001\002\003\004\005", glyph_base_, GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV, GL_TRANSLATE_X_NV, xtranslate);
