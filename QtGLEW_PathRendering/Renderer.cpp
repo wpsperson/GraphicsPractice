@@ -45,13 +45,22 @@ void Renderer::init()
     glPathParameteriNV(path_object_, GL_PATH_JOIN_STYLE_NV, GL_ROUND_NV);
     glPathParameteriNV(path_object_, GL_PATH_STROKE_WIDTH_NV, 6.5);
 
-    glyph_base_ = glGenPathsNV(6);
-    const GLsizei wordLen = (GLsizei)strlen(word);
+    //glyph_base_ = glGenPathsNV(6);
+    //const GLsizei wordLen = (GLsizei)strlen(word);
+    //const GLfloat emScale = 2048; // match TrueType convention
+    //GLuint templatePathObject = ~0; // Non-existant path object
+    //glPathGlyphsNV(glyph_base_, GL_SYSTEM_FONT_NAME_NV, "Helvetica", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
+    //glPathGlyphsNV(glyph_base_, GL_SYSTEM_FONT_NAME_NV, "Arial", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
+    //glPathGlyphsNV(glyph_base_, GL_STANDARD_FONT_NAME_NV, "Sans", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_USE_MISSING_GLYPH_NV, templatePathObject, emScale);
+
+
+    const int numChars = 256; // ISO/IEC 8859-1 8-bit character range
     const GLfloat emScale = 2048; // match TrueType convention
     GLuint templatePathObject = ~0; // Non-existant path object
-    glPathGlyphsNV(glyph_base_, GL_SYSTEM_FONT_NAME_NV, "Helvetica", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
-    glPathGlyphsNV(glyph_base_, GL_SYSTEM_FONT_NAME_NV, "Arial", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
-    glPathGlyphsNV(glyph_base_, GL_STANDARD_FONT_NAME_NV, "Sans", GL_BOLD_BIT_NV, wordLen, GL_UNSIGNED_BYTE, word, GL_USE_MISSING_GLYPH_NV, templatePathObject, emScale);
+    font_base_ = glGenPathsNV(numChars);
+    glPathGlyphRangeNV(font_base_, GL_SYSTEM_FONT_NAME_NV, "Helvetica", GL_BOLD_BIT_NV, 0, numChars, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
+    glPathGlyphRangeNV(font_base_, GL_SYSTEM_FONT_NAME_NV, "Arial", GL_BOLD_BIT_NV, 0, numChars, GL_SKIP_MISSING_GLYPH_NV, templatePathObject, emScale);
+    glPathGlyphRangeNV(font_base_, GL_STANDARD_FONT_NAME_NV, "Sans", GL_BOLD_BIT_NV, 0, numChars, GL_USE_MISSING_GLYPH_NV, templatePathObject, emScale);
 }
 
 void Renderer::resize(int width, int height)
@@ -85,9 +94,9 @@ void Renderer::render()
     xtranslate[0] = 0; // Initial glyph offset is zero
     const GLsizei wordLen = (GLsizei)strlen(word);
      // repeat last letter twice
-    glGetPathSpacingNV(GL_ACCUM_ADJACENT_PAIRS_NV, wordLen + 1, GL_UNSIGNED_BYTE, "\000\001\002\003\004\005\005", glyph_base_, 1.0f, 1.0f, GL_TRANSLATE_X_NV, xtranslate + 1);
+    glGetPathSpacingNV(GL_ACCUM_ADJACENT_PAIRS_NV, wordLen + 1, GL_UNSIGNED_BYTE, "OpenGLL", font_base_, 1.0f, 1.0f, GL_TRANSLATE_X_NV, xtranslate + 1);
     GLfloat yMinMax[2];
-    glGetPathMetricRangeNV(GL_FONT_Y_MIN_BOUNDS_BIT_NV | GL_FONT_Y_MAX_BOUNDS_BIT_NV, glyph_base_, /*count*/1, 2 * sizeof(GLfloat), yMinMax);
+    glGetPathMetricRangeNV(GL_FONT_Y_MIN_BOUNDS_BIT_NV | GL_FONT_Y_MAX_BOUNDS_BIT_NV, font_base_, /*count*/1, 2 * sizeof(GLfloat), yMinMax);
     glMatrixLoadIdentityEXT(GL_PROJECTION);
     glMatrixOrthoEXT(GL_PROJECTION, 0, xtranslate[6], yMinMax[0], yMinMax[1], -1, 1);
     glMatrixLoadIdentityEXT(GL_MODELVIEW);
@@ -97,8 +106,8 @@ void Renderer::render()
     { 0, -1, 1 } // blue = varies with y from bottom (1) to top (0)
         };
     glPathColorGenNV(GL_PRIMARY_COLOR, GL_PATH_OBJECT_BOUNDING_BOX_NV, GL_RGB, &rgbGen[0][0]);
-    glStencilFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "\000\001\002\003\004\005", glyph_base_, GL_PATH_FILL_MODE_NV, 0xFF, GL_TRANSLATE_X_NV, xtranslate);
+    glStencilFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "OpenGL", font_base_, GL_PATH_FILL_MODE_NV, 0xFF, GL_TRANSLATE_X_NV, xtranslate);
     glColor3f(0.5, 0.5, 0.5); // 50% gray
-    glCoverFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "\000\001\002\003\004\005", glyph_base_, GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV, GL_TRANSLATE_X_NV, xtranslate);
+    glCoverFillPathInstancedNV(6, GL_UNSIGNED_BYTE, "OpenGL", font_base_, GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV, GL_TRANSLATE_X_NV, xtranslate);
 
 }
