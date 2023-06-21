@@ -10,4 +10,5 @@ public:
     void render();
 private:
     unsigned int path_object_ = 42;
+    unsigned int glyph_base_ = 0;
 };
