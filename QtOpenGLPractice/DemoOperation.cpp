@@ -127,22 +127,39 @@ void MillionPrimitiveOperation::paint(Renderer* renderer) noexcept
             }
         }
         glEnd();
-    }
-    else
-    {
-        glBegin(GL_TRIANGLES);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glBegin(GL_LINES);
         for (int i = 0; i < m_repeat_count; i++)
         {
             xOffset = i * xStep;
-            glColor3f(i * 0.001f, 0.5f, 0.5f);
             for (int j = 0; j < m_repeat_count; j++)
             {
                 yOffset = j * yStep;
-                glVertex2f(triangle[0].x + xOffset, triangle[0].y + yOffset);
-                glVertex2f(triangle[1].x + xOffset, triangle[1].y + yOffset);
-                glVertex2f(triangle[2].x + xOffset, triangle[2].y + yOffset);
+                glVertex2f(pt0.x + xOffset, pt0.y + yOffset);
+                glVertex2f(pt1.x + xOffset, pt1.y + yOffset);
             }
         }
         glEnd();
+    }
+    else
+    {
+        glColor3f(0.5f, 0.5f, 0.5f);
+        for (int i = 0; i < m_repeat_count; i++)
+        {
+            xOffset = i * xStep;
+            for (int j = 0; j < m_repeat_count; j++)
+            {
+                yOffset = j * yStep;
+                glBegin(GL_TRIANGLES);
+                glVertex2f(triangle[0].x + xOffset, triangle[0].y + yOffset);
+                glVertex2f(triangle[1].x + xOffset, triangle[1].y + yOffset);
+                glVertex2f(triangle[2].x + xOffset, triangle[2].y + yOffset);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex2f(pt0.x + xOffset, pt0.y + yOffset);
+                glVertex2f(pt1.x + xOffset, pt1.y + yOffset);
+                glEnd();
+            }
+        }
     }
 }
