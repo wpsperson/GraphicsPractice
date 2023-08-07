@@ -4,7 +4,7 @@
 
 
 // most glyph width and height is from 0.7~0.8, so scale it to make font normalized.
-static constexpr float kGlyphScale = 1.3;
+static constexpr float kGlyphScale = 1.3f;
 
 #if _WIN32
 static const std::string kLocalFontFile = std::getenv("SystemRoot") + std::string("/Fonts/") + "Arial.ttf";

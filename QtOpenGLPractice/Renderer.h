@@ -8,6 +8,8 @@ class GLObject2D;
 class ProgramManager;
 class FontManager;
 class Operation;
+class ViewPort;
+struct Box;
 
 class Renderer
 {
@@ -26,9 +28,7 @@ public:
 
     FontManager* fontMgr() noexcept;
 
-    void setViewBox(float left, float right, float bttm, float top) noexcept;
-
-    ViewBox* viewBox() const noexcept;
+    ViewPort* viewPort() const noexcept;
 
     void addOperation(Operation* operation) noexcept;
 
@@ -36,9 +36,13 @@ public:
 
     void paintFont(GLObject2D* object) noexcept;
 
+    static ViewBox toViewBox(const Box& box) noexcept;
+
+    void legacyProjection() noexcept;
+
 private:
     ProgramManager* m_programMgr = nullptr;
     FontManager* m_fontMgr = nullptr;
-    ViewBox* m_viewBox = nullptr;
+    ViewPort* m_viewport = nullptr;
     std::vector<Operation*> m_operations;
 };

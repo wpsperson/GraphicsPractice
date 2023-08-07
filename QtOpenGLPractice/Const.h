@@ -2,6 +2,14 @@
 
 #include <corecrt_math_defines.h>
 
+using glint64 = long long;
+
+struct llPoint
+{
+    glint64 x;
+    glint64 y;
+};
+
 struct Color3f
 {
     float r = 0.0f;
@@ -48,6 +56,7 @@ struct Point
     {}
 };
 
+constexpr glint64 kDefaultDesignSize = 1000000;
 constexpr Color3f kColorRed = { 1.0f, 0.0f, 0.0f };
 constexpr Color3f kColorGreen = { 0.0f, 1.0f, 0.0f };
 constexpr Color3f kColorBlue = { 0.0f, 0.0f, 1.0f };

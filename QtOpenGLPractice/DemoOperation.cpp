@@ -4,6 +4,8 @@
 #include "FontManager.h"
 #include "glad/glad.h"
 
+
+
 void injectAllOperation(Renderer* renderer)
 {
     FirstTriangle* ft = new FirstTriangle;
@@ -28,7 +30,8 @@ FirstTriangle::~FirstTriangle()
 
 void FirstTriangle::initialize(Renderer* renderer) noexcept
 {
-    std::vector<Point> pts = { Point(-0.5f, -0.5f), Point(0.5f, -0.5f), Point(0.5f, 0.5f) };
+    float len = static_cast<float>(kDefaultDesignSize/2);
+    std::vector<Point> pts = { Point(-len, -len), Point(len, -len), Point(len, len) };
     m_object = new GLObject2D(renderer);
     m_object->setColor(kColorGreen);
     m_object->setOpaque(0.5f);
@@ -53,10 +56,11 @@ void FontOperation::initialize(Renderer* renderer) noexcept
     FontManager* fontMgr = renderer->fontMgr();
     const AsciiCharInfo *info = fontMgr->asciiChar('A');
 
-    Point pt0(-0.5f, -0.5f);
-    Point pt1(0.5f, -0.5f);
-    Point pt2(0.5f, 0.5f);
-    Point pt3(-0.5f, 0.5f);
+    float len = static_cast<float>(kDefaultDesignSize / 2);
+    Point pt0(-len, -len);
+    Point pt1(len, -len);
+    Point pt2(len, len);
+    Point pt3(-len, len);
     Point uv0(info->uv_min_x, info->uv_min_y);
     Point uv1(info->uv_max_x, info->uv_min_y);
     Point uv2(info->uv_max_x, info->uv_max_y);
@@ -83,9 +87,8 @@ MillionPrimitiveOperation::~MillionPrimitiveOperation()
 
 void MillionPrimitiveOperation::initialize(Renderer* renderer) noexcept
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, m_width, 0, m_height, -1, 1);
+    m_width = kDefaultDesignSize * 0.8;
+    m_height = kDefaultDesignSize * 0.8;
 }
 
 void MillionPrimitiveOperation::paint(Renderer* renderer) noexcept

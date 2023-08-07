@@ -9,6 +9,8 @@
 #include "Operation.h"
 #include "DemoOperation.h"
 #include "FontManager.h"
+#include "ViewPort.h"
+
 
 extern std::string g_argument;
 
@@ -16,12 +18,13 @@ Renderer::Renderer()
 {
     m_programMgr = new ProgramManager;
     m_fontMgr = new FontManager;
-    m_viewBox = new ViewBox;
+    m_viewport = new ViewPort;
+    m_viewport->setDesign(-kDefaultDesignSize, -kDefaultDesignSize, kDefaultDesignSize * 2, kDefaultDesignSize * 2);
 }
 
 Renderer::~Renderer()
 {
-    delete m_viewBox;
+    delete m_viewport;
     delete m_fontMgr;
     delete m_programMgr;
 }
@@ -58,7 +61,8 @@ bool Renderer::initialize(std::string& err)
 
 void Renderer::resize(int width, int height)
 {
-
+    m_viewport->setScreen(static_cast<glint64>(width), static_cast<glint64>(height));
+    m_viewport->updateViewToDesign();
 }
 
 void Renderer::render()
@@ -66,6 +70,7 @@ void Renderer::render()
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     glClearColor(kColorBG.r, kColorBG.g, kColorBG.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    legacyProjection();
 
     for (Operation* oper : m_operations)
     {
@@ -92,17 +97,9 @@ FontManager* Renderer::fontMgr() noexcept
     return m_fontMgr;
 }
 
-void Renderer::setViewBox(float left, float right, float bttm, float top) noexcept
+ViewPort* Renderer::viewPort() const noexcept
 {
-    m_viewBox->left = left;
-    m_viewBox->right = right;
-    m_viewBox->bttm = bttm;
-    m_viewBox->top = top;
-}
-
-ViewBox* Renderer::viewBox() const noexcept
-{
-    return m_viewBox;
+    return m_viewport;
 }
 
 void Renderer::addOperation(Operation* operation) noexcept
@@ -114,7 +111,8 @@ void Renderer::paintObject(GLObject2D* object) noexcept
 {
     const Color3f& color = object->color();
     float opaque = object->opaque();
-    m_programMgr->applyProgram(ProgramType::BaseColor, color, opaque, m_viewBox);
+    ViewBox vb = toViewBox(m_viewport->getView());
+    m_programMgr->applyProgram(ProgramType::BaseColor, color, opaque, &vb);
     object->draw();
     m_programMgr->releaseProgram();
 }
@@ -123,11 +121,30 @@ void Renderer::paintFont(GLObject2D* object) noexcept
 {
     const Color3f& color = object->color();
     float opaque = object->opaque();
-    m_programMgr->applyProgram(ProgramType::TextureFont, color, opaque, m_viewBox);
+    ViewBox vb = toViewBox(m_viewport->getView());
+    m_programMgr->applyProgram(ProgramType::TextureFont, color, opaque, &vb);
     unsigned int texture_id = m_fontMgr->fontTexutre();
     glBindTexture(GL_TEXTURE_2D, texture_id);
     object->drawAsFont();
     glBindTexture(GL_TEXTURE_2D, 0);
     m_programMgr->releaseProgram();
+}
+
+ViewBox Renderer::toViewBox(const Box& box) noexcept
+{
+    ViewBox vb;
+    vb.left = static_cast<float>(box.left());
+    vb.bttm = static_cast<float>(box.bottom());
+    vb.right = static_cast<float>(box.right());
+    vb.top = static_cast<float>(box.top());
+    return vb;
+}
+
+void Renderer::legacyProjection() noexcept
+{
+    ViewBox vb = toViewBox(m_viewport->getView());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(vb.left, vb.right, vb.bttm, vb.top, -1, 1);
 }
 

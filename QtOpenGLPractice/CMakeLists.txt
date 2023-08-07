@@ -18,6 +18,10 @@ add_executable(${TARGET_NAME}
 	main.cpp 
 	OpenGLWidget.h
 	OpenGLWidget.cpp
+	Box.h
+	Box.cpp
+	ViewPort.h
+	ViewPort.cpp
 	Renderer.h
 	Renderer.cpp
 	GLObject2D.h
