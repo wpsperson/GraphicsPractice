@@ -8,7 +8,7 @@ class Renderer;
 class GLObject2D
 {
 public:
-    GLObject2D(Renderer *renderer);
+    GLObject2D(Renderer *renderer, DrawMode mode);
     ~GLObject2D();
 
     void setColor(const Color3f& color) noexcept;
@@ -29,4 +29,5 @@ private:
     int m_point_count = 0;
     Color3f m_color = kColorBlue;
     float m_opaque = 1.0f;
+    DrawMode m_mode;
 };

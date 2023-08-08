@@ -1,9 +1,11 @@
-#include "DemoOperation.h"
+﻿#include "DemoOperation.h"
+
+#include <cassert>
+
 #include "Renderer.h"
 #include "ProgramManager.h"
 #include "FontManager.h"
 #include "glad/glad.h"
-
 
 
 void injectAllOperation(Renderer* renderer)
@@ -17,7 +19,6 @@ void injectAllOperation(Renderer* renderer)
     MillionPrimitiveOperation* million = new MillionPrimitiveOperation;
     million->setName("MillionPrimitiveOperation");
     renderer->addOperation(million);
-
 }
 
 FirstTriangle::~FirstTriangle()
@@ -32,7 +33,7 @@ void FirstTriangle::initialize(Renderer* renderer) noexcept
 {
     float len = static_cast<float>(kDefaultDesignSize/2);
     std::vector<Point> pts = { Point(-len, -len), Point(len, -len), Point(len, len) };
-    m_object = new GLObject2D(renderer);
+    m_object = new GLObject2D(renderer, DrawMode::Fill);
     m_object->setColor(kColorGreen);
     m_object->setOpaque(0.5f);
     m_object->upload(pts.data(), 3);
@@ -70,7 +71,7 @@ void FontOperation::initialize(Renderer* renderer) noexcept
     //Point uv2(0.8f, 0.8f);
     //Point uv3(0.0f, 0.8f);
     std::vector<Point> pts = { pt0, uv0, pt1, uv1, pt2, uv2, pt0, uv0, pt2,uv2, pt3, uv3 };
-    m_object = new GLObject2D(renderer);
+    m_object = new GLObject2D(renderer, DrawMode::Fill);
     m_object->setColor(kColorGreen);
     m_object->setOpaque(1.0f);
     m_object->upload(pts.data(), 12);
@@ -93,7 +94,7 @@ void MillionPrimitiveOperation::initialize(Renderer* renderer) noexcept
 
 void MillionPrimitiveOperation::paint(Renderer* renderer) noexcept
 {
-    float advance = m_width / m_repeat_count;
+    float advance = static_cast<float>(m_width / m_repeat_count);
 
     Point triangle[3];
     triangle[0].x = 0.0, triangle[0].y = 0;

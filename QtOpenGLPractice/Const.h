@@ -56,6 +56,13 @@ struct Point
     {}
 };
 
+enum class DrawMode : unsigned char
+{
+    Fill = 0,
+    Lines,
+    Points,
+};
+
 constexpr glint64 kDefaultDesignSize = 1000000;
 constexpr Color3f kColorRed = { 1.0f, 0.0f, 0.0f };
 constexpr Color3f kColorGreen = { 0.0f, 1.0f, 0.0f };

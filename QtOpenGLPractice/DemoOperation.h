@@ -1,7 +1,10 @@
 #pragma once 
 
+#include <vector>
+
 #include "Operation.h"
 #include "GLObject2D.h"
+
 
 void injectAllOperation(Renderer* renderer);
 

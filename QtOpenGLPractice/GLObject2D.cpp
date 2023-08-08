@@ -12,7 +12,7 @@ static constexpr int TwoDim = 2;
 static constexpr int Four = 4;
 
 
-GLObject2D::GLObject2D(Renderer* renderer) : m_renderer(renderer)
+GLObject2D::GLObject2D(Renderer* renderer, DrawMode mode) : m_renderer(renderer), m_mode(mode)
 {
 
 }
@@ -54,15 +54,17 @@ void GLObject2D::upload(Point* buffer, int count)
 
 void GLObject2D::draw()
 {
+    GLenum Primitive = (m_mode == DrawMode::Fill) ? GL_TRIANGLES : ((m_mode == DrawMode::Lines) ? GL_LINES : GL_POINTS);
     assert(m_vbo > 0);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glVertexAttribPointer(0, TwoDim, GL_FLOAT, GL_FALSE, TwoDim * sizeof(float), (void*)0);
-    glDrawArrays(GL_TRIANGLES, 0, m_point_count);
+    glDrawArrays(Primitive, 0, m_point_count);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void GLObject2D::drawAsFont()
 {
+    GLenum Primitive = (m_mode == DrawMode::Fill) ? GL_TRIANGLES : ((m_mode == DrawMode::Lines) ? GL_LINES : GL_POINTS);
     assert(m_vbo > 0);
     int text_pt_count = m_point_count / 2;
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -70,7 +72,7 @@ void GLObject2D::drawAsFont()
     glVertexAttribPointer(0, TwoDim, GL_FLOAT, GL_FALSE, Four * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, TwoDim, GL_FLOAT, GL_FALSE, Four * sizeof(float), (void*)(TwoDim *sizeof(float)));
-    glDrawArrays(GL_TRIANGLES, 0, text_pt_count);
+    glDrawArrays(Primitive, 0, text_pt_count);
     glDisableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
