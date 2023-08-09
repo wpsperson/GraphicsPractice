@@ -39,6 +39,8 @@ public:
     static ViewBox toViewBox(const Box& box) noexcept;
 
     void legacyProjection() noexcept;
+public:
+    Operation* m_operation = nullptr;
 
 private:
     ProgramManager* m_programMgr = nullptr;

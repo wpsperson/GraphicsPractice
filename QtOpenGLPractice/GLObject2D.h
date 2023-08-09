@@ -17,6 +17,8 @@ public:
     void setOpaque(float opaque) noexcept;
     float opaque() const noexcept;
 
+    int count() const noexcept;
+
     void upload(Point *buffer, int count);
 
     void draw();

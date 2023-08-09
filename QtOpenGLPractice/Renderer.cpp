@@ -47,11 +47,13 @@ bool Renderer::initialize(std::string& err)
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glPointSize(5);
     injectAllOperation(this);
     for (Operation* oper : m_operations)
     {
         if (oper->name() == g_argument)
         {
+            m_operation = oper;
             oper->initialize(this);
             break;
         }

@@ -3,16 +3,18 @@
 
 #include <QtGui/QWheelEvent>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QMouseEvent>
 #include <QtWidgets/QFileDialog>
 
 #include "Renderer.h"
 #include "ViewPort.h"
+#include "DemoOperation.h"
 
 
 OpenGLWidget::OpenGLWidget(QWidget* parent/* = 0*/)
 {
     m_renderer = new Renderer();
-    this->resize(1000, 1000);
+    this->resize(2000, 2000);
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -27,6 +29,8 @@ void OpenGLWidget::initializeGL()
     {
         std::cout << errorMessage << std::endl;
     }
+    m_oper = dynamic_cast<EditVectorFont*>(m_renderer->m_operation);
+    m_oper->setWidget(this);
 }
 
 void OpenGLWidget::resizeGL(int w, int h)
@@ -45,10 +49,10 @@ void OpenGLWidget::wheelEvent(QWheelEvent* eve)
 {
     QOpenGLWidget::wheelEvent(eve);
     int x = eve->position().x();
-    int y = m_height - eve->position().y();
+    int y = eve->position().y();
     int delta = eve->angleDelta().y();
     llPoint fixed_pt = m_renderer->viewPort()->screenToDB(x, y);
-    double zoom_factor = delta > 0 ? 0.5 : 2.0;
+    double zoom_factor = delta > 0 ? 0.8 : 1.25; // 0.5 : 2.0;
     m_renderer->viewPort()->zoomView(fixed_pt.x, fixed_pt.y, zoom_factor);
     update();
 }
@@ -83,4 +87,30 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event)
         m_renderer->viewPort()->moveView(delta_x, delta_y);
         update();
     }
+
+    m_oper->processKeyPress(event);
+}
+
+void OpenGLWidget::mousePressEvent(QMouseEvent* event)
+{
+    QOpenGLWidget::mousePressEvent(event);
+    m_oper->processMouseClick(event);
+}
+
+void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    QOpenGLWidget::mouseReleaseEvent(event);
+    m_oper->processMouseRelease(event);
+}
+
+void OpenGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    QOpenGLWidget::mouseDoubleClickEvent(event);
+    m_oper->processDoubleMouseClick(event);
+}
+
+void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+    QOpenGLWidget::mouseMoveEvent(event);
+    m_oper->processMouseMove(event);
 }

@@ -59,6 +59,16 @@ glint64 Box::height() const
     return ymax - ymin;
 }
 
+glint64 Box::centx() const
+{
+    return (xmin + xmax) / 2;
+}
+
+glint64 Box::centy() const
+{
+    return (ymin + ymax) / 2;
+}
+
 bool Box::containPoint(const llPoint& pt) const
 {
     return containPoint(pt.x, pt.y);

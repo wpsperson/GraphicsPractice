@@ -58,7 +58,7 @@ void ViewPort::zoomView(glint64 x, glint64 y, double zoom_factor)
     glint64 new_left = x - new_left_dist;
     glint64 new_bttm = y - new_bttm_dist;
     glint64 new_width = std::llround(m_screen_width * new_pixel_len);
-    glint64 new_height = std::llround<glint64>(m_screen_height * new_pixel_len);
+    glint64 new_height = std::llround(m_screen_height * new_pixel_len);
     if (new_width >= m_design.width() && new_height >= m_design.height())
     {
         updateViewToDesign();
@@ -120,7 +120,7 @@ void ViewPort::updateViewToDesign()
 llPoint ViewPort::screenToDB(int x, int y) const
 {
     glint64 pt_x = m_view.left() + std::llround(x * m_pixel_length);
-    glint64 pt_y = m_view.bottom() + std::llround(y * m_pixel_length);
+    glint64 pt_y = m_view.top() - std::llround(y * m_pixel_length);
     return llPoint(pt_x, pt_y);
 }
 
@@ -131,9 +131,9 @@ bool ViewPort::dbToScreen(const llPoint& pt, int& screen_x, int& screen_y) const
         return false;
     }
     glint64 left_dist = pt.x - m_view.left();
-    glint64 bttm_dist = pt.y - m_view.bottom();
+    glint64 top_dist = m_view.top() - pt.y;
     screen_x = static_cast<int>(left_dist / m_pixel_length);
-    screen_y = static_cast<int>(bttm_dist / m_pixel_length);
+    screen_y = static_cast<int>(top_dist / m_pixel_length);
     return true;
 }
 

@@ -42,11 +42,19 @@ float GLObject2D::opaque() const noexcept
     return m_opaque;
 }
 
+int GLObject2D::count() const noexcept
+{
+    return m_point_count;
+}
+
 void GLObject2D::upload(Point* buffer, int count)
 {
     m_point_count = count;
     std::size_t size = count * sizeof(Point);
-    glGenBuffers(1, &m_vbo);
+    if (m_vbo == 0)
+    {
+        glGenBuffers(1, &m_vbo);
+    }
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, size, buffer, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);

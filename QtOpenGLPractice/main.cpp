@@ -1,5 +1,6 @@
 ﻿#include <QtWidgets/QApplication>
 #include "OpenGLWidget.h"
+#include "Utils.h"
 
 std::string g_argument;
 

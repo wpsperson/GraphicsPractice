@@ -25,6 +25,10 @@ struct Box
 
     glint64 height() const;
 
+    glint64 centx() const;
+
+    glint64 centy() const;
+
     bool containPoint(const llPoint& pt) const;
     bool containPoint(glint64 ptx, glint64 pty) const;
 
