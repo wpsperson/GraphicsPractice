@@ -38,6 +38,8 @@ add_executable(${TARGET_NAME}
 	Operation.cpp
 	DemoOperation.h
 	DemoOperation.cpp
+	EditVectorFontOperation.h
+	EditVectorFontOperation.cpp
     Utils.h
     Utils.cpp
 	glad.c

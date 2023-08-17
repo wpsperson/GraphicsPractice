@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "ViewPort.h"
 #include "DemoOperation.h"
+#include "EditVectorFontOperation.h"
 
 
 OpenGLWidget::OpenGLWidget(QWidget* parent/* = 0*/)
