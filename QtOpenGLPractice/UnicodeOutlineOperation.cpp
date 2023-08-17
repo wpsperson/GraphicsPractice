@@ -1,12 +1,18 @@
 ﻿#include "UnicodeOutlineOperation.h"
 
 #include <iostream>
+#include <filesystem>
+#include <QtGui/QWheelEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QMouseEvent>
 
 #include "Renderer.h"
 #include "ViewPort.h"
 #include "AllChineseChar.h"
+#include "OpenGLWidget.h"
 
 #pragma warning(disable: 4996)
+namespace fs = std::filesystem;
 
 UnicodeOutlineOperation::~UnicodeOutlineOperation()
 {
@@ -18,7 +24,16 @@ UnicodeOutlineOperation::~UnicodeOutlineOperation()
 
 void UnicodeOutlineOperation::initialize(Renderer* renderer) noexcept
 {
-    std::string font_file_name = std::getenv("SystemRoot") + std::string("/Fonts/simfang.ttf");
+    std::vector<std::string> all_fonts = allSystemFontFiles();
+    for (const std::string& font : all_fonts)
+    {
+        if (supportChineseOutline(font))
+        {
+            m_font_list.emplace_back(font);
+        }
+    }
+    // m_font_list;
+    std::string font_file_name = m_font_list[m_font_idx];
     std::string err_msg;
     if (!m_generator.initFontLibrary(err_msg, font_file_name))
     {
@@ -81,5 +96,155 @@ void UnicodeOutlineOperation::paint(Renderer* renderer) noexcept
         renderer->paintObject(m_object);
     }
 
+}
+
+void UnicodeOutlineOperation::processKeyPress(QKeyEvent* event)
+{
+    int key = event->key();
+    if (Qt::Key_PageDown == key)
+    {
+        m_font_idx++;
+        if (m_font_idx >= m_font_list.size())
+        {
+            m_font_idx = 0;
+        }
+        loadFont(m_font_idx);
+        m_widget->update();
+    }
+    else if (Qt::Key_PageUp == key)
+    {
+        m_font_idx--;
+        if (m_font_idx < 0)
+        {
+            m_font_idx = int(m_font_list.size() - 1);
+        }
+        loadFont(m_font_idx);
+        m_widget->update();
+    }
+}
+
+void UnicodeOutlineOperation::loadFont(int index) noexcept
+{
+    std::string font_file_name = m_font_list[m_font_idx];
+    std::cout << "load font: " << font_file_name << std::endl;
+    std::string err_msg;
+    m_generator.clearOutlines();
+    if (!m_generator.initFontLibrary(err_msg, font_file_name))
+    {
+        return;
+    }
+    // wchar_t ch = L'人';
+    size_t size = kAllChineseChars.size();
+    for (size_t idx = 0; idx < size; idx++)
+    {
+        wchar_t ch = kAllChineseChars[idx];
+        if (!m_generator.genGlyphOutlines(ch, err_msg, m_outln))
+        {
+            std::cout << err_msg << std::endl;
+            return;
+        }
+    }
+}
+
+std::vector<std::string> UnicodeOutlineOperation::allSystemFontFiles() noexcept
+{
+    struct FontFile
+    {
+        std::string file_path;
+        std::string stem;
+        bool derived = false;
+    };
+    std::vector<FontFile> fonts_list;
+    std::string folder = std::getenv("SystemRoot") + std::string("/Fonts/");
+    for (const fs::directory_entry& entry : fs::directory_iterator(folder))
+    {
+        if (entry.is_directory())
+        {
+            continue;
+        }
+        std::string ext_name = entry.path().extension().string();
+        if (ext_name != ".ttf")
+        {
+            continue;
+        }
+        FontFile ff;
+        ff.stem = entry.path().stem().string();
+        ff.file_path = entry.path().string();
+        fonts_list.emplace_back(ff);
+    }
+    size_t count = fonts_list.size();
+    for (size_t idx = 0; idx < count; idx++)
+    {
+        const std::string& str = fonts_list[idx].stem;
+        for (size_t i = idx + 1; i < count;i++)
+        {
+            const std::string& another = fonts_list[i].stem;
+            if (another.find(str) != std::string::npos)
+            {
+                fonts_list[i].derived = true;
+            }
+        }
+    }
+
+    std::vector<std::string> results;
+    for (size_t idx = 0; idx < count; idx++)
+    {
+        if (!fonts_list[idx].derived)
+        {
+            results.emplace_back(fonts_list[idx].file_path);
+        }
+    }
+    return results;
+}
+
+bool UnicodeOutlineOperation::supportChineseOutline(const std::string& font_file) noexcept
+{
+    std::string err_msg;
+    m_generator.clearOutlines();
+    if (!m_generator.initFontLibrary(err_msg, font_file))
+    {
+        std::cout << err_msg << std::endl;
+        return false;
+    }
+
+    wchar_t ch_zhong = L'中';
+    wchar_t ch_guo = L'国';
+    GlyphOutlines outln_zhong;
+    GlyphOutlines outln_guo;
+    if (!m_generator.genGlyphOutlines(ch_zhong, err_msg, outln_zhong))
+    {
+        std::cout << err_msg << std::endl;
+        return false;
+    }
+    if (!m_generator.genGlyphOutlines(ch_guo, err_msg, outln_guo))
+    {
+        std::cout << err_msg << std::endl;
+        return false;
+    }
+
+    if (exactSameOutln(outln_zhong, outln_guo))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool UnicodeOutlineOperation::exactSameOutln(const GlyphOutlines& outln1, const GlyphOutlines& outln2) noexcept
+{
+    if (outln1.loops.size() != outln2.loops.size())
+    {
+        return false;
+    }
+    size_t loop_count = outln1.loops.size();
+    for (size_t idx = 0; idx <loop_count; idx++)
+    {
+        const GlyphLoop& loop1 = outln1.loops[idx];
+        const GlyphLoop& loop2 = outln2.loops[idx];
+        if (loop1.coords.size() != loop2.coords.size() || loop1.cmds.size() != loop2.cmds.size())
+        {
+            return false;
+        }
+    }
+    return true;
 }
 

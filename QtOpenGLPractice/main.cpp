@@ -3,7 +3,6 @@
 #include "OpenGLWidget.h"
 #include "Utils.h"
 
-std::string g_argument;
 
 int main(int argc, char *argv[])
 {

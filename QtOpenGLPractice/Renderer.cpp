@@ -12,8 +12,6 @@
 #include "ViewPort.h"
 
 
-extern std::string g_argument;
-
 Renderer::Renderer()
 {
     m_programMgr = new ProgramManager;

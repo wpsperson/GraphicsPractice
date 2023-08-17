@@ -16,6 +16,8 @@ public:
 
     void destroyFontLibrary() noexcept;
 
+    void clearOutlines() noexcept;
+
     bool genGlyphOutlines(wchar_t ch, std::string& error_msg, GlyphOutlines& output) noexcept;
 
     // first step, discretize on local coordinate.

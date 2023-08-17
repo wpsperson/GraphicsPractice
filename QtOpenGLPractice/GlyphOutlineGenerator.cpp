@@ -99,9 +99,13 @@ bool GlyphOutlineGenerator::initFontLibrary(std::string& error_msg, const std::s
 
 void GlyphOutlineGenerator::destroyFontLibrary() noexcept
 {
-    m_glyph_outlines.clear();
     FT_Done_Face(m_data->face_);
     FT_Done_FreeType(m_data->library_);
+}
+
+void GlyphOutlineGenerator::clearOutlines() noexcept
+{
+    m_glyph_outlines.clear();
 }
 
 bool GlyphOutlineGenerator::genGlyphOutlines(wchar_t ch, std::string& error_msg, GlyphOutlines& output) noexcept
