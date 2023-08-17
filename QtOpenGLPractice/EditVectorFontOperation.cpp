@@ -63,11 +63,6 @@ void EditVectorFont::paint(Renderer* renderer) noexcept
     }
 }
 
-void EditVectorFont::setWidget(OpenGLWidget* widget)
-{
-    m_widget = widget;
-}
-
 void EditVectorFont::processMouseClick(QMouseEvent* eve)
 {
     int x = eve->pos().x();
@@ -271,12 +266,12 @@ void EditVectorFont::checkFontToNewFormat() noexcept
     {
         for (VStroke& sk : ft.strokes)
         {
-            int cmd_count = sk.cmds.size();
-            int pt_count = sk.points.size();
+            size_t cmd_count = sk.cmds.size();
+            size_t pt_count = sk.points.size();
             assert(cmd_count == pt_count);
             VPoint last = sk.points.front();
             sk.cmds[0] = 1;
-            for (int i = 1; i < pt_count; i++)
+            for (size_t i = 1; i < pt_count; i++)
             {
                 VPoint cur = sk.points.at(i);
                 if (cur.y == last.y)

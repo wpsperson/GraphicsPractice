@@ -8,9 +8,9 @@
 
 #include "Renderer.h"
 #include "ViewPort.h"
-#include "DemoOperation.h"
-#include "EditVectorFontOperation.h"
+#include "Operation.h"
 
+Operation* createDefaultOperation(const std::string& name);
 
 OpenGLWidget::OpenGLWidget(QWidget* parent/* = 0*/)
 {
@@ -30,8 +30,11 @@ void OpenGLWidget::initializeGL()
     {
         std::cout << errorMessage << std::endl;
     }
-    m_oper = dynamic_cast<EditVectorFont*>(m_renderer->m_operation);
-    m_oper->setWidget(this);
+
+    std::string name = this->objectName().toStdString();
+    m_operation = createDefaultOperation(name);
+    m_operation->setWidget(this);
+    m_operation->initialize(m_renderer);
 }
 
 void OpenGLWidget::resizeGL(int w, int h)
@@ -44,6 +47,8 @@ void OpenGLWidget::resizeGL(int w, int h)
 void OpenGLWidget::paintGL()
 {
     m_renderer->render();
+    m_operation->paint(m_renderer);
+    m_renderer->endRender();
 }
 
 void OpenGLWidget::wheelEvent(QWheelEvent* eve)
@@ -88,30 +93,29 @@ void OpenGLWidget::keyPressEvent(QKeyEvent* event)
         m_renderer->viewPort()->moveView(delta_x, delta_y);
         update();
     }
-
-    m_oper->processKeyPress(event);
+    m_operation->processKeyPress(event);
 }
 
 void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 {
     QOpenGLWidget::mousePressEvent(event);
-    m_oper->processMouseClick(event);
+    m_operation->processMouseClick(event);
 }
 
 void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     QOpenGLWidget::mouseReleaseEvent(event);
-    m_oper->processMouseRelease(event);
+    m_operation->processMouseRelease(event);
 }
 
 void OpenGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
 {
     QOpenGLWidget::mouseDoubleClickEvent(event);
-    m_oper->processDoubleMouseClick(event);
+    m_operation->processDoubleMouseClick(event);
 }
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
 {
     QOpenGLWidget::mouseMoveEvent(event);
-    m_oper->processMouseMove(event);
+    m_operation->processMouseMove(event);
 }

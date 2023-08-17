@@ -110,7 +110,7 @@ void writeFontFileInNewFormat(const char* file, const VFontLibrary& lib)
     {
         const VFont& font = lib[i];
         unsigned char ch = font.ch;
-        int line_count = font.strokes.size();
+        int line_count = static_cast<int>(font.strokes.size());
         ofs << line_count << "            " << ch << std::endl;
 
         for (const VStroke sk : font.strokes)
@@ -134,7 +134,9 @@ void writeFontFileInNewFormat(const char* file, const VFontLibrary& lib)
 std::string timeToStr(const std::string& format/* = "%Y-%m-%d %H-%M-%S"*/)
 {
     time_t t = std::time(nullptr);
-    tm _tm = *std::localtime(&t);
+    //tm _tm = *std::localtime_s(&t);
+    tm _tm;
+    localtime_s(&_tm, &t);
     std::ostringstream oss;
     oss << std::put_time(&_tm, format.data());
     std::string str_time = oss.str();

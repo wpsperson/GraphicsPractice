@@ -48,16 +48,6 @@ bool Renderer::initialize(std::string& err)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPointSize(5);
-    injectAllOperation(this);
-    for (Operation* oper : m_operations)
-    {
-        if (oper->name() == g_argument)
-        {
-            m_operation = oper;
-            oper->initialize(this);
-            break;
-        }
-    }
     return true;
 }
 
@@ -69,22 +59,16 @@ void Renderer::resize(int width, int height)
 
 void Renderer::render()
 {
-    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+    m_start_time = std::chrono::steady_clock::now();
     glClearColor(kColorBG.r, kColorBG.g, kColorBG.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     legacyProjection();
+}
 
-    for (Operation* oper : m_operations)
-    {
-        if (oper->name() == g_argument)
-        {
-            oper->paint(this);
-            break;
-        }
-    }
-
+void Renderer::endRender()
+{
     std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
-    std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+    std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
     double render_time = static_cast<double>(result.count()) / 1000.0;
     std::cout << "draw time(ms) is " << render_time << std::endl;
 }
@@ -102,11 +86,6 @@ FontManager* Renderer::fontMgr() noexcept
 ViewPort* Renderer::viewPort() const noexcept
 {
     return m_viewport;
-}
-
-void Renderer::addOperation(Operation* operation) noexcept
-{
-    m_operations.emplace_back(operation);
 }
 
 void Renderer::paintObject(GLObject2D* object) noexcept

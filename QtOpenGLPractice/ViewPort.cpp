@@ -117,6 +117,11 @@ void ViewPort::updateViewToDesign()
     setView(new_left, new_bttm, new_width, new_height);
 }
 
+double ViewPort::pixelLength() const
+{
+    return m_pixel_length;
+}
+
 llPoint ViewPort::screenToDB(int x, int y) const
 {
     glint64 pt_x = m_view.left() + std::llround(x * m_pixel_length);

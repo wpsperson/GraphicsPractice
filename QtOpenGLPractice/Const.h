@@ -1,6 +1,7 @@
 #pragma once
 
 #include <corecrt_math_defines.h>
+#include <vector>
 
 using glint64 = long long;
 
@@ -54,6 +55,18 @@ struct Point
     Point() {}
     Point(float _x, float _y): x(_x), y(_y)
     {}
+
+    void scale(float sx, float sy)
+    {
+        x *= sx;
+        y *= sy;
+    }
+
+    void move(float offx, float offy)
+    {
+        x += offx;
+        y += offy;
+    }
 };
 
 enum class DrawMode : unsigned char
@@ -61,6 +74,26 @@ enum class DrawMode : unsigned char
     Fill = 0,
     Lines,
     Points,
+};
+
+enum class SVGCmd : unsigned char
+{
+    MoveTo = 0,
+    LineTo,
+    Conic,
+    Cubic,
+};
+
+struct GlyphLoop
+{
+    std::vector<SVGCmd> cmds;
+    std::vector<Point> coords;
+};
+
+struct GlyphOutlines
+{
+    int units_per_EM;
+    std::vector<GlyphLoop> loops;
 };
 
 constexpr glint64 kDefaultDesignSize = 1000000;

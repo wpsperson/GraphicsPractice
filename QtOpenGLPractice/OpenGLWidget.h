@@ -3,7 +3,7 @@
 
 
 class Renderer;
-class EditVectorFont;
+class Operation;
 class OpenGLWidget : public QOpenGLWidget
 {
     Q_OBJECT
@@ -26,6 +26,6 @@ private:
     int m_width = 0;
     int m_height = 0;
     Renderer* m_renderer = nullptr;
-    EditVectorFont* m_oper = nullptr;
+    Operation* m_operation = nullptr;
 };
 

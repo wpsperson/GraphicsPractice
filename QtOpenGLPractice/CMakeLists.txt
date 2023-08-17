@@ -30,6 +30,8 @@ add_executable(${TARGET_NAME}
 	ProgramManager.h
 	FontManager.cpp
 	FontManager.h
+	GlyphOutlineGenerator.h
+	GlyphOutlineGenerator.cpp
 	Const.h
     ShaderSource.h
 	Geometry.h
@@ -38,8 +40,12 @@ add_executable(${TARGET_NAME}
 	Operation.cpp
 	DemoOperation.h
 	DemoOperation.cpp
+	DefaultOperation.cpp
 	EditVectorFontOperation.h
 	EditVectorFontOperation.cpp
+	UnicodeOutlineOperation.h
+	UnicodeOutlineOperation.cpp
+	AllChineseChar.h
     Utils.h
     Utils.cpp
 	glad.c

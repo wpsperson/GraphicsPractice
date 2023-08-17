@@ -3,6 +3,9 @@
 #include <string>
 
 class Renderer;
+class QMouseEvent;
+class QKeyEvent;
+class OpenGLWidget;
 
 class Operation
 {
@@ -13,10 +16,23 @@ public:
 
     const std::string& name() const noexcept;
 
+    void setWidget(OpenGLWidget* widget);
+
     virtual void initialize(Renderer *renderer) noexcept;
 
     virtual void paint(Renderer* renderer) noexcept;
 
-private:
+    virtual void processMouseClick(QMouseEvent* eve);
+
+    virtual void processMouseRelease(QMouseEvent* eve);
+
+    virtual void processDoubleMouseClick(QMouseEvent* eve);
+
+    virtual void processMouseMove(QMouseEvent* eve);
+
+    virtual void processKeyPress(QKeyEvent* event);
+
+protected:
     std::string m_name;
+    OpenGLWidget* m_widget = nullptr;
 };

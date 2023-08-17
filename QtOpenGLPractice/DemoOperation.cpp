@@ -11,23 +11,10 @@
 #include "FontManager.h"
 #include "glad/glad.h"
 #include "EditVectorFontOperation.h"
+#include "UnicodeOutlineOperation.h"
 
 
-void injectAllOperation(Renderer* renderer)
-{
-    FirstTriangle* ft = new FirstTriangle;
-    ft->setName("FirstTriangle");
-    renderer->addOperation(ft);
-    FontOperation* font = new FontOperation;
-    font->setName("FontOperation");
-    renderer->addOperation(font);
-    MillionPrimitiveOperation* million = new MillionPrimitiveOperation;
-    million->setName("MillionPrimitiveOperation");
-    renderer->addOperation(million);
-    EditVectorFont* edit_font = new EditVectorFont;
-    edit_font->setName("EditVectorFont");
-    renderer->addOperation(edit_font);
-}
+
 
 FirstTriangle::~FirstTriangle()
 {

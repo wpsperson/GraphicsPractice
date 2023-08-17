@@ -8,7 +8,6 @@
 class ViewPort;
 class QMouseEvent;
 class QKeyEvent;
-class OpenGLWidget;
 
 class EditVectorFont : public Operation
 {
@@ -18,8 +17,6 @@ public:
     virtual void initialize(Renderer* renderer) noexcept;
 
     virtual void paint(Renderer* renderer) noexcept;
-
-    void setWidget(OpenGLWidget* widget);
 
     void processMouseClick(QMouseEvent* eve);
 
@@ -78,5 +75,4 @@ private:
     ViewPort* m_vp;
     bool m_edit_mode = false;
     bool m_drag = false;
-    OpenGLWidget* m_widget = nullptr;
 };

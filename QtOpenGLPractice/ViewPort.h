@@ -28,6 +28,8 @@ public:
 
     void updateViewToDesign();
 
+    double pixelLength() const;
+
     llPoint screenToDB(int x, int y) const;
 
     bool dbToScreen(const llPoint& pt, int& screen_x, int& screen_y) const;

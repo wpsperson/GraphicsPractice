@@ -1,6 +1,7 @@
 #include "FontManager.h"
 #include <freetype/freetype.h>
 #include "glad/glad.h"
+#pragma warning(disable: 4996)
 
 
 // most glyph width and height is from 0.7~0.8, so scale it to make font normalized.

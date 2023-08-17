@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <string>
 #include <vector>
 #include "Const.h"
@@ -7,7 +8,6 @@
 class GLObject2D;
 class ProgramManager;
 class FontManager;
-class Operation;
 class ViewPort;
 struct Box;
 
@@ -24,13 +24,13 @@ public:
 
     void render();
 
+    void endRender();
+
     ProgramManager* programMgr() noexcept;
 
     FontManager* fontMgr() noexcept;
 
     ViewPort* viewPort() const noexcept;
-
-    void addOperation(Operation* operation) noexcept;
 
     void paintObject(GLObject2D* object) noexcept;
 
@@ -39,12 +39,10 @@ public:
     static ViewBox toViewBox(const Box& box) noexcept;
 
     void legacyProjection() noexcept;
-public:
-    Operation* m_operation = nullptr;
 
 private:
     ProgramManager* m_programMgr = nullptr;
     FontManager* m_fontMgr = nullptr;
     ViewPort* m_viewport = nullptr;
-    std::vector<Operation*> m_operations;
+    std::chrono::steady_clock::time_point m_start_time;
 };
