@@ -163,7 +163,7 @@ std::vector<std::string> UnicodeOutlineOperation::allSystemFontFiles() noexcept
             continue;
         }
         std::string ext_name = entry.path().extension().string();
-        if (ext_name != ".ttf")
+        if (ext_name != ".ttf" && ext_name != ".ttc" && ext_name != ".TTF" && ext_name != ".TTC") // truetype font/ truetype collection
         {
             continue;
         }
