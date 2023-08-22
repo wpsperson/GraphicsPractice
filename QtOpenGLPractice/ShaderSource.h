@@ -7,7 +7,7 @@ const char* const kBaseColorVertexSource =
 
 "float convert(float start, float end, float value)\n"
 "{\n"
-"    return ((value - start) * 2.0f) / (end - start) - 1.0f;\n"
+"    return ((value - start) * 2.0) / (end - start) - 1.0;\n"
 "}\n"
 
 "void main() \n"
@@ -33,7 +33,7 @@ const char* const kFontVertexSource =
 
 "float convert(float start, float end, float value)\n"
 "{\n"
-"    return ((value - start) * 2.0f) / (end - start) - 1.0f;\n"
+"    return ((value - start) * 2.0) / (end - start) - 1.0;\n"
 "}\n"
 
 "void main() \n"
