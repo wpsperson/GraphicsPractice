@@ -3,26 +3,26 @@ IF (WIN32)
 	find_path(FREETYPE_INCLUDE_DIR 
 		NAMES ft2build.h
 		PATHS 
-        "D:/3rd-party/freetype-2.13.0/include"
+        "D:/3rd-party/freetype-2.13.2/include"
 		)
 	message(STATUS "FREETYPE_INCLUDE_DIR => ${FREETYPE_INCLUDE_DIR}")
 	find_path(FREETYPE_LIB_DIR 
 		NAMES freetype.lib
 		PATHS 
-        "D:/3rd-party/freetype-2.13.0/lib"
+        "D:/3rd-party/freetype-2.13.2/lib"
 		)
 	message(STATUS "FREETYPE_LIB_DIR => ${FREETYPE_LIB_DIR}")
 	find_library(FREETYPE_LIBRARY 
 			NAMES freetype
 			PATHS
-            "D:/3rd-party/freetype-2.13.0/lib"
+            "D:/3rd-party/freetype-2.13.2/lib"
 			)
 	message(STATUS "FREETYPE_LIBRARY => ${FREETYPE_LIBRARY}")
 	# debug release same library
 	find_library(FREETYPE_LIBRARY_DEBUG
 			NAMES freetyped
 			PATHS
-            "D:/3rd-party/freetype-2.13.0/lib"
+            "D:/3rd-party/freetype-2.13.2/lib"
 			)
 	message(STATUS "FREETYPE_LIBRARY_DEBUG => ${FREETYPE_LIBRARY_DEBUG}")
 ELSE (WIN32)

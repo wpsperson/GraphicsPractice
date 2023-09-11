@@ -1,8 +1,6 @@
 ﻿#include <QtWidgets/QApplication>
 #include <QtCore/QString>
 #include "OpenGLWidget.h"
-#include "Utils.h"
-
 
 int main(int argc, char *argv[])
 {

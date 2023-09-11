@@ -50,3 +50,6 @@ void writeFontFile(const char* file, const VFontLibrary& lib);
 void writeFontFileInNewFormat(const char* file, const VFontLibrary& lib);
 
 std::string timeToStr(const std::string& format = "%Y-%m-%d %H-%M-%S");
+
+
+

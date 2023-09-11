@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 
 void parseFontFile(const char* file, int font_size, VFontLibrary &lib)

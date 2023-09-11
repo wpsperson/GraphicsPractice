@@ -1,0 +1,39 @@
+SET(ZLIB_FOUND "NO")
+IF (WIN32)
+	find_path(ZLIB_INCLUDE_DIR 
+		NAMES zlib.h
+		PATHS 
+        "C:/Program Files (x86)/zlib/include"
+		)
+	message(STATUS "ZLIB_INCLUDE_DIR => ${ZLIB_INCLUDE_DIR}")
+	find_path(ZLIB_LIB_DIR 
+		NAMES zlibstatic.lib
+		PATHS 
+        "C:/Program Files (x86)/zlib/lib"
+		)
+	message(STATUS "ZLIB_LIB_DIR => ${ZLIB_LIB_DIR}")
+	find_library(ZLIB_LIBRARY 
+			NAMES zlibstatic
+			PATHS
+            "C:/Program Files (x86)/zlib/lib"
+			)
+	message(STATUS "ZLIB_LIBRARY => ${ZLIB_LIBRARY}")
+	# debug release same library
+	find_library(ZLIB_LIBRARY_DEBUG
+			NAMES zlibstaticd
+			PATHS
+            "C:/Program Files (x86)/zlib/lib"
+			)
+	message(STATUS "ZLIB_LIBRARY_DEBUG => ${ZLIB_LIBRARY_DEBUG}")
+ELSE (WIN32)
+# I have not touched any Linux or Mac OS projects, however a explicit framework or architecture is prevailing
+
+#	find_path(GLUT_INCLUDE_DIR 
+#		
+#	...	
+ENDIF (WIN32)
+
+
+IF(ZLIB_INCLUDE_DIR AND ZLIB_LIB_DIR AND ZLIB_LIBRARY AND ZLIB_LIBRARY_DEBUG)
+  SET(ZLIB_FOUND "YES")
+ENDIF(ZLIB_INCLUDE_DIR AND ZLIB_LIB_DIR AND ZLIB_LIBRARY AND ZLIB_LIBRARY_DEBUG)
