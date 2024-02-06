@@ -40,7 +40,7 @@ void EditVectorFont::initialize(Renderer* renderer) noexcept
     m_snap = new GLObject2D(renderer, DrawMode::Points);
     m_snap->setColor(kColorRed);
 
-    parseFontFile("old_font.txt", kOldFontDim, m_old_library);
+    parseFontFile("old_font.txt", kNewFontDim, m_old_library);
     parseFontFile("new_font.txt", kNewFontDim, m_new_library);
     m_vp = renderer->viewPort();
     overallMode();
