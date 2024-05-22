@@ -14,7 +14,11 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(GLEW REQUIRED)
 
 add_executable(${TARGET_NAME}
-	main.cpp 
+	main.cpp
+    MainWindow.h
+    MainWindow.cpp
+    DummyWidget.h
+    DummyWidget.cpp
 	OpenGLWidget.h
 	OpenGLWidget.cpp
 	Renderer.h
