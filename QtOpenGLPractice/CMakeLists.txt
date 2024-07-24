@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(FreeType REQUIRED)
-find_package(ZLIB REQUIRED)
+#find_package(ZLIB REQUIRED)
 
 add_executable(${TARGET_NAME}
 	main.cpp 
@@ -56,4 +56,4 @@ add_executable(${TARGET_NAME}
 target_include_directories(${TARGET_NAME} PRIVATE ${FREETYPE_INCLUDE_DIR})
 target_link_libraries(${TARGET_NAME} Qt5::Widgets ${CMAKE_DL_LIBS})
 target_link_libraries(${TARGET_NAME} debug "${FREETYPE_LIBRARY_DEBUG}" optimized "${FREETYPE_LIBRARY}")
-target_link_libraries(${TARGET_NAME} debug "${ZLIB_LIBRARY_DEBUG}" optimized "${ZLIB_LIBRARY}")
+#target_link_libraries(${TARGET_NAME} debug "${ZLIB_LIBRARY_DEBUG}" optimized "${ZLIB_LIBRARY}")
