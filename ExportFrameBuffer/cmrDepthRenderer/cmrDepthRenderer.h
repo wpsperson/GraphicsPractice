@@ -17,7 +17,7 @@ public:
 
     float* getDepthData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ);
 
-    std::tuple<float* ,unsigned char *> getDepthColorData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ);
+    std::tuple<float*, unsigned char*, unsigned char *> getDepthColorData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ);
 
 private:
     bool initOpenGLContext(std::string& errorMsg);
@@ -34,6 +34,8 @@ private:
 
     float* readDepthBuffer(int width, int height);
 
+    unsigned char* readNormalBuffer(int width, int height);
+
     unsigned char* readColorBuffer(int width, int height);
 
     void freeGLObjects();
@@ -41,6 +43,7 @@ private:
 private:
     unsigned int m_frameBuffer = 0;
     unsigned int m_depthRenderBuffer = 0;
+    unsigned int m_normalRenderBuffer = 0;
     unsigned int m_colorRenderBuffer = 0;
     ProgramManager m_programMgr;
     GLObject* m_globject = nullptr;

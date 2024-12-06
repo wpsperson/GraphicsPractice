@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     // maxy	1.52201998
     // minz - 0.698237002
     // maxz	0.505699992
-    std::string modelURL = "D:/WorkSpace/bunny.obj";
+    std::string modelURL = "C:/WorkSpace/bunny.obj";
     cmrDepthRenderer renderer(modelURL);
     double offset_x = -0.17;
     double offset_y = -0.7;
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
     //double zNear = 0.8;
     //double zFar = 2.0;
 
-    int imageWidth = 4096;
-    int imageHeight = 4096;
+    int imageWidth = 1024;
+    int imageHeight = 1024;
     //double intrinsics[4] = { 4202.4, 4202.4, 2665.4, 1628.4 };
     double intrinsics[4] = { static_cast<double>(imageWidth / 2), static_cast<double>(imageHeight / 2), static_cast<double>(imageWidth / 2), static_cast<double>(imageHeight / 2) };
     double zNear = 1;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     bool useReverseZ = false;
 
     // float* depthBuffer = renderer.getDepthData(pose, imageWidth, imageWidth, intrinsics, zNear, zFar, useReverseZ);
-    auto [depthBuffer, colorBuffer] = renderer.getDepthColorData(pose, imageWidth, imageHeight, intrinsics, zNear, zFar, useReverseZ);
+    auto [depthBuffer, normalBuffer, colorBuffer] = renderer.getDepthColorData(pose, imageWidth, imageHeight, intrinsics, zNear, zFar, useReverseZ);
     if (depthBuffer)
     {
         stbi_flip_vertically_on_write(1);
@@ -56,6 +56,14 @@ int main(int argc, char *argv[])
         std::transform(depthBuffer, depthBuffer + imageWidth * imageHeight, depthImageData.begin(), [](float depth) {return static_cast<unsigned char>(depth * 255);});
         stbi_write_png(depthImageFile.c_str(), imageWidth, imageHeight, depthComp, depthImageData.data(), depthComp * imageWidth);
         delete[] depthBuffer;
+    }
+
+    if (normalBuffer)
+    {
+        std::string normImageFile = "normal.png";
+        constexpr int normComp = 3;
+        stbi_write_png(normImageFile.c_str(), imageWidth, imageHeight, normComp, normalBuffer, normComp * imageWidth);
+        delete[] normalBuffer;
     }
 
     if (colorBuffer)

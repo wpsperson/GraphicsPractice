@@ -49,7 +49,8 @@ const char* const strVertexForNormal =
 
 const char* const strFragmentForNormal =
 "#version 460 core \n"
-"out vec4 FragColor; \n"
+"layout(location = 0) out vec3 NormalColor; \n"
+"layout(location = 1) out vec4 FragColor; \n"
 "in vec3 Normal; \n"
 "in vec3 FragPos; \n"
 "uniform vec3 viewPos; \n"
@@ -66,6 +67,7 @@ const char* const strFragmentForNormal =
 "    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32); \n"
 "    vec3 specular = (spec * vec3(1.0, 1.0, 1.0)) * 0.3; \n"
 "    vec3 result = ambient + diffuse + specular; \n"
+"    NormalColor = vec3(Normal * 0.5 + 0.5); \n"
 "    FragColor = vec4(result, 1.0); \n"
 "} \n";
 

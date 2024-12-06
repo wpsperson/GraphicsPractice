@@ -46,6 +46,10 @@ cmrDepthRenderer::~cmrDepthRenderer()
     {
         glDeleteRenderbuffers(1, &m_depthRenderBuffer);
     }
+    if (m_normalRenderBuffer)
+    {
+        glDeleteRenderbuffers(1, &m_normalRenderBuffer);
+    }
     if (m_colorRenderBuffer)
     {
         glDeleteRenderbuffers(1, &m_colorRenderBuffer);
@@ -66,7 +70,7 @@ float* cmrDepthRenderer::getDepthData(double pose[16], int imageWidth, int image
     return depthBuffer;
 }
 
-std::tuple<float*, unsigned char*> cmrDepthRenderer::getDepthColorData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ)
+std::tuple<float*, unsigned char*, unsigned char*> cmrDepthRenderer::getDepthColorData(double pose[16], int imageWidth, int imageHeight, double intrinsics[4], double zNear, double zFar, bool useReverseZ)
 {
     createFBO(imageWidth, imageHeight, true);
     std::array<float, 16> model = computeModelMatrix(pose);
@@ -74,7 +78,8 @@ std::tuple<float*, unsigned char*> cmrDepthRenderer::getDepthColorData(double po
     render(imageWidth, imageHeight, model, projection, useReverseZ);
     float* depthBuffer = readDepthBuffer(imageWidth, imageHeight);
     unsigned char* colorBuffer = readColorBuffer(imageWidth, imageHeight);
-    return std::tuple<float*, unsigned char*>(depthBuffer, colorBuffer);
+    unsigned char* normalBuffer = readNormalBuffer(imageWidth, imageHeight);
+    return std::tuple<float*, unsigned char*, unsigned char*>(depthBuffer, normalBuffer, colorBuffer);
 }
 
 bool cmrDepthRenderer::initOpenGLContext(std::string& errorMsg)
@@ -151,12 +156,17 @@ void cmrDepthRenderer::createFBO(int width, int height, bool useColorBuffer)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
     glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
 
+    glGenRenderbuffers(1, &m_normalRenderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_normalRenderBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB, width, height);
+    glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_normalRenderBuffer);
+
     if (useColorBuffer)
     {
         glGenRenderbuffers(1, &m_colorRenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_BGRA, width, height);
-        glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_colorRenderBuffer);
+        glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, m_colorRenderBuffer);
     }
 }
 
@@ -232,7 +242,6 @@ void cmrDepthRenderer::render(int width, int height, const std::array<float, 16>
     }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
     for (GLObject* object : m_objects)
     {
         bool hasNormal = object->hasNormal();
@@ -250,10 +259,18 @@ float* cmrDepthRenderer::readDepthBuffer(int width, int height)
     return depthBuffer;
 }
 
+unsigned char* cmrDepthRenderer::readNormalBuffer(int width, int height)
+{
+    unsigned char* normalBuffer = new unsigned char[width * height * 3];
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, normalBuffer);
+    return normalBuffer;
+}
+
 unsigned char* cmrDepthRenderer::readColorBuffer(int width, int height)
 {
     unsigned char* colorBuffer = new unsigned char[width * height * 4];
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, colorBuffer);
     return colorBuffer;
 }
