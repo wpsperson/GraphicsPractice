@@ -3,19 +3,19 @@ IF (WIN32)
     find_path(ASSIMP_INCLUDE_DIR
         NAMES assimp
         PATHS
-        $ENV{3rd-party}/assimp-4.1.0/include
+        $ENV{3rd-party}/assimp-5.4.3/include
         )
     message(STATUS "ASSIMP_INCLUDE_DIR => ${ASSIMP_INCLUDE_DIR}")
     find_path(ASSIMP_LIB_DIR
-        NAMES assimp-vc140-mt.lib
+        NAMES assimp-vc142-mt.lib
         PATHS
-        $ENV{3rd-party}/assimp-4.1.0/lib
+        $ENV{3rd-party}/assimp-5.4.3/lib
         )
     message(STATUS "ASSIMP_LIB_DIR => ${ASSIMP_LIB_DIR}")
     find_library(ASSIMP_LIBRARY
-            NAMES assimp-vc140-mt
+            NAMES assimp-vc142-mt
             PATHS
-            $ENV{3rd-party}/assimp-4.1.0/lib
+            $ENV{3rd-party}/assimp-5.4.3/lib
             )
     message(STATUS "ASSIMP_LIBRARY => ${ASSIMP_LIBRARY}")
 ELSE (WIN32)

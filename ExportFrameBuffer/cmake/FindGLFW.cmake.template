@@ -3,26 +3,26 @@ IF (WIN32)
     find_path(GLFW_INCLUDE_DIR
         NAMES GLFW
         PATHS
-        $ENV{3rd-party}/glfw-3.2.1/include
+        $ENV{3rd-party}/glfw-3.4/include
         )
     message(STATUS "GLFW_INCLUDE_DIR => ${GLFW_INCLUDE_DIR}")
     find_path(GLFW_LIB_DIR
         NAMES glfw3.lib
         PATHS
-        $ENV{3rd-party}/glfw-3.2.1/lib
+        $ENV{3rd-party}/glfw-3.4/lib
         )
     message(STATUS "GLFW_LIB_DIR => ${GLFW_LIB_DIR}")
     find_library(GLFW_LIBRARY
             NAMES glfw3
             PATHS
-            $ENV{3rd-party}/glfw-3.2.1/lib
+            $ENV{3rd-party}/glfw-3.4/lib
             )
     message(STATUS "GLFW_LIBRARY => ${GLFW_LIBRARY}")
     # debug release same library
     find_library(GLFW_LIBRARY_DEBUG
             NAMES glfw3d
             PATHS
-            $ENV{3rd-party}/glfw-3.2.1/lib
+            $ENV{3rd-party}/glfw-3.4/lib
             )
     message(STATUS "GLFW_LIBRARY_DEBUG => ${GLFW_LIBRARY_DEBUG}")
 ELSE (WIN32)
