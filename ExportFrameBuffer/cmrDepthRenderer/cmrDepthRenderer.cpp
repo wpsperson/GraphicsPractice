@@ -149,25 +149,29 @@ bool cmrDepthRenderer::load3dModel(const std::string& fileName, std::string& err
 void cmrDepthRenderer::createFBO(int width, int height, bool useColorBuffer)
 {
     glGenFramebuffers(1, &m_frameBuffer);
-    glBindFramebuffer(GL_DRAW_BUFFER, m_frameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
 
     glGenRenderbuffers(1, &m_depthRenderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
-    glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
 
     glGenRenderbuffers(1, &m_normalRenderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_normalRenderBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB, width, height);
-    glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_normalRenderBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_normalRenderBuffer);
 
     if (useColorBuffer)
     {
         glGenRenderbuffers(1, &m_colorRenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_BGRA, width, height);
-        glFramebufferRenderbuffer(GL_DRAW_BUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, m_colorRenderBuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, m_colorRenderBuffer);
+
+        GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+        glDrawBuffers(2, buffers);
     }
+
 }
 
 std::array<float, 16> cmrDepthRenderer::computeModelMatrix(double pose[16])
