@@ -16,43 +16,47 @@ find_package(FreeType REQUIRED)
 #find_package(ZLIB REQUIRED)
 
 add_executable(${TARGET_NAME}
-	OpenGLHeader.h
-	main.cpp 
-	OpenGLWidget.h
-	OpenGLWidget.cpp
-	Box.h
-	Box.cpp
-	ViewPort.h
-	ViewPort.cpp
-	Renderer.h
-	Renderer.cpp
-	GLObject2D.h
-	GLObject2D.cpp
-	ProgramManager.cpp
-	ProgramManager.h
-	FontManager.cpp
-	FontManager.h
-	GlyphOutlineGenerator.h
-	GlyphOutlineGenerator.cpp
-	Const.h
+    OpenGLHeader.h
+    main.cpp 
+    OpenGLWidget.h
+    OpenGLWidget.cpp
+    Box.h
+    Box.cpp
+    ViewPort.h
+    ViewPort.cpp
+    Renderer.h
+    Renderer.cpp
+    GLObject2D.h
+    GLObject2D.cpp
+    ProgramManager.cpp
+    ProgramManager.h
+    FontManager.cpp
+    FontManager.h
+    GlyphOutlineGenerator.h
+    GlyphOutlineGenerator.cpp
+    Const.h
     ShaderSource.h
-	Geometry.h
-	Geometry.cpp
-	Operation.h
-	Operation.cpp
-	DemoOperation.h
-	DemoOperation.cpp
-	DefaultOperation.cpp
-	EditVectorFontOperation.h
-	EditVectorFontOperation.cpp
-	UnicodeOutlineOperation.h
-	UnicodeOutlineOperation.cpp
-	AllChineseChar.h
+    Geometry.h
+    Geometry.cpp
+    Operations/Operation.h
+    Operations/Operation.cpp
+    Operations/DemoOperation.h
+    Operations/DemoOperation.cpp
+    Operations/DefaultOperation.cpp
+    Operations/EditVectorFontOperation.h
+    Operations/EditVectorFontOperation.cpp
+    Operations/UnicodeOutlineOperation.h
+    Operations/UnicodeOutlineOperation.cpp
+    AllChineseChar.h
     Utils.h
     Utils.cpp
-	FreeTypeUtils.h
-	FreeTypeUtils.cpp
+    FreeTypeUtils.h
+    FreeTypeUtils.cpp
 )
+
+get_target_property(ProjectSourceFiles ${TARGET_NAME} SOURCES)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ProjectSourceFiles})
+
 
 target_include_directories(${TARGET_NAME} PRIVATE ${GLEW_INCLUDE_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${FREETYPE_INCLUDE_DIR})

@@ -6,10 +6,10 @@
 #include "OpenGLHeader.h"
 #include "GLObject2D.h"
 #include "ProgramManager.h"
-#include "Operation.h"
-#include "DemoOperation.h"
 #include "FontManager.h"
 #include "ViewPort.h"
+#include "Operations/Operation.h"
+#include "Operations/DemoOperation.h"
 
 
 Renderer::Renderer()

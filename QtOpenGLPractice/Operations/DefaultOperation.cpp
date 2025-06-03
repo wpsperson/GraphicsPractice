@@ -1,7 +1,7 @@
-#include "Operation.h"
-#include "DemoOperation.h"
-#include "EditVectorFontOperation.h"
-#include "UnicodeOutlineOperation.h"
+#include "Operations/Operation.h"
+#include "Operations/DemoOperation.h"
+#include "Operations/EditVectorFontOperation.h"
+#include "Operations/UnicodeOutlineOperation.h"
 
 Operation* createDefaultOperation(const std::string &name)
 {
@@ -26,6 +26,11 @@ Operation* createDefaultOperation(const std::string &name)
         return edit_font;
     }
     else if (name == "UnicodeOutlineOperation")
+    {
+        UnicodeOutlineOperation* font_outline = new UnicodeOutlineOperation;
+        return font_outline;
+    }
+    else if (name == "FrameBufferObject")
     {
         UnicodeOutlineOperation* font_outline = new UnicodeOutlineOperation;
         return font_outline;

@@ -1,4 +1,4 @@
-#include "EditVectorFontOperation.h"
+#include "Operations/EditVectorFontOperation.h"
 
 #include <cassert>
 #include <QtGui/QWheelEvent>

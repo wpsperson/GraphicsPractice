@@ -8,7 +8,7 @@
 
 #include "Renderer.h"
 #include "ViewPort.h"
-#include "Operation.h"
+#include "Operations/Operation.h"
 
 Operation* createDefaultOperation(const std::string& name);
 

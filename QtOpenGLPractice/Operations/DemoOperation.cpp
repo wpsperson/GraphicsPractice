@@ -1,4 +1,4 @@
-﻿#include "DemoOperation.h"
+﻿#include "Operations/DemoOperation.h"
 
 #include <cassert>
 #include <QtGui/QWheelEvent>
@@ -10,8 +10,8 @@
 #include "ProgramManager.h"
 #include "FontManager.h"
 #include "OpenGLHeader.h"
-#include "EditVectorFontOperation.h"
-#include "UnicodeOutlineOperation.h"
+#include "Operations/EditVectorFontOperation.h"
+#include "Operations/UnicodeOutlineOperation.h"
 
 
 

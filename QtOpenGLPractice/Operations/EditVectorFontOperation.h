@@ -1,7 +1,8 @@
 #pragma once
+#include "Operations/Operation.h"
+
 #include <vector>
 
-#include "Operation.h"
 #include "GLObject2D.h"
 #include "Utils.h"
 

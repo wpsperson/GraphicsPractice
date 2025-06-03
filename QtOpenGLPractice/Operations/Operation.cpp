@@ -1,4 +1,4 @@
-#include "Operation.h"
+#include "Operations/Operation.h"
 
 
 void Operation::setName(const std::string& name) noexcept
