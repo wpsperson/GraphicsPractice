@@ -1,6 +1,6 @@
 #include "FontManager.h"
 #include <freetype/freetype.h>
-#include "glad/glad.h"
+#include "OpenGLHeader.h"
 #pragma warning(disable: 4996)
 
 

@@ -11,10 +11,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
+find_package(GLEW REQUIRED)
 find_package(FreeType REQUIRED)
 #find_package(ZLIB REQUIRED)
 
 add_executable(${TARGET_NAME}
+	OpenGLHeader.h
 	main.cpp 
 	OpenGLWidget.h
 	OpenGLWidget.cpp
@@ -50,10 +52,17 @@ add_executable(${TARGET_NAME}
     Utils.cpp
 	FreeTypeUtils.h
 	FreeTypeUtils.cpp
-	glad.c
 )
 
+target_include_directories(${TARGET_NAME} PRIVATE ${GLEW_INCLUDE_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${FREETYPE_INCLUDE_DIR})
-target_link_libraries(${TARGET_NAME} Qt5::Widgets ${CMAKE_DL_LIBS})
-target_link_libraries(${TARGET_NAME} debug "${FREETYPE_LIBRARY_DEBUG}" optimized "${FREETYPE_LIBRARY}")
+
+if(WIN32)
+    target_link_libraries(${TARGET_NAME} PRIVATE opengl32 glu32)
+else ()
+    target_link_libraries(${TARGET_NAME} PRIVATE GL GLU pthread)
+endif ()
+
+target_link_libraries(${TARGET_NAME} PRIVATE Qt5::Widgets ${CMAKE_DL_LIBS} ${GLEW_LIB})
+target_link_libraries(${TARGET_NAME} PRIVATE debug "${FREETYPE_LIBRARY_DEBUG}" optimized "${FREETYPE_LIBRARY}")
 #target_link_libraries(${TARGET_NAME} debug "${ZLIB_LIBRARY_DEBUG}" optimized "${ZLIB_LIBRARY}")

@@ -1,6 +1,6 @@
 #include "programmanager.h"
 #include "ShaderSource.h"
-#include "glad/glad.h"
+#include "OpenGLHeader.h"
 
 ProgramManager::ProgramManager()
 {

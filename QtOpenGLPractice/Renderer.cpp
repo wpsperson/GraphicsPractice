@@ -3,7 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <exception>
-#include "glad/glad.h"
+#include "OpenGLHeader.h"
 #include "GLObject2D.h"
 #include "ProgramManager.h"
 #include "Operation.h"
@@ -29,10 +29,20 @@ Renderer::~Renderer()
 
 bool Renderer::initialize(std::string& err)
 {
-    if (!gladLoadGL())
+    GLenum GlewInitResult = glewInit();
+    if (GLEW_OK != GlewInitResult)
     {
-        err = "failed to load glad!";
-        return false;
+        const char* error_message = reinterpret_cast<const char*>(glewGetErrorString(GlewInitResult));
+        if (error_message)
+        {
+            std::cerr << error_message << std::endl;
+        }
+        exit(EXIT_FAILURE);
+    }
+
+    if (!GLEW_VERSION_2_0)
+    {
+        throw std::exception("Required OpenGL 2.0 Features are not available!");
     }
     if (!m_programMgr->initialize(err))
     {

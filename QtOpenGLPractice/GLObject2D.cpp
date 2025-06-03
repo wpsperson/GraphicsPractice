@@ -4,7 +4,7 @@
 #include <chrono>
 #include <cassert>
 #include <exception>
-#include "glad/glad.h"
+#include "OpenGLHeader.h"
 #include "Renderer.h"
 #include "ShaderSource.h"
 

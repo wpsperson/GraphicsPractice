@@ -9,7 +9,7 @@
 #include "ViewPort.h"
 #include "ProgramManager.h"
 #include "FontManager.h"
-#include "glad/glad.h"
+#include "OpenGLHeader.h"
 #include "OpenGLWidget.h"
 
 EditVectorFont::~EditVectorFont()
