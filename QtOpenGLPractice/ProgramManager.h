@@ -9,6 +9,7 @@ enum class ProgramType : unsigned char
 {
     BaseColor = 0,
     TextureFont,
+    Texture2D,
 };
 
 using AttribLoc = std::vector<std::pair<int, const char*>>;
@@ -24,6 +25,10 @@ public:
 
     unsigned int program(ProgramType type) const noexcept;
 
+    void applyProgram(ProgramType type) noexcept;
+
+    void uniformViewBox(const ViewBox& view) noexcept;
+
     void applyProgram(ProgramType type, const Color3f &color, float opaque, ViewBox *view) noexcept;
 
     void releaseProgram() noexcept;
@@ -33,5 +38,6 @@ private:
 
 private:
     std::map<ProgramType, unsigned int> m_programs;
+    unsigned int m_current_program = 0;
 };
 

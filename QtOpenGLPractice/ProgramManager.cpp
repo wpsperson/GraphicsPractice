@@ -25,6 +25,7 @@ bool ProgramManager::initialize(std::string& err) noexcept
         return false;
     }
     m_programs[ProgramType::BaseColor] = program;
+
     AttribLoc fontAttribs;
     fontAttribs.emplace_back(std::make_pair(0, "aPos"));
     fontAttribs.emplace_back(std::make_pair(1, "aUV"));
@@ -35,6 +36,13 @@ bool ProgramManager::initialize(std::string& err) noexcept
     //GLint aPos = glGetAttribLocation(program, "aPos");
     //GLint aUV = glGetAttribLocation(program, "aUV");
     m_programs[ProgramType::TextureFont] = program;
+
+    if (!createProgram(kFontVertexSource, kTextureFragmentSource, fontAttribs, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::Texture2D] = program;
+
     return true;
 }
 
@@ -43,10 +51,24 @@ unsigned int ProgramManager::program(ProgramType type) const noexcept
     return m_programs.at(type);
 }
 
+void ProgramManager::applyProgram(ProgramType type) noexcept
+{
+    unsigned int program = this->program(type);
+    glUseProgram(program);
+    m_current_program = program;
+}
+
+void ProgramManager::uniformViewBox(const ViewBox& view) noexcept
+{
+    int nPosView = glGetUniformLocation(m_current_program, "view");
+    glUniform4f(nPosView, view.left, view.right, view.bttm, view.top);
+}
+
 void ProgramManager::applyProgram(ProgramType type, const Color3f& color, float opaque, ViewBox* view) noexcept
 {
     unsigned int program = this->program(type);
     glUseProgram(program);
+    m_current_program = program;
 
     //be careful, if you want to change uniform in runtime, those code should between glUseProgram(m_program); updateUniform... glUseProgram(0);
     int nPosBaseColor = glGetUniformLocation(program, "baseColor");

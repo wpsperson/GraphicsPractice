@@ -25,6 +25,12 @@ void Operation::paint(Renderer* renderer) noexcept
 {
 }
 
+void Operation::resize(int w, int h) noexcept
+{
+    m_width = w;
+    m_height = h;
+}
+
 void Operation::processMouseClick(QMouseEvent* eve)
 {
 }

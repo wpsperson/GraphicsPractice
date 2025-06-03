@@ -58,3 +58,11 @@ const char* const kFontFragmentSource =
 "    gl_FragColor = vec4(baseColor.xyz, texValue * baseColor.w); \n"
 "} \n";
 
+const char* const kTextureFragmentSource =
+"#version 110 \n"
+"uniform sampler2D textureUnit; \n"
+"varying vec2 varyingUV; \n"
+"void main() \n"
+"{ \n"
+"    gl_FragColor = texture2D(textureUnit, varyingUV); \n"
+"} \n";

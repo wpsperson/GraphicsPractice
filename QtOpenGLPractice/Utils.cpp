@@ -143,3 +143,18 @@ std::string timeToStr(const std::string& format/* = "%Y-%m-%d %H-%M-%S"*/)
     std::string str_time = oss.str();
     return str_time;
 }
+
+Point toFPoint(const llPoint& pt)
+{
+    return Point(static_cast<float>(pt.x), static_cast<float>(pt.y));
+}
+
+ViewBox Utils::toViewBox(const Box& box) noexcept
+{
+    ViewBox vb;
+    vb.left = static_cast<float>(box.left());
+    vb.bttm = static_cast<float>(box.bottom());
+    vb.right = static_cast<float>(box.right());
+    vb.top = static_cast<float>(box.top());
+    return vb;
+}

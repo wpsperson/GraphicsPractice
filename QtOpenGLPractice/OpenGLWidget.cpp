@@ -16,6 +16,8 @@ OpenGLWidget::OpenGLWidget(QWidget* parent/* = 0*/)
 {
     m_renderer = new Renderer();
     this->resize(2000, 2000);
+    setMouseTracking(true); // mouse move
+    setFocusPolicy(Qt::StrongFocus); // key input
 }
 
 OpenGLWidget::~OpenGLWidget()
@@ -42,6 +44,7 @@ void OpenGLWidget::resizeGL(int w, int h)
     m_width = w;
     m_height = h;
     m_renderer->resize(w, h);
+    m_operation->resize(w, h);
 }
 
 void OpenGLWidget::paintGL()

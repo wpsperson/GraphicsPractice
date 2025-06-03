@@ -8,6 +8,7 @@
 #include "ProgramManager.h"
 #include "FontManager.h"
 #include "ViewPort.h"
+#include "Utils.h"
 #include "Operations/Operation.h"
 #include "Operations/DemoOperation.h"
 
@@ -100,7 +101,7 @@ void Renderer::paintObject(GLObject2D* object) noexcept
 {
     const Color3f& color = object->color();
     float opaque = object->opaque();
-    ViewBox vb = toViewBox(m_viewport->getView());
+    ViewBox vb = Utils::toViewBox(m_viewport->getView());
     m_programMgr->applyProgram(ProgramType::BaseColor, color, opaque, &vb);
     object->draw();
     m_programMgr->releaseProgram();
@@ -110,7 +111,7 @@ void Renderer::paintFont(GLObject2D* object) noexcept
 {
     const Color3f& color = object->color();
     float opaque = object->opaque();
-    ViewBox vb = toViewBox(m_viewport->getView());
+    ViewBox vb = Utils::toViewBox(m_viewport->getView());
     m_programMgr->applyProgram(ProgramType::TextureFont, color, opaque, &vb);
     unsigned int texture_id = m_fontMgr->fontTexutre();
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -119,19 +120,9 @@ void Renderer::paintFont(GLObject2D* object) noexcept
     m_programMgr->releaseProgram();
 }
 
-ViewBox Renderer::toViewBox(const Box& box) noexcept
-{
-    ViewBox vb;
-    vb.left = static_cast<float>(box.left());
-    vb.bttm = static_cast<float>(box.bottom());
-    vb.right = static_cast<float>(box.right());
-    vb.top = static_cast<float>(box.top());
-    return vb;
-}
-
 void Renderer::legacyProjection() noexcept
 {
-    ViewBox vb = toViewBox(m_viewport->getView());
+    ViewBox vb = Utils::toViewBox(m_viewport->getView());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(vb.left, vb.right, vb.bttm, vb.top, -1, 1);

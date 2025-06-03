@@ -47,6 +47,8 @@ add_executable(${TARGET_NAME}
     Operations/EditVectorFontOperation.cpp
     Operations/UnicodeOutlineOperation.h
     Operations/UnicodeOutlineOperation.cpp
+    Operations/FBOOperation.h
+    Operations/FBOOperation.cpp
     AllChineseChar.h
     Utils.h
     Utils.cpp

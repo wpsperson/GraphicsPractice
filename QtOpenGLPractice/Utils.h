@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 #include <string>
+#include "Const.h"
+#include "Box.h"
 
 const int kOldFontDim = 32767;
 const int kNewFontDim = 100;
@@ -51,5 +53,12 @@ void writeFontFileInNewFormat(const char* file, const VFontLibrary& lib);
 
 std::string timeToStr(const std::string& format = "%Y-%m-%d %H-%M-%S");
 
+Point toFPoint(const llPoint& pt);
 
+
+class Utils
+{
+public:
+    static ViewBox toViewBox(const Box& box) noexcept;
+};
 

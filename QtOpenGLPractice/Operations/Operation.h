@@ -22,6 +22,8 @@ public:
 
     virtual void paint(Renderer* renderer) noexcept;
 
+    virtual void resize(int w, int h) noexcept;
+
     virtual void processMouseClick(QMouseEvent* eve);
 
     virtual void processMouseRelease(QMouseEvent* eve);
@@ -35,4 +37,6 @@ public:
 protected:
     std::string m_name;
     OpenGLWidget* m_widget = nullptr;
+    int m_width = 0;
+    int m_height = 0;
 };
