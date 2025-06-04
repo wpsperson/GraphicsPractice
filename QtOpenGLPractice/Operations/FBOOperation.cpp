@@ -163,11 +163,15 @@ void FBOOperation::drawStaticScene()
         m_static->setOpaque(0.5f);
         m_static->upload(pts.data(), int(pts.size()));
     }
+
+    GLint origin_fbo = 0;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origin_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glViewport(0, 0, m_width, m_height);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer->paintObject(m_static);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // restore to origin fbo in QOpenGLWidget
+    glBindFramebuffer(GL_FRAMEBUFFER, origin_fbo);
 
 }
 
@@ -209,7 +213,6 @@ void FBOOperation::drawDynamicScene()
     {
         return;
     }
-
     if (!m_dynamic)
     {
         m_dynamic = new GLObject2D(m_renderer, DrawMode::Fill);
