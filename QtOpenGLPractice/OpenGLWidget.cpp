@@ -49,7 +49,7 @@ void OpenGLWidget::resizeGL(int w, int h)
 
 void OpenGLWidget::paintGL()
 {
-    m_renderer->render();
+    m_renderer->beforeRender();
     m_operation->paint(m_renderer);
     m_renderer->endRender();
 }
@@ -63,6 +63,7 @@ void OpenGLWidget::wheelEvent(QWheelEvent* eve)
     llPoint fixed_pt = m_renderer->viewPort()->screenToDB(x, y);
     double zoom_factor = delta > 0 ? 0.8 : 1.25; // 0.5 : 2.0;
     m_renderer->viewPort()->zoomView(fixed_pt.x, fixed_pt.y, zoom_factor);
+    m_operation->processMouseWheel(eve);
     update();
 }
 

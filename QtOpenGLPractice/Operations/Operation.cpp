@@ -50,3 +50,7 @@ void Operation::processMouseMove(QMouseEvent* eve)
 void Operation::processKeyPress(QKeyEvent* event)
 {
 }
+
+void Operation::processMouseWheel(QWheelEvent* eve)
+{
+}

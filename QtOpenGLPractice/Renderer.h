@@ -22,7 +22,7 @@ public:
 
     void resize(int width, int height);
 
-    void render();
+    void beforeRender();
 
     void endRender();
 

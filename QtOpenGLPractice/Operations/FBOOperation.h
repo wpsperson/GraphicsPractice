@@ -2,6 +2,8 @@
 
 #include "Operations/Operation.h"
 #include "GLObject2D.h"
+#include "OpenGLHeader.h"
+
 
 class FBOOperation : public Operation
 {
@@ -20,6 +22,8 @@ public:
 
     void processMouseMove(QMouseEvent* eve) override;
 
+    void processMouseWheel(QWheelEvent* eve) override;
+
 private:
     bool initFBO();
 
@@ -30,15 +34,13 @@ private:
     void drawDynamicScene();
 
 private:
-    bool m_support_fbo = true;
     Renderer* m_renderer = nullptr;
     GLObject2D* m_static = nullptr;
     GLObject2D* m_tex_obj = nullptr;
     GLObject2D* m_dynamic = nullptr;
     unsigned int m_fbo = 0;
     unsigned int m_texture = 0;
-    bool m_fbo_finish = false;
-
+    bool m_texture_done = false;
     // mouse trace
     bool m_drag = false;
     llPoint m_mouse_pt;

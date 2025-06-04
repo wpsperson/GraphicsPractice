@@ -81,6 +81,7 @@ void ProgramManager::applyProgram(ProgramType type, const Color3f& color, float 
 void ProgramManager::releaseProgram() noexcept
 {
     glUseProgram(0);
+    m_current_program = 0;
 }
 
 bool ProgramManager::createProgram(const char* vert, const char* frag, const AttribLoc& attribs, unsigned int& program, std::string& errorMsg) noexcept

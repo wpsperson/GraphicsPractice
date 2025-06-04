@@ -39,7 +39,7 @@ struct VStroke
 
 struct VFont
 {
-    unsigned char ch;
+    unsigned char ch = 0;
     std::vector<VStroke> strokes;
 };
 

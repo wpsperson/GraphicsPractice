@@ -26,97 +26,49 @@ FBOOperation::~FBOOperation()
     {
         delete m_dynamic;
     }
+    if (m_tex_obj)
+    {
+        delete m_tex_obj;
+    }
+    if (m_texture)
+    {
+        glDeleteTextures(1, &m_texture);
+    }
+    if (m_fbo)
+    {
+        glDeleteFramebuffers(1, &m_fbo);
+    }
 }
 
 void FBOOperation::initialize(Renderer* renderer) noexcept
 {
     m_renderer = renderer;
-
-
-
-
-
 }
 
 void FBOOperation::paint(Renderer* renderer) noexcept
 {
-    // try to draw a texture.
-
-    if (0 == m_texture)
+    // first time
+    if (0 == m_fbo)
     {
-        std::vector<unsigned char> images;
-        images.reserve(m_width * m_height * 4);
-        for (int idx = 0; idx < m_height; idx++)
-        {
-            unsigned char blue = (idx * 255) / m_height;
-            for (int col = 0; col < m_width; col++)
-            {
-                images.emplace_back(uchar(127));
-                images.emplace_back(uchar(127));
-                images.emplace_back(uchar(blue));
-                images.emplace_back(uchar(255));
-            }
-        }
-        glGenTextures(1, &m_texture);
-        glBindTexture(GL_TEXTURE_2D, m_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, images.data());
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-
-        std::vector<Point> buffer;
-        // buffer emplace back both point and uvs;
-
-        const Box& view = m_renderer->viewPort()->getView();
-        //Point pt0(view.xmin, view.ymin);
-        //Point pt1(view.xmax, view.ymin);
-        //Point pt2(view.xmax, view.ymax);
-        //Point pt3(view.xmin, view.ymax);
-        Point pt0(0.0f, 0.0f);
-        Point pt1(100000.0f, 0.0f);
-        Point pt2(100000.0f, 100000.0f);
-        Point pt3(0.0f, 100000.0f);
-        Point uv0(0.0f, 0.0f);
-        Point uv1(1.0f, 0.0f);
-        Point uv2(1.0f, 1.0f);
-        Point uv3(0.0f, 1.0f);
-        std::vector<Point> pts = { pt0, uv0, pt1, uv1, pt2, uv2, pt0, uv0, pt2,uv2, pt3, uv3 };
-        m_tex_obj = new GLObject2D(m_renderer, DrawMode::Fill);
-        m_tex_obj->upload(pts.data(), pts.size());
+        initFBO();
+    }
+    if (!m_texture_done)
+    {
+        std::cout << "drawStaticScene...." << std::endl;
+        drawStaticScene();
+        m_texture_done = true;
     }
 
-    ProgramManager* program = m_renderer->programMgr();;
-    ViewBox vb = Utils::toViewBox(m_renderer->viewPort()->getView());
-    program->applyProgram(ProgramType::Texture2D);
-    program->uniformViewBox(vb);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
-    m_tex_obj->drawAsFont();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    program->releaseProgram();
-
-
-    return;
-    if (m_support_fbo)
+    // loop
+    if (m_texture_done)
     {
-        // first time
-        if (!m_fbo_finish)
-        {
-            if (initFBO())
-            {
-                drawStaticScene();
-                m_fbo_finish = true;
-            }
-        }
-        // loop
-        if (m_fbo_finish)
-        {
-            applyTexture();
-            //drawStaticScene();
-            //drawDynamicScene();
-        }
+        std::cout << "draw texture and dynamic...." << std::endl;
+        applyTexture();
+        drawDynamicScene();
     }
     else
     {
-
+        std::cout << "m_texture_done is not true!" << std::endl;
     }
 }
 
@@ -125,6 +77,10 @@ void FBOOperation::processMouseClick(QMouseEvent* eve)
     if (eve->button() == Qt::LeftButton)
     {
         m_drag = true;
+        m_widget->update();
+    }
+    else if (eve->button() == Qt::RightButton)
+    {
         m_widget->update();
     }
 }
@@ -147,6 +103,12 @@ void FBOOperation::processMouseMove(QMouseEvent* eve)
     {
         m_widget->update();
     }
+}
+
+void FBOOperation::processMouseWheel(QWheelEvent* eve)
+{
+    std::cout << "processMouseWheel...." << std::endl;
+    m_texture_done = false;
 }
 
 bool FBOOperation::initFBO()
@@ -199,42 +161,46 @@ void FBOOperation::drawStaticScene()
         m_static = new GLObject2D(m_renderer, DrawMode::Fill);
         m_static->setColor(kColorGreen);
         m_static->setOpaque(0.5f);
-        m_static->upload(pts.data(), pts.size());
+        m_static->upload(pts.data(), int(pts.size()));
     }
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glViewport(0, 0, m_width, m_height);
-    //const Box& view = m_renderer->viewPort()->getView();
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    //glOrtho(view.xmin, view.xmax, view.ymin, view.ymax, -1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer->paintObject(m_static);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void FBOOperation::applyTexture()
 {
     glViewport(0, 0, m_width, m_height);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+
     if (!m_tex_obj)
     {
-        const Box& view = m_renderer->viewPort()->getView();
-        Point pta(view.xmin, view.ymin);
-        Point ptb(view.xmax, view.ymin);
-        Point ptc(view.xmax, view.ymax);
-        Point ptd(view.xmin, view.ymax);
-        std::vector<Point> pts{ pta, ptb, ptc, ptc, ptd, pta };
-        m_static = new GLObject2D(m_renderer, DrawMode::Fill);
-        m_static->setColor(kColorGreen);
-        m_static->setOpaque(0.5f);
-        m_static->upload(pts.data(), pts.size());
+        m_tex_obj = new GLObject2D(m_renderer, DrawMode::Fill);
     }
+    std::vector<Point> buffer;
+    const Box& view = m_renderer->viewPort()->getView();
+    Point pt0(view.xmin, view.ymin);
+    Point pt1(view.xmax, view.ymin);
+    Point pt2(view.xmax, view.ymax);
+    Point pt3(view.xmin, view.ymax);
+    Point uv0(0.0f, 0.0f);
+    Point uv1(1.0f, 0.0f);
+    Point uv2(1.0f, 1.0f);
+    Point uv3(0.0f, 1.0f);
+    std::vector<Point> pts = { pt0, uv0, pt1, uv1, pt2, uv2, pt0, uv0, pt2,uv2, pt3, uv3 };
+    m_tex_obj->upload(pts.data(), int(pts.size()));
 
-    ProgramManager* program = m_renderer->programMgr();
-    program;
-
+    ProgramManager* program = m_renderer->programMgr();;
+    ViewBox vb = Utils::toViewBox(m_renderer->viewPort()->getView());
+    program->applyProgram(ProgramType::Texture2D);
+    program->uniformViewBox(vb);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    m_tex_obj->drawAsFont();
     glBindTexture(GL_TEXTURE_2D, 0);
+    program->releaseProgram();
 }
 
 void FBOOperation::drawDynamicScene()
@@ -255,6 +221,6 @@ void FBOOperation::drawDynamicScene()
     Point pt2(pt1.x + size, pt1.y);
     Point pt3(pt1.x, pt1.y + size);
     std::vector<Point> pts{pt1, pt2, pt3};
-    m_dynamic->upload(pts.data(), pts.size());
+    m_dynamic->upload(pts.data(), int(pts.size()));
     m_renderer->paintObject(m_dynamic);
 }

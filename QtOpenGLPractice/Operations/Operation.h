@@ -6,6 +6,7 @@ class Renderer;
 class QMouseEvent;
 class QKeyEvent;
 class OpenGLWidget;
+class QWheelEvent;
 
 class Operation
 {
@@ -33,6 +34,8 @@ public:
     virtual void processMouseMove(QMouseEvent* eve);
 
     virtual void processKeyPress(QKeyEvent* event);
+
+    virtual void processMouseWheel(QWheelEvent* eve);
 
 protected:
     std::string m_name;
