@@ -16,6 +16,8 @@ public:
 
     void paint(Renderer* renderer) noexcept override;
 
+    void resize(int w, int h) noexcept override;
+
     void processMouseClick(QMouseEvent* eve) override;
 
     void processMouseRelease(QMouseEvent* eve) override;

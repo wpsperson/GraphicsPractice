@@ -78,6 +78,20 @@ void FBOOperation::paint(Renderer* renderer) noexcept
     }
 }
 
+void FBOOperation::resize(int w, int h) noexcept
+{
+    Operation::resize(w, h);
+
+    // resize texture.
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+    std::cout << "resize event...." << std::endl;
+    m_texture_done = false;
+
+
+}
+
 void FBOOperation::processMouseClick(QMouseEvent* eve)
 {
     if (eve->button() == Qt::LeftButton)
