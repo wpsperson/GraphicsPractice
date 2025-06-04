@@ -43,14 +43,20 @@ FBOOperation::~FBOOperation()
 void FBOOperation::initialize(Renderer* renderer) noexcept
 {
     m_renderer = renderer;
+    std::pair<int, int> version = m_renderer->getVersion();
+    if (version.first >= 3)
+    {
+        m_support_fbo = true;
+    }
 }
 
 void FBOOperation::paint(Renderer* renderer) noexcept
 {
     // first time
-    if (0 == m_fbo)
+    if (m_first_time)
     {
         initFBO();
+        m_first_time = false;
     }
     if (!m_texture_done)
     {
@@ -113,21 +119,31 @@ void FBOOperation::processMouseWheel(QWheelEvent* eve)
 
 bool FBOOperation::initFBO()
 {
-    glGenFramebuffers(1, &m_fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    GLint origin_fbo = 0;
+    if (m_support_fbo)
+    {
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origin_fbo);
+        glGenFramebuffers(1, &m_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    }
 
+    // no matter GPU support fbo, we use texture.
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    if (m_support_fbo)
     {
-        std::cerr << "Fail to complete frame buffer!" << std::endl;
-        return false;
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        {
+            std::cerr << "Fail to complete frame buffer!" << std::endl;
+            return false;
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, origin_fbo);
     }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     return true;
 }
 
@@ -165,13 +181,27 @@ void FBOOperation::drawStaticScene()
     }
 
     GLint origin_fbo = 0;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origin_fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    if (m_support_fbo)
+    {
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origin_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    }
+
     glViewport(0, 0, m_width, m_height);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer->paintObject(m_static);
-    // restore to origin fbo in QOpenGLWidget
-    glBindFramebuffer(GL_FRAMEBUFFER, origin_fbo);
+
+    if (m_support_fbo)
+    {
+        // restore to origin fbo in QOpenGLWidget
+        glBindFramebuffer(GL_FRAMEBUFFER, origin_fbo);
+    }
+    else
+    {
+        glBindTexture(GL_TEXTURE_2D, m_texture);
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, m_width, m_height, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 
 }
 

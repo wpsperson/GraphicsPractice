@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include "OpenGLHeader.h"
 
 
 void parseFontFile(const char* file, int font_size, VFontLibrary &lib)
@@ -157,4 +158,19 @@ ViewBox Utils::toViewBox(const Box& box) noexcept
     vb.right = static_cast<float>(box.right());
     vb.top = static_cast<float>(box.top());
     return vb;
+}
+
+bool Utils::getOpenGLVersion(int& major, int& minor)
+{
+    const char* ptr = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    std::string str_version(ptr);
+    if (str_version.size() < 3)
+    {
+        return false;
+    }
+    std::string str_major = str_version.substr(0, 1);
+    std::string str_minor = str_version.substr(2, 1);
+    major = std::stoi(str_major);
+    minor = std::stoi(str_minor);
+    return true;
 }

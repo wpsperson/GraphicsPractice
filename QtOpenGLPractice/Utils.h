@@ -60,5 +60,7 @@ class Utils
 {
 public:
     static ViewBox toViewBox(const Box& box) noexcept;
+
+    static bool getOpenGLVersion(int& major, int& minor);
 };
 

@@ -40,11 +40,18 @@ bool Renderer::initialize(std::string& err)
         }
         exit(EXIT_FAILURE);
     }
-
+    if (!Utils::getOpenGLVersion(m_major_version, m_minor_version))
+    {
+        throw std::exception("Fail to read OpenGL version!");
+        std::exit(EXIT_FAILURE);
+    }
     if (!GLEW_VERSION_2_0)
     {
         throw std::exception("Required OpenGL 2.0 Features are not available!");
+        std::exit(EXIT_FAILURE);
     }
+    
+
     if (!m_programMgr->initialize(err))
     {
         return false;
@@ -95,6 +102,11 @@ FontManager* Renderer::fontMgr() noexcept
 ViewPort* Renderer::viewPort() const noexcept
 {
     return m_viewport;
+}
+
+std::pair<int, int> Renderer::getVersion() const noexcept
+{
+    return std::pair<int, int>(m_major_version, m_minor_version);
 }
 
 void Renderer::paintObject(GLObject2D* object) noexcept

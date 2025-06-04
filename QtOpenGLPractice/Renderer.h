@@ -32,6 +32,8 @@ public:
 
     ViewPort* viewPort() const noexcept;
 
+    std::pair<int, int> getVersion() const noexcept;
+
     void paintObject(GLObject2D* object) noexcept;
 
     void paintFont(GLObject2D* object) noexcept;
@@ -43,4 +45,6 @@ private:
     FontManager* m_fontMgr = nullptr;
     ViewPort* m_viewport = nullptr;
     std::chrono::steady_clock::time_point m_start_time;
+    int m_major_version = 0;
+    int m_minor_version = 0;
 };
