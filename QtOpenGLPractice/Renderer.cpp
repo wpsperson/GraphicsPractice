@@ -61,9 +61,13 @@ bool Renderer::initialize(std::string& err)
         return false;
     }
 
+    glStencilFunc(GL_NOTEQUAL, 1, 0xff);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPointSize(5);
+    glEnable(GL_TEXTURE);
     return true;
 }
 
@@ -139,4 +143,37 @@ void Renderer::legacyProjection() noexcept
     glLoadIdentity();
     glOrtho(vb.left, vb.right, vb.bttm, vb.top, -1, 1);
 }
+
+void Renderer::beginStencil()
+{
+    glEnable(GL_STENCIL_TEST);
+    glClear(GL_STENCIL_BUFFER_BIT);
+}
+
+void Renderer::endStencil()
+{
+    glDisable(GL_STENCIL_TEST);
+}
+
+void Renderer::stencilFill()
+{
+    glStencilFunc(GL_GREATER, 1, 0xff);
+}
+
+void Renderer::stencilText()
+{
+    glStencilFunc(GL_EQUAL, 1, 0xff);
+}
+
+void Renderer::stencilVoidBegin()
+{
+    glStencilFunc(GL_GREATER, 2, 0xff);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+}
+
+void Renderer::stencilVoidEnd()
+{
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+}
+
 

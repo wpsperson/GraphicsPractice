@@ -39,11 +39,13 @@ private:
     bool m_support_fbo = false;
     Renderer* m_renderer = nullptr;
     GLObject2D* m_static = nullptr;
+    GLObject2D* m_sten_obj = nullptr;
+    GLObject2D* m_sten_void = nullptr;
     GLObject2D* m_tex_obj = nullptr;
     GLObject2D* m_dynamic = nullptr;
     unsigned int m_fbo = 0;
     unsigned int m_texture = 0;
-    bool m_first_time = true;
+    unsigned int m_stencil = 0;
     bool m_texture_done = false;
     // mouse trace
     bool m_drag = false;

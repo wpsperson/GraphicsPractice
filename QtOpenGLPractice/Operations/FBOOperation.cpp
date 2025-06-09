@@ -11,6 +11,7 @@
 #include "Utils.h"
 #include "ProgramManager.h"
 #include "OpenGLWidget.h"
+#include "Geometry.h"
 
 FBOOperation::FBOOperation()
 {
@@ -18,6 +19,14 @@ FBOOperation::FBOOperation()
 
 FBOOperation::~FBOOperation()
 {
+    if (m_sten_void)
+    {
+        delete m_sten_void;
+    }
+    if (m_sten_obj)
+    {
+        delete m_sten_obj;
+    }
     if (m_static)
     {
         delete m_static;
@@ -38,6 +47,10 @@ FBOOperation::~FBOOperation()
     {
         glDeleteFramebuffers(1, &m_fbo);
     }
+    if (m_stencil)
+    {
+        glDeleteRenderbuffers(1, &m_stencil);
+    }
 }
 
 void FBOOperation::initialize(Renderer* renderer) noexcept
@@ -48,16 +61,11 @@ void FBOOperation::initialize(Renderer* renderer) noexcept
     {
         m_support_fbo = true;
     }
+    initFBO();
 }
 
 void FBOOperation::paint(Renderer* renderer) noexcept
 {
-    // first time
-    if (m_first_time)
-    {
-        initFBO();
-        m_first_time = false;
-    }
     if (!m_texture_done)
     {
         std::cout << "drawStaticScene...." << std::endl;
@@ -85,11 +93,13 @@ void FBOOperation::resize(int w, int h) noexcept
     // resize texture.
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_stencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     std::cout << "resize event...." << std::endl;
     m_texture_done = false;
-
-
 }
 
 void FBOOperation::processMouseClick(QMouseEvent* eve)
@@ -150,6 +160,13 @@ bool FBOOperation::initFBO()
     if (m_support_fbo)
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
+
+        glGenRenderbuffers(1, &m_stencil);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_stencil);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_stencil);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_stencil);
+
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         {
             std::cerr << "Fail to complete frame buffer!" << std::endl;
@@ -192,6 +209,23 @@ void FBOOperation::drawStaticScene()
         m_static->setColor(kColorGreen);
         m_static->setOpaque(0.5f);
         m_static->upload(pts.data(), int(pts.size()));
+
+
+        std::vector<Point> circle1 = generateCircle(0.0f, 0.0f, 100000.0f, 32);
+        std::vector<Point> circle2 = generateCircle(100000.0f, 0.0f, 100000.0f, 32);
+        std::vector<Point> circle3 = generateCircle(200000.0f, 0.0f, 100000.0f, 32);
+        pts.clear();
+        std::copy(circle1.begin(), circle1.end(), std::back_inserter(pts));
+        std::copy(circle2.begin(), circle2.end(), std::back_inserter(pts));
+        std::copy(circle3.begin(), circle3.end(), std::back_inserter(pts));
+        m_sten_obj = new GLObject2D(m_renderer, DrawMode::Fill);
+        m_sten_obj->setColor(kColorBlue);
+        m_sten_obj->setOpaque(0.5f);
+        m_sten_obj->upload(pts.data(), int(pts.size()));
+
+        std::vector<Point> void_pts = generateCircle(0.0, 0.0f, 50000.0f, 32);
+        m_sten_void = new GLObject2D(m_renderer, DrawMode::Fill);
+        m_sten_void->upload(void_pts.data(), int(void_pts.size()));
     }
 
     GLint origin_fbo = 0;
@@ -204,6 +238,14 @@ void FBOOperation::drawStaticScene()
     glViewport(0, 0, m_width, m_height);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer->paintObject(m_static);
+    // draw a stencil object
+    m_renderer->beginStencil();
+    m_renderer->stencilVoidBegin();
+    m_renderer->paintObject(m_sten_void);
+    m_renderer->stencilVoidEnd();
+    m_renderer->stencilFill();
+    m_renderer->paintObject(m_sten_obj);
+    m_renderer->endStencil();
 
     if (m_support_fbo)
     {

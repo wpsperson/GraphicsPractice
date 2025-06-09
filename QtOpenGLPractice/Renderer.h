@@ -40,6 +40,13 @@ public:
 
     void legacyProjection() noexcept;
 
+    void beginStencil();
+    void endStencil();
+    void stencilFill();
+    void stencilText();
+    void stencilVoidBegin();
+    void stencilVoidEnd();
+
 private:
     ProgramManager* m_programMgr = nullptr;
     FontManager* m_fontMgr = nullptr;
