@@ -86,16 +86,19 @@ void FBOOperation::paint(Renderer* renderer) noexcept
     }
 }
 
-void FBOOperation::resize(int w, int h) noexcept
+void FBOOperation::resizeOperation(int width, int height) noexcept
 {
-    Operation::resize(w, h);
+    Operation::resizeOperation(width, height);
+    double ratio = m_widget->devicePixelRatioF();
+    m_device_width = m_width * ratio;
+    m_device_height = m_height * ratio;
 
     // resize texture.
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_device_width, m_device_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindRenderbuffer(GL_RENDERBUFFER, m_stencil);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_device_width, m_device_height);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     std::cout << "resize event...." << std::endl;
@@ -152,9 +155,10 @@ bool FBOOperation::initFBO()
     }
 
     // no matter GPU support fbo, we use texture.
+    int dummy = 1000;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, dummy, dummy, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     if (m_support_fbo)
@@ -163,7 +167,7 @@ bool FBOOperation::initFBO()
 
         glGenRenderbuffers(1, &m_stencil);
         glBindRenderbuffer(GL_RENDERBUFFER, m_stencil);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, dummy, dummy);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_stencil);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_stencil);
 
@@ -235,7 +239,7 @@ void FBOOperation::drawStaticScene()
         glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     }
 
-    glViewport(0, 0, m_width, m_height);
+    glViewport(0, 0, m_device_width, m_device_height);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer->paintObject(m_static);
     // draw a stencil object
@@ -255,7 +259,7 @@ void FBOOperation::drawStaticScene()
     else
     {
         glBindTexture(GL_TEXTURE_2D, m_texture);
-        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, m_width, m_height, 0);
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, m_device_width, m_device_height, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
@@ -263,7 +267,7 @@ void FBOOperation::drawStaticScene()
 
 void FBOOperation::applyTexture()
 {
-    glViewport(0, 0, m_width, m_height);
+    glViewport(0, 0, m_device_width, m_device_height);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (!m_tex_obj)

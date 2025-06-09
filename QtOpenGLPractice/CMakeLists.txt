@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(CMAKE_MSVC_INCLUDE_FLAG_NO_EXTERNAL ON) # include directory use /I instead of /external:I
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
@@ -58,7 +59,6 @@ add_executable(${TARGET_NAME}
 
 get_target_property(ProjectSourceFiles ${TARGET_NAME} SOURCES)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ProjectSourceFiles})
-
 
 target_include_directories(${TARGET_NAME} PRIVATE ${GLEW_INCLUDE_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${FREETYPE_INCLUDE_DIR})

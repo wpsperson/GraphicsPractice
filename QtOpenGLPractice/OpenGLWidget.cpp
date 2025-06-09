@@ -15,7 +15,7 @@ Operation* createDefaultOperation(const std::string& name);
 OpenGLWidget::OpenGLWidget(QWidget* parent/* = 0*/)
 {
     m_renderer = new Renderer();
-    this->resize(2000, 2000);
+    this->resize(1000, 1000);
     setMouseTracking(true); // mouse move
     setFocusPolicy(Qt::StrongFocus); // key input
 }
@@ -39,12 +39,12 @@ void OpenGLWidget::initializeGL()
     m_operation->initialize(m_renderer);
 }
 
-void OpenGLWidget::resizeGL(int w, int h)
+void OpenGLWidget::resizeGL(int width, int height)
 {
-    m_width = w;
-    m_height = h;
-    m_renderer->resize(w, h);
-    m_operation->resize(w, h);
+    m_width = width;
+    m_height = height;
+    m_renderer->resize(width, height);
+    m_operation->resizeOperation(width, height);
 }
 
 void OpenGLWidget::paintGL()

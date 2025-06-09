@@ -16,7 +16,7 @@ public:
 
     void paint(Renderer* renderer) noexcept override;
 
-    void resize(int w, int h) noexcept override;
+    void resizeOperation(int width, int height) noexcept override;
 
     void processMouseClick(QMouseEvent* eve) override;
 
@@ -47,6 +47,8 @@ private:
     unsigned int m_texture = 0;
     unsigned int m_stencil = 0;
     bool m_texture_done = false;
+    int m_device_width = 0;
+    int m_device_height = 0;
     // mouse trace
     bool m_drag = false;
     llPoint m_mouse_pt;

@@ -1,6 +1,5 @@
 #include "Operations/Operation.h"
 
-
 void Operation::setName(const std::string& name) noexcept
 {
     m_name = name;
@@ -25,10 +24,10 @@ void Operation::paint(Renderer* renderer) noexcept
 {
 }
 
-void Operation::resize(int w, int h) noexcept
+void Operation::resizeOperation(int width, int height) noexcept
 {
-    m_width = w;
-    m_height = h;
+    m_width = width;
+    m_height = height;
 }
 
 void Operation::processMouseClick(QMouseEvent* eve)

@@ -23,7 +23,7 @@ public:
 
     virtual void paint(Renderer* renderer) noexcept;
 
-    virtual void resize(int w, int h) noexcept;
+    virtual void resizeOperation(int width, int height) noexcept;
 
     virtual void processMouseClick(QMouseEvent* eve);
 

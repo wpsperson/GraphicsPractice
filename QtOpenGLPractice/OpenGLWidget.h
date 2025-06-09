@@ -12,7 +12,7 @@ public:
     ~OpenGLWidget();
 protected:
     void initializeGL() override;
-    void resizeGL(int w, int h) override;
+    void resizeGL(int width, int height) override;
     void paintGL() override;
     void wheelEvent(QWheelEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
