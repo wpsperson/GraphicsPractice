@@ -50,6 +50,8 @@ add_executable(${TARGET_NAME}
     Operations/UnicodeOutlineOperation.cpp
     Operations/FBOOperation.h
     Operations/FBOOperation.cpp
+    Operations/PersistMapOperation.h
+    Operations/PersistMapOperation.cpp
     AllChineseChar.h
     Utils.h
     Utils.cpp
