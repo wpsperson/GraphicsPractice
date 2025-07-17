@@ -52,6 +52,8 @@ void OpenGLWidget::paintGL()
     m_renderer->beforeRender();
     m_operation->paint(m_renderer);
     m_renderer->endRender();
+    update();
+
 }
 
 void OpenGLWidget::wheelEvent(QWheelEvent* eve)

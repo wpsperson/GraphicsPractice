@@ -1,0 +1,185 @@
+#include "Performance/CirclesColorUniform.h"
+
+#include <cmath>
+#include <vector>
+#include "Const.h"
+
+#include "OpenGLHeader.h"
+
+// OpenGL Circle Renderer - Grouped by color, using uniform color and merged VBO per group
+
+#include <array>
+#include <unordered_map>
+
+
+struct Point2D {
+    float x, y;
+};
+
+struct Circle {
+    Point2D position;
+    float radius;
+    int color_index;
+};
+
+static const int NUM_CIRCLES_X = 100;
+static const int NUM_CIRCLES_Y = 100;
+static const int NUM_CIRCLES = NUM_CIRCLES_X * NUM_CIRCLES_Y;
+static const int NUM_SEGMENTS = 16; // circle tessellation segments
+
+struct Vertex {
+    float x, y;
+};
+
+struct VBOData
+{
+std::vector<Vertex> vertex_buffer;
+std::vector<unsigned int> index_buffer;
+};
+
+constexpr int COLOR_COUNT = 10;
+static float color_table[10][3] = {
+    {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 0.0}, {1.0, 0.0, 1.0},
+    {0.0, 1.0, 1.0}, {1.0, 0.5, 0.0}, {0.5, 0.0, 1.0}, {0.0, 0.5, 1.0}, {0.5, 0.5, 0.5}
+};
+
+static const char* vertex_shader_src = R"(
+#version 330 core
+layout(location = 0) in vec2 aPos;
+void main() {
+    gl_Position = vec4(aPos, 0.0, 1.0);
+}
+)";
+static const char* fragment_shader_src = R"(
+#version 330 core
+uniform vec3 uColor;
+out vec4 FragColor;
+void main() {
+    FragColor = vec4(uColor, 1.0);
+}
+)";
+
+GLuint shaderProgram;
+GLuint vaos[COLOR_COUNT];
+GLuint vbos[COLOR_COUNT];
+GLuint ebos[COLOR_COUNT];
+GLint uColorLoc;
+static std::vector<Circle> all_circles;
+
+
+GLuint compileShader(GLenum type, const char* src) {
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &src, nullptr);
+    glCompileShader(shader);
+    return shader;
+}
+
+GLuint createShaderProgram() {
+
+    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertex_shader_src);
+    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragment_shader_src);
+    GLuint program = glCreateProgram();
+
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glLinkProgram(program);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    return program;
+}
+
+static void regenerate_circles()
+{
+    all_circles.clear();
+    float spacing = 2.0f / NUM_CIRCLES_X;
+    for (int y = 0; y < NUM_CIRCLES_Y; ++y) {
+        for (int x = 0; x < NUM_CIRCLES_X; ++x) {
+            Circle c;
+            c.position = { -1.0f + x * spacing + spacing * 0.5f, -1.0f + y * spacing + spacing * 0.5f };
+            c.radius = spacing * 0.4f; // + 0.01f * std::sin(glfwGetTime() + x + y);
+            c.color_index = (x + y) % 10;
+            all_circles.push_back(c);
+        }
+    }
+}
+
+void generate_vbo(const Circle& circle, VBOData &data) {
+
+    std::vector<Vertex> & vertex_buffer = data.vertex_buffer;
+    std::vector<unsigned int> &index_buffer = data.index_buffer;
+
+    unsigned int base_idx = vertex_buffer.size();
+    vertex_buffer.push_back(Vertex(circle.position.x, circle.position.y));
+    for (int i = 0; i < NUM_SEGMENTS; ++i) 
+    {
+        float angle = (2.0f * M_PI * i) / NUM_SEGMENTS;
+        float px = circle.position.x + std::cos(angle) * circle.radius;
+        float py = circle.position.y + std::sin(angle) * circle.radius;
+        vertex_buffer.push_back(Vertex(px, py));
+    }
+    for (int i = 0; i < NUM_SEGMENTS; ++i)
+    {
+        index_buffer.push_back(base_idx);
+        index_buffer.push_back(base_idx + i + 1);
+        index_buffer.push_back(base_idx + ((i + 1) % NUM_SEGMENTS) + 1);
+    }
+}
+
+CirclesColorUniform::~CirclesColorUniform()
+{
+}
+
+void CirclesColorUniform::initialize(Renderer* renderer) noexcept
+{
+    shaderProgram = createShaderProgram();
+    uColorLoc = glGetUniformLocation(shaderProgram, "uColor");
+    glGenVertexArrays(COLOR_COUNT, vaos);
+    glGenBuffers(COLOR_COUNT, vbos);
+    glGenBuffers(COLOR_COUNT, ebos);
+    for (int i = 0; i < COLOR_COUNT; ++i) {
+        glBindVertexArray(vaos[i]);
+        glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
+        glBufferData(GL_ARRAY_BUFFER, (NUM_CIRCLES/COLOR_COUNT) * (NUM_SEGMENTS + 1) * 2 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[i]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, (NUM_CIRCLES / COLOR_COUNT) * NUM_SEGMENTS * 3 * sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW);
+    }
+}
+
+void CirclesColorUniform::paint(Renderer* renderer) noexcept
+{
+    regenerate_circles();
+
+    std::unordered_map<int, VBOData> color_vertex;
+    for (const auto& circle : all_circles)
+    {
+        VBOData &color_data = color_vertex[circle.color_index];
+        generate_vbo(circle, color_data);
+    }
+    for (int idx = 0; idx < COLOR_COUNT; idx++)
+    {
+        VBOData& data = color_vertex[idx];
+        const std::vector<Vertex> &vertex_buffer = data.vertex_buffer;
+        const std::vector<unsigned int> &index_buffer = data.index_buffer;
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbos[idx]);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertex_buffer.size() * sizeof(Vertex), vertex_buffer.data());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebos[idx]);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, index_buffer.size() * sizeof(unsigned int), index_buffer.data());
+    }
+
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(shaderProgram);
+    for (int i = 0; i < COLOR_COUNT; ++i) 
+    {
+        glBindVertexArray(vaos[i]);
+        float* color = color_table[i];
+        glUniform3fv(uColorLoc, 1, color);
+        VBOData& data = color_vertex[i];
+        glDrawElements(GL_TRIANGLES, data.index_buffer.size(), GL_UNSIGNED_INT, 0);
+    }
+}

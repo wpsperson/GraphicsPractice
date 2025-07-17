@@ -87,10 +87,10 @@ void Renderer::beforeRender()
 
 void Renderer::endRender()
 {
-    // std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
-    // std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
-    // double render_time = static_cast<double>(result.count()) / 1000.0;
-    // std::cout << "draw time(ms) is " << render_time << std::endl;
+     std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
+     std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
+     double render_time = static_cast<double>(result.count()) / 1000.0;
+     std::cout << "draw time(ms) is " << render_time << std::endl;
 }
 
 ProgramManager* Renderer::programMgr() noexcept

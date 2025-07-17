@@ -52,6 +52,10 @@ add_executable(${TARGET_NAME}
     Operations/FBOOperation.cpp
     Operations/PersistMapOperation.h
     Operations/PersistMapOperation.cpp
+    Performance/CirclesColorAttrib.h
+    Performance/CirclesColorAttrib.cpp
+    Performance/CirclesColorUniform.h
+    Performance/CirclesColorUniform.cpp
     AllChineseChar.h
     Utils.h
     Utils.cpp

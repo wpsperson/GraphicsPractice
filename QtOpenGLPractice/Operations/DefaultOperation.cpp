@@ -3,6 +3,8 @@
 #include "Operations/EditVectorFontOperation.h"
 #include "Operations/UnicodeOutlineOperation.h"
 #include "Operations/FBOOperation.h"
+#include "Performance/CirclesColorAttrib.h"
+#include "Performance/CirclesColorUniform.h"
 
 Operation* createDefaultOperation(const std::string &name)
 {
@@ -35,6 +37,16 @@ Operation* createDefaultOperation(const std::string &name)
     {
         FBOOperation* fbo_opr = new FBOOperation;
         return fbo_opr;
+    }
+    else if (name == "CirclesColorAttrib")
+    {
+        CirclesColorAttrib* color_attrib = new CirclesColorAttrib;
+        return color_attrib;
+    }
+    else if (name == "CirclesColorUniform")
+    {
+        CirclesColorUniform* color_attrib = new CirclesColorUniform;
+        return color_attrib;
     }
 
     return new FirstTriangle;
