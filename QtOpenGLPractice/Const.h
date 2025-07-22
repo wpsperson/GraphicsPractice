@@ -69,6 +69,22 @@ struct Point
     }
 };
 
+struct Color4uc
+{
+    unsigned char red = 0;
+    unsigned char green = 0;
+    unsigned char blue = 0;
+    unsigned char alpha = 0;
+};
+
+struct ColorVertex
+{
+    Point point; 
+    Color4uc color;
+    ColorVertex() = default;
+    ColorVertex(const Point& pt, Color4uc col) : point(pt), color(col) {}
+};
+
 enum class DrawMode : unsigned char
 {
     Fill = 0,

@@ -5,6 +5,7 @@
 #include "Operations/FBOOperation.h"
 #include "Performance/CirclesColorAttrib.h"
 #include "Performance/CirclesColorUniform.h"
+#include "Operations/PersistMapOperation.h"
 
 Operation* createDefaultOperation(const std::string &name)
 {
@@ -47,6 +48,11 @@ Operation* createDefaultOperation(const std::string &name)
     {
         CirclesColorUniform* color_attrib = new CirclesColorUniform;
         return color_attrib;
+    }
+    else if (name == "PersistMapOperation")
+    {
+        PersistMapOperation* persist = new PersistMapOperation;
+        return persist;
     }
 
     return new FirstTriangle;

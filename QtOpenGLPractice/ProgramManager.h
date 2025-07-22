@@ -10,6 +10,7 @@ enum class ProgramType : unsigned char
     BaseColor = 0,
     TextureFont,
     Texture2D,
+    ColorVertex,
 };
 
 using AttribLoc = std::vector<std::pair<int, const char*>>;

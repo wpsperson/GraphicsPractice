@@ -119,7 +119,7 @@ void build_vbo() {
 
         for (int i = 0; i < NUM_SEGMENTS; ++i) 
         {
-            float angle = (2.0f * M_PI * i) / NUM_SEGMENTS;
+            float angle = float(2.0f * M_PI * i) / NUM_SEGMENTS;
             float px = circle.position.x + std::cos(angle) * circle.radius;
             float py = circle.position.y + std::sin(angle) * circle.radius;
             vertex_buffer.push_back(px);
@@ -149,7 +149,7 @@ void draw_scene()
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shader_program);
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, index_buffer.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, int(index_buffer.size()), GL_UNSIGNED_INT, 0);
 }
 
 CirclesColorAttrib::~CirclesColorAttrib()

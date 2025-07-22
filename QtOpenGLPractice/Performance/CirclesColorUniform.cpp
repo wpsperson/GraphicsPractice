@@ -109,11 +109,11 @@ void generate_vbo(const Circle& circle, VBOData &data) {
     std::vector<Vertex> & vertex_buffer = data.vertex_buffer;
     std::vector<unsigned int> &index_buffer = data.index_buffer;
 
-    unsigned int base_idx = vertex_buffer.size();
+    unsigned int base_idx = unsigned int(vertex_buffer.size());
     vertex_buffer.push_back(Vertex(circle.position.x, circle.position.y));
     for (int i = 0; i < NUM_SEGMENTS; ++i) 
     {
-        float angle = (2.0f * M_PI * i) / NUM_SEGMENTS;
+        float angle = float(2.0f * M_PI * i) / NUM_SEGMENTS;
         float px = circle.position.x + std::cos(angle) * circle.radius;
         float py = circle.position.y + std::sin(angle) * circle.radius;
         vertex_buffer.push_back(Vertex(px, py));
@@ -180,6 +180,6 @@ void CirclesColorUniform::paint(Renderer* renderer) noexcept
         float* color = color_table[i];
         glUniform3fv(uColorLoc, 1, color);
         VBOData& data = color_vertex[i];
-        glDrawElements(GL_TRIANGLES, data.index_buffer.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, int(data.index_buffer.size()), GL_UNSIGNED_INT, 0);
     }
 }

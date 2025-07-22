@@ -43,6 +43,12 @@ bool ProgramManager::initialize(std::string& err) noexcept
     }
     m_programs[ProgramType::Texture2D] = program;
 
+    if (!createProgram(kColorVertexVS, kColorVertexFS, AttribLoc{}, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::ColorVertex] = program;
+
     return true;
 }
 
