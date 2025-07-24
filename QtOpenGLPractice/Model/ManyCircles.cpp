@@ -1,6 +1,7 @@
 #include "Model/ManyCircles.h"
 
 #include <cmath>
+#include <random>
 
 ManyCircles::ManyCircles()
 {
@@ -29,11 +30,40 @@ void ManyCircles::rebuildInfos()
 {
     circle_infos.clear();
     float spacing = 2.0f / NUMX;
-    for (int y = 0; y < NUMY; ++y) {
-        for (int x = 0; x < NUMX; ++x) {
+    for (int y = 0; y < NUMY; ++y)
+    {
+        for (int x = 0; x < NUMX; ++x)
+        {
             CircleInfo info;
-            info.center = { -1.0f + x * spacing + spacing * 0.5f, -1.0f + y * spacing + spacing * 0.5f };
-            info.radius = spacing * 0.4f; // + 0.01f * std::sin(glfwGetTime() + x + y);
+            float ptx = -1.0f + (x + 0.5f) * spacing;
+            float pty = -1.0f + (y + 0.5f) * spacing;
+            info.center = {ptx, pty};
+            info.radius = spacing * 0.4f;
+            info.color_index = (x + y) % 10;
+            circle_infos.push_back(info);
+        }
+    }
+}
+
+void ManyCircles::rebuildRandomInfos()
+{
+    std::random_device device;
+    std::mt19937 engine;
+    engine.seed(device());
+    std::normal_distribution<float> norm_dist(0.0, 1);
+
+    circle_infos.clear();
+    float spacing = 2.0f / NUMX;
+    for (int y = 0; y < NUMY; ++y)
+    {
+        for (int x = 0; x < NUMX; ++x)
+        {
+            CircleInfo info;
+            float ptx = -1.0f + (x + 0.5f) * spacing;
+            float pty = -1.0f + (y + 0.5f) * spacing;
+            float random = norm_dist(engine);
+            info.center = { ptx, pty };
+            info.radius = spacing * 0.4f + random * spacing * 0.1f;
             info.color_index = (x + y) % 10;
             circle_infos.push_back(info);
         }

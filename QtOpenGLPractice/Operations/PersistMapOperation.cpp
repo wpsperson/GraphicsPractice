@@ -1,12 +1,10 @@
 #include "Operations/PersistMapOperation.h"
+
+#include <iostream>
+
 #include "Renderer.h"
 #include "ProgramManager.h"
 
-
-static constexpr int kMaxVertex = 1024 * 1024;
-static constexpr int kTotalVBOSize = kMaxVertex * sizeof(ColorVertex);
-static constexpr int kMaxIndiceCount = 1024 * 1024;
-static constexpr int kTotalEBOSize = kMaxIndiceCount * sizeof(unsigned int);
 
 PersistMapOperation::PersistMapOperation()
 {
@@ -44,12 +42,18 @@ void PersistMapOperation::initialize(Renderer* renderer) noexcept
     m_perMapIndices = reinterpret_cast<unsigned int*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, kTotalEBOSize, mapFlags));
 
 
+    for (int idx = 0; idx < kSEG_NUM; idx++)
+    {
+        MemorySegment& seg = m_segments[idx];
+        seg.setIndex(idx);
+    }
     m_circles.setCircleNumInBatch(100);
-    m_circles.rebuildInfos();
 }
 
 void PersistMapOperation::paint(Renderer* renderer) noexcept
 {
+    m_circles.rebuildRandomInfos();
+
     ProgramManager*progMgr = renderer->programMgr();
     progMgr->applyProgram(ProgramType::ColorVertex);
     glBindVertexArray(m_vao);
@@ -59,34 +63,141 @@ void PersistMapOperation::paint(Renderer* renderer) noexcept
     {
         m_tempMesh.resetMesh();
         m_circles.buildBatchMesh(idx, m_tempMesh);
-        
-        std::vector<ColorVertex>& vertices = m_tempMesh.verticesReference();
-        std::vector<unsigned int>& indices = m_tempMesh.indicesReference();
-        unsigned int vertice_count = unsigned int(vertices.size());
-        unsigned int indice_count = unsigned int(indices.size());
-        if (m_verticeIdx + vertice_count > kMaxVertex || m_indiceIdx + indice_count > kMaxIndiceCount)
-        {
-            drawAllBuffer();
-        }
-        // 1 copy batch vertices
-        ColorVertex* dest = m_perMapVertices + m_verticeIdx;
-        ColorVertex* src = vertices.data();
-        std::memcpy(dest, src, vertices.size() * sizeof(ColorVertex));
-        // 2 copy batch indices with offset;
-        unsigned int* idx_dest = m_perMapIndices + m_indiceIdx;
-        unsigned int offset = m_verticeIdx;
-        std::transform(indices.begin(), indices.end(), idx_dest,
-            [offset](unsigned int index) { return index + offset; });
-        m_verticeIdx += vertice_count;
-        m_indiceIdx += indice_count;
+        processMesh(m_tempMesh);
     }
-    drawAllBuffer();
+    drawCurrentSegmentBuffer();
 }
 
-void PersistMapOperation::drawAllBuffer()
+void PersistMapOperation::processMesh(const ColorMesh& mesh)
 {
-    int count = int(m_indiceIdx);
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
-    m_verticeIdx = 0;
-    m_indiceIdx = 0;
+    std::vector<ColorVertex>& vertices = m_tempMesh.verticesReference();
+    std::vector<unsigned int>& indices = m_tempMesh.indicesReference();
+    std::size_t vertice_count = vertices.size();
+    std::size_t indice_count = indices.size();
+    MemorySegment* current = &(m_segments[m_cur_seg_idx]);
+    if (!current->hasSpace(vertice_count, indice_count))
+    {
+        // 1 draw current segment.
+        drawCurrentSegmentBuffer();
+        current->setSyncPoint();
+        current->resetOffset();
+
+        // 2 switch current to next segment.
+        m_cur_seg_idx = (m_cur_seg_idx + 1) % 3;
+        current = &(m_segments[m_cur_seg_idx]);
+        current->waitSync();
+    }
+
+    // 1 copy batch vertices
+    std::size_t global_vertice_offset = current->globalVertexOffset();
+    ColorVertex* dest = m_perMapVertices + global_vertice_offset;
+    ColorVertex* src = vertices.data();
+    std::memcpy(dest, src, vertices.size() * sizeof(ColorVertex));
+    // 2 copy batch indices with offset;
+    std::size_t global_indice_offset = current->globalIndexOffset();
+    unsigned int* idx_dest = m_perMapIndices + global_indice_offset;
+    unsigned int offset = unsigned int(global_vertice_offset);
+    std::transform(indices.begin(), indices.end(), idx_dest,
+        [offset](unsigned int index) { return index + offset; });
+
+    current->advanceFillOffset(vertice_count, indice_count);
+}
+
+void PersistMapOperation::drawCurrentSegmentBuffer()
+{
+    MemorySegment* current = &(m_segments[m_cur_seg_idx]);
+    GLsizei count = int(current->drawElementCount());
+    if (0 == count)
+    {
+        return;
+    }
+    std::size_t begin_offset_byte = current->globalDrawIndexOffset() * sizeof(unsigned int);
+    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void *)(begin_offset_byte));
+
+    current->advanceDrawOffset();
+}
+
+void MemorySegment::setIndex(int idx)
+{
+    segment_index = idx;
+}
+
+std::size_t MemorySegment::globalVertexOffset()
+{
+    return segment_index * kSegmentVertexNum + vertex_fill_offset;
+}
+
+std::size_t MemorySegment::globalIndexOffset()
+{
+    return segment_index * kSegmentIndiceNum + indice_fill_offset;
+}
+
+std::size_t MemorySegment::globalDrawIndexOffset()
+{
+    return segment_index * kSegmentIndiceNum + indice_draw_offset;
+}
+
+std::size_t MemorySegment::drawElementCount()
+{
+    return indice_fill_offset - indice_draw_offset;
+}
+
+void MemorySegment::resetOffset()
+{
+    vertex_fill_offset = 0;
+    indice_draw_offset = 0;
+    indice_fill_offset = 0;
+}
+
+bool MemorySegment::hasSpace(std::size_t vert_count, std::size_t indice_count)
+{
+    if (vertex_fill_offset + vert_count > kSegmentVertexNum
+        || indice_fill_offset + indice_count > kSegmentIndiceNum)
+    {
+        return false;
+    }
+    return true;
+}
+
+void MemorySegment::advanceFillOffset(std::size_t vert_count, std::size_t indice_count)
+{
+    vertex_fill_offset += vert_count;
+    indice_fill_offset += indice_count;
+}
+
+void MemorySegment::advanceDrawOffset()
+{
+    indice_draw_offset = indice_fill_offset;
+}
+
+void MemorySegment::setSyncPoint()
+{
+    sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+}
+
+void MemorySegment::waitSync()
+{
+    if (!sync)
+    {
+        return;
+    }
+    static int trigger_count = 0;
+    static int wait_count = 0;
+    trigger_count++;
+    GLenum result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 10'000);;
+    while (result != GL_ALREADY_SIGNALED && result != GL_CONDITION_SATISFIED)
+    {
+        result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 10'000);
+        wait_count++;
+    }
+    glDeleteSync(sync);
+    sync = nullptr;
+
+    if (trigger_count == 100)
+    {
+        double average_wait_time = 0.01 * double(wait_count) / trigger_count;
+        std::cout << "wait count is (ms): " << average_wait_time << std::endl;
+        trigger_count = 0;
+        wait_count = 0;
+    }
 }

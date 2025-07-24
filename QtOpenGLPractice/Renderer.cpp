@@ -68,6 +68,7 @@ bool Renderer::initialize(std::string& err)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPointSize(5);
     glEnable(GL_TEXTURE);
+    m_start_time = std::chrono::steady_clock::now();
     return true;
 }
 
@@ -79,7 +80,12 @@ void Renderer::resize(int width, int height)
 
 void Renderer::beforeRender()
 {
-    m_start_time = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
+    std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
+    double render_time = static_cast<double>(result.count()) / 1000.0;
+    std::cout << "draw time(ms) is " << render_time << std::endl;
+    m_start_time = finish;
+
     glClearColor(kColorBG.r, kColorBG.g, kColorBG.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // legacyProjection();
@@ -87,10 +93,6 @@ void Renderer::beforeRender()
 
 void Renderer::endRender()
 {
-     std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
-     std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
-     double render_time = static_cast<double>(result.count()) / 1000.0;
-     std::cout << "draw time(ms) is " << render_time << std::endl;
 }
 
 ProgramManager* Renderer::programMgr() noexcept

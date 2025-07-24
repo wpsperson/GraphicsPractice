@@ -22,6 +22,8 @@ public:
 
     void rebuildInfos();
 
+    void rebuildRandomInfos();
+
     int batchCount();
 
     void buildBatchMesh(int batch_index, ColorMesh& mesh);
