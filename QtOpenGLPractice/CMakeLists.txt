@@ -56,6 +56,8 @@ add_executable(${TARGET_NAME}
     Performance/CirclesColorAttrib.cpp
     Performance/CirclesColorUniform.h
     Performance/CirclesColorUniform.cpp
+    Util/ArgumentUtil.h
+    Util/ArgumentUtil.cpp
     Model/Mesh.h
     Model/Mesh.cpp
     Model/ManyCircles.h

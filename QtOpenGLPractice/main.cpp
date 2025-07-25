@@ -2,12 +2,14 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include "OpenGLWidget.h"
+#include "Util/ArgumentUtil.h"
 
 int main(int argc, char *argv[])
 {
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication a(argc, argv);
+    ArgumentUtil::initArguments(argc, argv);
     QString argument;
     if (argc >= 2)
     {

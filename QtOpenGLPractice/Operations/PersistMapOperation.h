@@ -10,10 +10,6 @@
 #include "Model/Mesh.h"
 
 constexpr std::size_t kSEG_NUM = 3;
-constexpr std::size_t kSegmentVertexNum = 256 * 1024;
-constexpr std::size_t kTotalVBOSize = kSegmentVertexNum * kSEG_NUM * sizeof(ColorVertex);
-constexpr std::size_t kSegmentIndiceNum = 256 * 1024;
-constexpr std::size_t kTotalEBOSize = kSegmentIndiceNum * kSEG_NUM * sizeof(unsigned int);
 
 struct MemorySegment
 {
@@ -40,12 +36,21 @@ public:
 
     void waitSync();
 
+public:
+    static void setSegmentCapacityKB(int kb_size);
+
+    static std::size_t SegmentVertexCapacity();
+
+    static std::size_t SegmentIndiceCapacity();
+
 private:
     int segment_index = 0;
     std::size_t vertex_fill_offset = 0;  // offset in segment.
     std::size_t indice_draw_offset = 0;  // offset in segment.
     std::size_t indice_fill_offset = 0;  // offset in segment.
     GLsync sync = nullptr;
+    static inline std::size_t kSegmentVertexNum = 256 * 1024;
+    static inline std::size_t kSegmentIndiceNum = 256 * 1024;
 };
 
 class PersistMapOperation : public Operation

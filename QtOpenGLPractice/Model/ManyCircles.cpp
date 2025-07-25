@@ -89,7 +89,7 @@ void ManyCircles::buildBatchMesh(int batch_index, ColorMesh& mesh)
     int end = start + CircleNumInBatch;
     if (end > circle_infos.size())
     {
-        end = circle_infos.size();
+        end = int(circle_infos.size());
     }
 
     std::vector<ColorVertex>& vertices = mesh.verticesReference();
@@ -103,9 +103,9 @@ void ManyCircles::buildBatchMesh(int batch_index, ColorMesh& mesh)
         vert0.color = TABLE_COLORS[info.color_index];
         vertices.emplace_back(vert0);
 
-        for (int i = 0; i < NUMSEGMENT; ++i)
+        for (int i = 0; i < CIRCLE_RESO; ++i)
         {
-            float angle = float(2.0f * M_PI * i) / NUMSEGMENT;
+            float angle = float(2.0f * M_PI * i) / CIRCLE_RESO;
             float px = info.center.x + std::cos(angle) * info.radius;
             float py = info.center.y + std::sin(angle) * info.radius;
 
@@ -115,11 +115,17 @@ void ManyCircles::buildBatchMesh(int batch_index, ColorMesh& mesh)
             vertices.emplace_back(vert);
         }
 
-        for (int i = 0; i < NUMSEGMENT; ++i) {
+        for (int i = 0; i < CIRCLE_RESO; ++i) {
             indices.push_back(base_idx);
             indices.push_back(base_idx + i + 1);
-            indices.push_back(base_idx + ((i + 1) % NUMSEGMENT) + 1);
+            indices.push_back(base_idx + ((i + 1) % CIRCLE_RESO) + 1);
         }
-        base_idx += NUMSEGMENT + 1;
+        base_idx += CIRCLE_RESO + 1;
     }
+}
+
+void ManyCircles::setCircleNumDim(int num)
+{
+    NUMX = num;
+    NUMY = num;
 }

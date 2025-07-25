@@ -4,10 +4,22 @@
 
 #include "Renderer.h"
 #include "ProgramManager.h"
+#include "Util/ArgumentUtil.h"
 
 
 PersistMapOperation::PersistMapOperation()
 {
+    // arguments:  PersistMapOperation  CirNumDim=100 PersistMem=256
+    int value = 0;
+    if (ArgumentUtil::getValueByKey("CirNumDim", value))
+    {
+        ManyCircles::setCircleNumDim(value);
+    }
+    if (ArgumentUtil::getValueByKey("PersistMem", value))
+    {
+        MemorySegment::setSegmentCapacityKB(value);
+    }
+
 }
 
 PersistMapOperation::~PersistMapOperation()
@@ -21,6 +33,9 @@ PersistMapOperation::~PersistMapOperation()
 
 void PersistMapOperation::initialize(Renderer* renderer) noexcept
 {
+    std::size_t kTotalVBOSize = MemorySegment::SegmentVertexCapacity() * kSEG_NUM * sizeof(ColorVertex);
+    std::size_t kTotalEBOSize = MemorySegment::SegmentIndiceCapacity() * kSEG_NUM * sizeof(unsigned int);
+
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
@@ -47,7 +62,7 @@ void PersistMapOperation::initialize(Renderer* renderer) noexcept
         MemorySegment& seg = m_segments[idx];
         seg.setIndex(idx);
     }
-    m_circles.setCircleNumInBatch(100);
+    m_circles.setCircleNumInBatch(10);
 }
 
 void PersistMapOperation::paint(Renderer* renderer) noexcept
@@ -182,22 +197,44 @@ void MemorySegment::waitSync()
         return;
     }
     static int trigger_count = 0;
-    static int wait_count = 0;
     trigger_count++;
-    GLenum result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 10'000);;
+    static double total_wait_time = 0.0;
+
+
+    auto start = std::chrono::high_resolution_clock::now();
+    GLenum result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1'000'000);
     while (result != GL_ALREADY_SIGNALED && result != GL_CONDITION_SATISFIED)
     {
-        result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 10'000);
-        wait_count++;
+        result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1'000'000);
     }
     glDeleteSync(sync);
     sync = nullptr;
 
-    if (trigger_count == 100)
+    auto end = std::chrono::high_resolution_clock::now();
+    double elapsed_ms = std::chrono::duration<double, std::milli>(end - start).count();
+    total_wait_time += elapsed_ms;
+
+    if (trigger_count == 30)
     {
-        double average_wait_time = 0.01 * double(wait_count) / trigger_count;
+        double average_wait_time = total_wait_time / trigger_count;
         std::cout << "wait count is (ms): " << average_wait_time << std::endl;
         trigger_count = 0;
-        wait_count = 0;
+        total_wait_time = 0.0;
     }
+}
+
+void MemorySegment::setSegmentCapacityKB(int kb_size)
+{
+    kSegmentVertexNum = kb_size * 1024;
+    kSegmentIndiceNum = kb_size * 1024;
+}
+
+std::size_t MemorySegment::SegmentVertexCapacity()
+{
+    return kSegmentVertexNum;
+}
+
+std::size_t MemorySegment::SegmentIndiceCapacity()
+{
+    return kSegmentIndiceNum;
 }

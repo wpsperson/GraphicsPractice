@@ -80,11 +80,23 @@ void Renderer::resize(int width, int height)
 
 void Renderer::beforeRender()
 {
+    static int trigger_count = 0;
+    trigger_count++;
+    static double total_render_time = 0.0;
+
     std::chrono::steady_clock::time_point finish = std::chrono::steady_clock::now();
     std::chrono::microseconds result = std::chrono::duration_cast<std::chrono::microseconds>(finish - m_start_time);
     double render_time = static_cast<double>(result.count()) / 1000.0;
-    std::cout << "draw time(ms) is " << render_time << std::endl;
+    total_render_time += render_time;
+    // std::cout << "draw time(ms) is " << render_time << std::endl;
     m_start_time = finish;
+
+    if (trigger_count == 30)
+    {
+        std::cout << "draw time(ms) is: " << total_render_time / trigger_count << std::endl;
+        trigger_count = 0;
+        total_render_time = 0;
+    }
 
     glClearColor(kColorBG.r, kColorBG.g, kColorBG.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

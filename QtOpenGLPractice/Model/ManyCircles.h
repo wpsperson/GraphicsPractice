@@ -28,15 +28,17 @@ public:
 
     void buildBatchMesh(int batch_index, ColorMesh& mesh);
 
+    static void setCircleNumDim(int num);
+
 private:
-    const int NUMX = 100;
-    const int NUMY = 100;
-    const int NUMSEGMENT = 16;
+    static inline  int NUMX = 100;
+    static inline  int NUMY = 100;
+    const int CIRCLE_RESO = 100;
     const int NUMCOLOR = 10;
     std::array<Color4uc, 10> TABLE_COLORS;
 
     std::vector<CircleInfo> circle_infos;
     int index = 0;
-    int CircleNumInBatch = 100;
+    int CircleNumInBatch = 10;
 };
 
