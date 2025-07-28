@@ -1,4 +1,4 @@
-#include "Util/FreeTypeUtils.h"
+#include "FreeTypeUtils.h"
 
 #include <iostream>
 #include <filesystem>
@@ -87,7 +87,7 @@ std::tuple<std::wstring, bool> findBestFontName(FT_Face face)
         if ((sfn.platform_id == 3) || (sfn.platform_id == 0))
         {
             wstr.reserve(sfn.string_len / 2);
-            for (int i = 0; i < sfn.string_len / 2; i++)
+            for (unsigned int i = 0; i < sfn.string_len / 2; i++)
             {
                 wchar_t wch = ch[i * 2] * 256 + ch[i * 2 + 1]; // big endian: bigger address store the lastest data.
                 wstr.push_back(wch);
@@ -96,7 +96,7 @@ std::tuple<std::wstring, bool> findBestFontName(FT_Face face)
         else
         {
             wstr.reserve(sfn.string_len);
-            for (int i = 0; i < sfn.string_len; i++)
+            for (unsigned int i = 0; i < sfn.string_len; i++)
             {
                 wchar_t wch = ch[i];
                 wstr.push_back(wch);

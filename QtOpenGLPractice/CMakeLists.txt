@@ -50,23 +50,23 @@ add_executable(${TARGET_NAME}
     Operations/UnicodeOutlineOperation.cpp
     Operations/FBOOperation.h
     Operations/FBOOperation.cpp
-    Operations/PersistMapOperation.h
-    Operations/PersistMapOperation.cpp
+    Performance/PersistMapOperation.h
+    Performance/PersistMapOperation.cpp
     Performance/CirclesColorAttrib.h
     Performance/CirclesColorAttrib.cpp
     Performance/CirclesColorUniform.h
     Performance/CirclesColorUniform.cpp
     Util/ArgumentUtil.h
     Util/ArgumentUtil.cpp
+    Util/Utils.h
+    Util/Utils.cpp
+    Util/FreeTypeUtils.h
+    Util/FreeTypeUtils.cpp
     Model/Mesh.h
     Model/Mesh.cpp
     Model/ManyCircles.h
     Model/ManyCircles.cpp
     AllChineseChar.h
-    Utils.h
-    Utils.cpp
-    FreeTypeUtils.h
-    FreeTypeUtils.cpp
 )
 
 get_target_property(ProjectSourceFiles ${TARGET_NAME} SOURCES)

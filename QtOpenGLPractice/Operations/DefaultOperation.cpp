@@ -5,7 +5,7 @@
 #include "Operations/FBOOperation.h"
 #include "Performance/CirclesColorAttrib.h"
 #include "Performance/CirclesColorUniform.h"
-#include "Operations/PersistMapOperation.h"
+#include "Performance/PersistMapOperation.h"
 
 Operation* createDefaultOperation(const std::string &name)
 {

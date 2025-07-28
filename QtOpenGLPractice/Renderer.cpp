@@ -8,7 +8,7 @@
 #include "ProgramManager.h"
 #include "FontManager.h"
 #include "ViewPort.h"
-#include "Utils.h"
+#include "Util/Utils.h"
 #include "Operations/Operation.h"
 #include "Operations/DemoOperation.h"
 

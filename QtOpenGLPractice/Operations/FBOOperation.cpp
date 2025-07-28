@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "OpenGLHeader.h"
 #include "ViewPort.h"
-#include "Utils.h"
+#include "Util/Utils.h"
 #include "ProgramManager.h"
 #include "OpenGLWidget.h"
 #include "Geometry.h"

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "GLObject2D.h"
-#include "Utils.h"
+#include "Util/Utils.h"
 
 
 void injectAllOperation(Renderer* renderer);

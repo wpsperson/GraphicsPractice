@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "GLObject2D.h"
-#include "Utils.h"
+#include "Util/Utils.h"
 
 class ViewPort;
 class QMouseEvent;
