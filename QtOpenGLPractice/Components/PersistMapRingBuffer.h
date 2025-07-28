@@ -3,7 +3,7 @@
 #include <array>
 
 #include "Const.h"
-#include "Model/SegmentMemory.h"
+#include "Components/SegmentMemory.h"
 #include "Model/Mesh.h"
 
 constexpr std::size_t kSEG_NUM = 3;

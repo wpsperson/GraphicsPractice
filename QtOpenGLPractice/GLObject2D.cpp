@@ -5,7 +5,7 @@
 #include <cassert>
 #include <exception>
 #include "OpenGLHeader.h"
-#include "Renderer.h"
+#include "Components/Renderer.h"
 #include "ShaderSource.h"
 
 static constexpr int TwoDim = 2;

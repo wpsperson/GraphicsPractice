@@ -2,8 +2,8 @@
 
 #include "Operations/Operation.h"
 #include "Model/Mesh.h"
-#include "Model/ManyCircles.h"
-#include "Model/PersistMapRingBuffer.h"
+#include "Util/ManyCircles.h"
+#include "Components/PersistMapRingBuffer.h"
 #include "Components/StippleManager.h"
 
 class StippleOperation : public Operation

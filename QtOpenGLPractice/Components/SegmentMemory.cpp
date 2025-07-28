@@ -1,4 +1,4 @@
-#include "Model/SegmentMemory.h"
+#include "Components/SegmentMemory.h"
 
 #include <chrono>
 #include <iostream>

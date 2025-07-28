@@ -2,8 +2,10 @@
 
 #include <iostream>
 
-#include "Renderer.h"
-#include "ProgramManager.h"
+#include "Components/Renderer.h"
+#include "Components/ViewPort.h"
+#include "Components/ProgramManager.h"
+#include "Util/Utils.h"
 #include "Util/ArgumentUtil.h"
 
 
@@ -29,8 +31,11 @@ PersistMapOperation::~PersistMapOperation()
 
 void PersistMapOperation::initialize(Renderer* renderer) noexcept
 {
+    glint64 hrange = 10000;
+    renderer->viewPort()->setDesign(-hrange, -hrange, 2 * hrange, 2 * hrange);
     m_ringbuffer = new PersistMapRingBuffer;
     m_ringbuffer->initBuffer();
+    m_circles.setRange(float(hrange));
     m_circles.setCircleNumInBatch(10);
 }
 
@@ -40,6 +45,8 @@ void PersistMapOperation::paint(Renderer* renderer) noexcept
 
     ProgramManager*progMgr = renderer->programMgr();
     progMgr->applyProgram(ProgramType::ColorVertex);
+    ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+    progMgr->uniformViewBox(viewbox);
     m_ringbuffer->bindVAO();
 
     int batch_count = m_circles.batchCount();

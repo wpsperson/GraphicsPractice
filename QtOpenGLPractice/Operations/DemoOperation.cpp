@@ -5,9 +5,9 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMouseEvent>
 
-#include "Renderer.h"
-#include "ViewPort.h"
-#include "ProgramManager.h"
+#include "Components/Renderer.h"
+#include "Components/ViewPort.h"
+#include "Components/ProgramManager.h"
 #include "FontManager.h"
 #include "OpenGLHeader.h"
 #include "Operations/EditVectorFontOperation.h"

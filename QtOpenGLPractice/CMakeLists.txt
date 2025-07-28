@@ -23,14 +23,8 @@ add_executable(${TARGET_NAME}
     OpenGLWidget.cpp
     Box.h
     Box.cpp
-    ViewPort.h
-    ViewPort.cpp
-    Renderer.h
-    Renderer.cpp
     GLObject2D.h
     GLObject2D.cpp
-    ProgramManager.cpp
-    ProgramManager.h
     FontManager.cpp
     FontManager.h
     GlyphOutlineGenerator.h
@@ -64,17 +58,23 @@ add_executable(${TARGET_NAME}
     Util/Utils.cpp
     Util/FreeTypeUtils.h
     Util/FreeTypeUtils.cpp
+    Util/ManyCircles.h
+    Util/ManyCircles.cpp
     Model/Mesh.h
     Model/Mesh.cpp
-    Model/SegmentMemory.h
-    Model/SegmentMemory.cpp
-    Model/PersistMapRingBuffer.h
-    Model/PersistMapRingBuffer.cpp
-    Model/ManyCircles.h
-    Model/ManyCircles.cpp
     Components/StippleManager.h
     Components/StippleManager.cpp
     Components/StippleConst.h
+    Components/SegmentMemory.h
+    Components/SegmentMemory.cpp
+    Components/PersistMapRingBuffer.h
+    Components/PersistMapRingBuffer.cpp
+    Components/ProgramManager.cpp
+    Components/ProgramManager.h
+    Components/ViewPort.h
+    Components/ViewPort.cpp
+    Components/Renderer.h
+    Components/Renderer.cpp
     AllChineseChar.h
 )
 

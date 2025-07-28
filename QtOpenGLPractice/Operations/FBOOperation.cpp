@@ -5,11 +5,11 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMouseEvent>
 
-#include "Renderer.h"
+#include "Components/Renderer.h"
 #include "OpenGLHeader.h"
-#include "ViewPort.h"
+#include "Components/ViewPort.h"
 #include "Util/Utils.h"
-#include "ProgramManager.h"
+#include "Components/ProgramManager.h"
 #include "OpenGLWidget.h"
 #include "Geometry.h"
 

@@ -6,8 +6,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QMouseEvent>
 
-#include "Renderer.h"
-#include "ViewPort.h"
+#include "Components/Renderer.h"
+#include "Components/ViewPort.h"
 #include "AllChineseChar.h"
 #include "OpenGLWidget.h"
 

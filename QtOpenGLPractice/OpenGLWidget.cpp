@@ -6,8 +6,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QFileDialog>
 
-#include "Renderer.h"
-#include "ViewPort.h"
+#include "Components/Renderer.h"
+#include "Components/ViewPort.h"
 #include "Operations/Operation.h"
 
 Operation* createDefaultOperation(const std::string& name);

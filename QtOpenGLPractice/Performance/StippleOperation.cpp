@@ -2,9 +2,9 @@
 
 
 #include "OpenGLHeader.h"
-#include "Renderer.h"
-#include "ViewPort.h"
-#include "ProgramManager.h"
+#include "Components/Renderer.h"
+#include "Components/ViewPort.h"
+#include "Components/ProgramManager.h"
 #include "Util/Utils.h"
 
 StippleOperation::StippleOperation()

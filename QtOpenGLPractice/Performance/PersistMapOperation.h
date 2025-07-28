@@ -6,10 +6,10 @@
 
 #include "OpenGLHeader.h"
 #include "Const.h"
-#include "Model/ManyCircles.h"
+#include "Util/ManyCircles.h"
 #include "Model/Mesh.h"
-#include "Model/SegmentMemory.h"
-#include "Model/PersistMapRingBuffer.h"
+#include "Components/SegmentMemory.h"
+#include "Components/PersistMapRingBuffer.h"
 
 
 class PersistMapOperation : public Operation
