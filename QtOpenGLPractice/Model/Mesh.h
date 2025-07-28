@@ -6,6 +6,10 @@
 class ColorMesh
 {
 public:
+    const std::vector<ColorVertex>& getVertices() const;
+
+    const std::vector<unsigned int>& getIndices() const;
+
     std::vector<ColorVertex>& verticesReference();
 
     std::vector<unsigned int>& indicesReference();

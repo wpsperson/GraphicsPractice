@@ -56,6 +56,8 @@ add_executable(${TARGET_NAME}
     Performance/CirclesColorAttrib.cpp
     Performance/CirclesColorUniform.h
     Performance/CirclesColorUniform.cpp
+    Performance/StippleOperation.h
+    Performance/StippleOperation.cpp
     Util/ArgumentUtil.h
     Util/ArgumentUtil.cpp
     Util/Utils.h
@@ -64,6 +66,10 @@ add_executable(${TARGET_NAME}
     Util/FreeTypeUtils.cpp
     Model/Mesh.h
     Model/Mesh.cpp
+    Model/SegmentMemory.h
+    Model/SegmentMemory.cpp
+    Model/PersistMapRingBuffer.h
+    Model/PersistMapRingBuffer.cpp
     Model/ManyCircles.h
     Model/ManyCircles.cpp
     AllChineseChar.h

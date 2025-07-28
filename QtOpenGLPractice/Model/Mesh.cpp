@@ -1,5 +1,15 @@
 #include "Model/Mesh.h"
 
+const std::vector<ColorVertex>& ColorMesh::getVertices() const
+{
+    return vertices;
+}
+
+const std::vector<unsigned int>& ColorMesh::getIndices() const
+{
+    return indices;
+}
+
 std::vector<ColorVertex>& ColorMesh::verticesReference()
 {
     return vertices;
