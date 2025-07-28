@@ -11,6 +11,7 @@ enum class ProgramType : unsigned char
     TextureFont,
     Texture2D,
     ColorVertex,
+    PolygonStipple,
 };
 
 using AttribLoc = std::vector<std::pair<int, const char*>>;

@@ -75,11 +75,21 @@ const char* const kColorVertexVS = R"(
 #version 330 core
 layout(location = 0) in vec2 pos;
 layout(location = 1) in vec4 color;
+uniform vec4 view;
 out vec4 vertexColor;
+
+vec2 transform2d(vec2 pos)
+{
+    vec2 result;
+    result.x = (pos.x - view.x) / (view.y - view.x);
+    result.y = (pos.y - view.z) / (view.w - view.z);
+    return result * 2.0 - 1.0;
+}
+
 void main()
 {
     vertexColor = color;
-    gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);
+    gl_Position = vec4(transform2d(pos), 0.0, 1.0);
 }
 )";
 
@@ -88,6 +98,22 @@ const char* const kColorVertexFS = R"(
 in vec4 vertexColor;
 void main()
 {
+    gl_FragColor = vertexColor;
+}
+)";
+
+
+const char* const kPolygonStippleFS = R"(
+#version 330 core
+in vec4 vertexColor;
+uniform sampler2D uStippleTexture;
+
+void main()
+{
+    vec2 coord = mod(gl_FragCoord.xy, 32.0) / 32.0;
+    float mask = texture(uStippleTexture, coord).a;
+    if (mask < 0.5)
+        discard;
     gl_FragColor = vertexColor;
 }
 )";

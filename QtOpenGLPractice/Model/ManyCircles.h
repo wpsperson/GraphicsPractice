@@ -20,6 +20,8 @@ public:
 
     void setCircleNumInBatch(int num);
 
+    void setRange(float extent_range);
+
     void rebuildInfos();
 
     void rebuildRandomInfos();
@@ -28,13 +30,14 @@ public:
 
     void buildBatchMesh(int batch_index, ColorMesh& mesh);
 
-    static void setCircleNumDim(int num);
+    void setCircleNumDim(int num);
 
 private:
-    static inline  int NUMX = 100;
-    static inline  int NUMY = 100;
-    const int CIRCLE_RESO = 100;
-    const int NUMCOLOR = 10;
+    float m_Range = 2.0;
+    int NUMX = 100;
+    int NUMY = 100;
+    int CIRCLE_RESO = 100;
+    int NUMCOLOR = 10;
     std::array<Color4uc, 10> TABLE_COLORS;
 
     std::vector<CircleInfo> circle_infos;

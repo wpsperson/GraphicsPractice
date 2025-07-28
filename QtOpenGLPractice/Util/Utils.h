@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <vector>
 #include <cmath>
 #include <string>
@@ -62,5 +63,9 @@ public:
     static ViewBox toViewBox(const Box& box) noexcept;
 
     static bool getOpenGLVersion(int& major, int& minor);
+
+    // unsigned char represent 8 bits, we convert each src uchar to 8 uchar, (0, 1) -> (0, 255).
+    static void bitToUchars(const unsigned char *src, std::array<unsigned char, 1024> &dest);
+
 };
 

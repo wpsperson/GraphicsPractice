@@ -6,6 +6,7 @@
 #include "Performance/CirclesColorAttrib.h"
 #include "Performance/CirclesColorUniform.h"
 #include "Performance/PersistMapOperation.h"
+#include "Performance/StippleOperation.h"
 
 Operation* createDefaultOperation(const std::string &name)
 {
@@ -53,6 +54,11 @@ Operation* createDefaultOperation(const std::string &name)
     {
         PersistMapOperation* persist = new PersistMapOperation;
         return persist;
+    }
+    else if (name == "StippleOperation")
+    {
+        StippleOperation* operation = new StippleOperation;
+        return operation;
     }
 
     return new FirstTriangle;

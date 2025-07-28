@@ -49,6 +49,12 @@ bool ProgramManager::initialize(std::string& err) noexcept
     }
     m_programs[ProgramType::ColorVertex] = program;
 
+    if (!createProgram(kColorVertexVS, kPolygonStippleFS, AttribLoc{}, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::PolygonStipple] = program;
+
     return true;
 }
 

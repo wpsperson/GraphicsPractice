@@ -13,7 +13,7 @@ PersistMapOperation::PersistMapOperation()
     int value = 0;
     if (ArgumentUtil::getValueByKey("CirNumDim", value))
     {
-        ManyCircles::setCircleNumDim(value);
+        m_circles.setCircleNumDim(value);
     }
     if (ArgumentUtil::getValueByKey("PersistMem", value))
     {

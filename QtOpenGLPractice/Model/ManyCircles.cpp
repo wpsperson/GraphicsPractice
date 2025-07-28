@@ -26,19 +26,27 @@ void ManyCircles::setCircleNumInBatch(int num)
     CircleNumInBatch = num;
 }
 
+void ManyCircles::setRange(float extent_range)
+{
+    m_Range = extent_range;
+}
+
 void ManyCircles::rebuildInfos()
 {
     circle_infos.clear();
-    float spacing = 2.0f / NUMX;
+    float xbegin = -m_Range / 2;
+    float ybegin = -m_Range / 2;
+    float spacingx = m_Range / NUMX;
+    float spacingy = m_Range / NUMX;
     for (int y = 0; y < NUMY; ++y)
     {
         for (int x = 0; x < NUMX; ++x)
         {
             CircleInfo info;
-            float ptx = -1.0f + (x + 0.5f) * spacing;
-            float pty = -1.0f + (y + 0.5f) * spacing;
+            float ptx = xbegin + (x + 0.5f) * spacingx;
+            float pty = ybegin + (y + 0.5f) * spacingy;
             info.center = {ptx, pty};
-            info.radius = spacing * 0.4f;
+            info.radius = spacingx * 0.4f;
             info.color_index = (x + y) % 10;
             circle_infos.push_back(info);
         }
@@ -53,17 +61,20 @@ void ManyCircles::rebuildRandomInfos()
     std::normal_distribution<float> norm_dist(0.0, 1);
 
     circle_infos.clear();
-    float spacing = 2.0f / NUMX;
+    float xbegin = -m_Range / 2;
+    float ybegin = -m_Range / 2;
+    float spacingx = m_Range / NUMX;
+    float spacingy = m_Range / NUMX;
     for (int y = 0; y < NUMY; ++y)
     {
         for (int x = 0; x < NUMX; ++x)
         {
             CircleInfo info;
-            float ptx = -1.0f + (x + 0.5f) * spacing;
-            float pty = -1.0f + (y + 0.5f) * spacing;
+            float ptx = xbegin + (x + 0.5f) * spacingx;
+            float pty = ybegin + (y + 0.5f) * spacingy;
             float random = norm_dist(engine);
             info.center = { ptx, pty };
-            info.radius = spacing * 0.4f + random * spacing * 0.1f;
+            info.radius = spacingx * 0.4f + random * spacingx * 0.1f;
             info.color_index = (x + y) % 10;
             circle_infos.push_back(info);
         }

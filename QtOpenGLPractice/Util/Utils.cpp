@@ -174,3 +174,16 @@ bool Utils::getOpenGLVersion(int& major, int& minor)
     minor = std::stoi(str_minor);
     return true;
 }
+
+void Utils::bitToUchars(const unsigned char* src, std::array<unsigned char, 1024>& dest)
+{
+    for (int idx = 0; idx < 128; idx++)
+    {
+        unsigned char uchar = src[idx];
+        for (int bit = 0; bit < 8; ++bit)
+        {
+            bool value = (uchar >> (7 - bit)) & 1;
+            dest[idx * 8 + bit] = value ? 255 : 0;
+        }
+    }
+}

@@ -72,6 +72,9 @@ add_executable(${TARGET_NAME}
     Model/PersistMapRingBuffer.cpp
     Model/ManyCircles.h
     Model/ManyCircles.cpp
+    Components/StippleManager.h
+    Components/StippleManager.cpp
+    Components/StippleConst.h
     AllChineseChar.h
 )
 
