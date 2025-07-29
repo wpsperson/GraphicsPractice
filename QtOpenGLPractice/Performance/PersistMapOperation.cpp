@@ -53,7 +53,7 @@ void PersistMapOperation::paint(Renderer* renderer) noexcept
     for (int idx = 0; idx < batch_count; idx++)
     {
         m_tempMesh.resetMesh();
-        m_circles.buildBatchMesh(idx, m_tempMesh);
+        m_circles.buildBatchFillMesh(idx, m_tempMesh);
         m_ringbuffer->processMesh(m_tempMesh);
     }
     m_ringbuffer->drawCurrentSegmentBuffer();

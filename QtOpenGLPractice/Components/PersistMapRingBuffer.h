@@ -23,6 +23,8 @@ public:
 
     void drawCurrentSegmentBuffer();
 
+    void drawCurrentSegmentLines();
+
 
 private:
     unsigned int m_vao = 0;

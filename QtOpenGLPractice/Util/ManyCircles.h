@@ -28,7 +28,9 @@ public:
 
     int batchCount();
 
-    void buildBatchMesh(int batch_index, ColorMesh& mesh);
+    void buildBatchFillMesh(int batch_index, ColorMesh& mesh);
+
+    void buildBatchLineMesh(int batch_index, ColorMesh& mesh);
 
     void setCircleNumDim(int num);
 

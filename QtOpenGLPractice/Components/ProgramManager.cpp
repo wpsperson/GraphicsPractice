@@ -1,4 +1,7 @@
 #include "Components/ProgramManager.h"
+
+#include <iostream>
+
 #include "ShaderSource.h"
 #include "OpenGLHeader.h"
 
@@ -55,6 +58,12 @@ bool ProgramManager::initialize(std::string& err) noexcept
     }
     m_programs[ProgramType::PolygonStipple] = program;
 
+    if (!createProgram(kLineStippleVS, kLineStippleFS, AttribLoc{}, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::LineStipple] = program;
+
     return true;
 }
 
@@ -74,6 +83,39 @@ void ProgramManager::uniformViewBox(const ViewBox& view) noexcept
 {
     int nPosView = glGetUniformLocation(m_current_program, "view");
     glUniform4f(nPosView, view.left, view.right, view.bttm, view.top);
+}
+
+void ProgramManager::uniform1f(std::string_view name, float value0) noexcept
+{
+    int loc = glGetUniformLocation(m_current_program, name.data());
+    if (loc < 0)
+    {
+        std::cerr << "Failure to get uniform location " << name << std::endl;
+        return;
+    }
+    glUniform1f(loc, value0);
+}
+
+void ProgramManager::uniform2f(std::string_view name, float value0, float value1) noexcept
+{
+    int loc = glGetUniformLocation(m_current_program, name.data());
+    if (loc < 0)
+    {
+        std::cerr << "Failure to get uniform location " << name << std::endl;
+        return;
+    }
+    glUniform2f(loc, value0, value1);
+}
+
+void ProgramManager::uniform1ui(std::string_view name, unsigned int value0) noexcept
+{
+    int loc = glGetUniformLocation(m_current_program, name.data());
+    if (loc < 0)
+    {
+        std::cerr << "Failure to get uniform location " << name << std::endl;
+        return;
+    }
+    glUniform1ui(loc, value0);
 }
 
 void ProgramManager::applyProgram(ProgramType type, const Color3f& color, float opaque, ViewBox* view) noexcept

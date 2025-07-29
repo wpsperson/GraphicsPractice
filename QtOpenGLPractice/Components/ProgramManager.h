@@ -12,6 +12,7 @@ enum class ProgramType : unsigned char
     Texture2D,
     ColorVertex,
     PolygonStipple,
+    LineStipple,
 };
 
 using AttribLoc = std::vector<std::pair<int, const char*>>;
@@ -30,6 +31,10 @@ public:
     void applyProgram(ProgramType type) noexcept;
 
     void uniformViewBox(const ViewBox& view) noexcept;
+
+    void uniform1f(std::string_view name, float value0) noexcept;
+    void uniform2f(std::string_view name, float value0, float value1) noexcept;
+    void uniform1ui(std::string_view name, unsigned int value0) noexcept;
 
     void applyProgram(ProgramType type, const Color3f &color, float opaque, ViewBox *view) noexcept;
 

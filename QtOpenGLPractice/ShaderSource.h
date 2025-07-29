@@ -117,3 +117,55 @@ void main()
     gl_FragColor = vertexColor;
 }
 )";
+
+
+
+const char* const kLineStippleVS = R"(
+#version 330 core
+layout(location = 0) in vec2 pos;
+layout(location = 1) in vec4 color;
+uniform vec4 view;
+out vec4 vertexColor;
+flat out vec3 startPos;
+out vec3 vertPos;
+
+vec2 transform2d(vec2 pos)
+{
+    vec2 result;
+    result.x = (pos.x - view.x) / (view.y - view.x);
+    result.y = (pos.y - view.z) / (view.w - view.z);
+    return result * 2.0 - 1.0;
+}
+
+void main()
+{
+    vertexColor = color;
+    vec4 pos  = vec4(transform2d(pos), 0.0, 1.0);
+    gl_Position = pos;
+    vertPos = pos.xyz / pos.w;
+    startPos = vertPos;
+}
+)";
+
+const char* const kLineStippleFS = R"(
+#version 330 core
+in vec4 vertexColor;
+flat in vec3 startPos;
+in vec3 vertPos;
+
+uniform vec2  u_resolution;
+uniform uint  u_pattern;
+uniform float u_factor;
+
+void main()
+{
+    vec2  dir  = (vertPos.xy-startPos.xy) * u_resolution/2.0;
+    float dist = length(dir);
+
+    uint bit = uint(round(dist / u_factor)) & 15U;
+    if ((u_pattern & (1U<<bit)) == 0U)
+        discard; 
+
+    gl_FragColor = vertexColor;
+}
+)";

@@ -17,9 +17,12 @@ public:
 
     void paint(Renderer* renderer) noexcept override;
 
+    void buildRectangles(glint64 half_range, ColorMesh &mesh);
+
 private:
     PersistMapRingBuffer* m_ringbuffer = nullptr;
     StippleManager* m_stip_mgr = nullptr;
     ManyCircles m_circles;
     ColorMesh m_tempMesh;
+    glint64 hrange = 10000;
 };

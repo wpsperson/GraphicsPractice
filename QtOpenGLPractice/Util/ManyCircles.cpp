@@ -94,7 +94,7 @@ int ManyCircles::batchCount()
     }
 }
 
-void ManyCircles::buildBatchMesh(int batch_index, ColorMesh& mesh)
+void ManyCircles::buildBatchFillMesh(int batch_index, ColorMesh& mesh)
 {
     int start = batch_index * CircleNumInBatch;
     int end = start + CircleNumInBatch;
@@ -126,12 +126,47 @@ void ManyCircles::buildBatchMesh(int batch_index, ColorMesh& mesh)
             vertices.emplace_back(vert);
         }
 
-        for (int i = 0; i < CIRCLE_RESO; ++i) {
+        for (int i = 0; i < CIRCLE_RESO; ++i)
+        {
             indices.push_back(base_idx);
             indices.push_back(base_idx + i + 1);
             indices.push_back(base_idx + ((i + 1) % CIRCLE_RESO) + 1);
         }
         base_idx += CIRCLE_RESO + 1;
+    }
+}
+
+void ManyCircles::buildBatchLineMesh(int batch_index, ColorMesh& mesh)
+{
+    int start = batch_index * CircleNumInBatch;
+    int end = start + CircleNumInBatch;
+    if (end > circle_infos.size())
+    {
+        end = int(circle_infos.size());
+    }
+
+    std::vector<ColorVertex>& vertices = mesh.verticesReference();
+    std::vector<unsigned int>& indices = mesh.indicesReference();
+    unsigned int base_idx = unsigned int(vertices.size());
+    for (int idx = start; idx < end; idx++)
+    {
+        const CircleInfo& info = circle_infos[idx];
+        for (int i = 0; i < CIRCLE_RESO; ++i)
+        {
+            float angle = float(2.0f * M_PI * i) / CIRCLE_RESO;
+            float px = info.center.x + std::cos(angle) * info.radius;
+            float py = info.center.y + std::sin(angle) * info.radius;
+            ColorVertex vert;
+            vert.point = Point(px, py);
+            vert.color = TABLE_COLORS[info.color_index];
+            vertices.emplace_back(vert);
+        }
+        for (int i = 0; i < CIRCLE_RESO; ++i)
+        {
+            indices.push_back(base_idx + i);
+            indices.push_back(base_idx + ((i + 1) % CIRCLE_RESO));
+        }
+        base_idx += CIRCLE_RESO;
     }
 }
 
