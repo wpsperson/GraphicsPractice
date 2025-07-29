@@ -29,7 +29,6 @@ add_executable(${TARGET_NAME}
     FontManager.h
     GlyphOutlineGenerator.h
     GlyphOutlineGenerator.cpp
-    Const.h
     Geometry.h
     Geometry.cpp
     Operations/Operation.h
@@ -63,6 +62,7 @@ add_executable(${TARGET_NAME}
     Util/ManyRectangles.cpp
     Core/DefineEnum.h
     Core/DefineStruct.h
+    Core/DefineConst.h
     Core/Mesh.h
     Core/Mesh.cpp
     Components/StippleManager.h

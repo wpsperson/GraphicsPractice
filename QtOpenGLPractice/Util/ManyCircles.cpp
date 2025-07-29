@@ -3,6 +3,8 @@
 #include <cmath>
 #include <random>
 
+#include "Core/DefineConst.h"
+
 ManyCircles::ManyCircles()
 {
     TABLE_COLORS[0] = {255, 0, 0, 255};
@@ -116,7 +118,7 @@ void ManyCircles::buildBatchFillMesh(int batch_index, ColorMesh& mesh)
 
         for (int i = 0; i < CIRCLE_RESO; ++i)
         {
-            float angle = float(2.0f * M_PI * i) / CIRCLE_RESO;
+            float angle = float(2.0f * kMathPId * i) / CIRCLE_RESO;
             float px = info.center.x + std::cos(angle) * info.radius;
             float py = info.center.y + std::sin(angle) * info.radius;
 
@@ -153,7 +155,7 @@ void ManyCircles::buildBatchLineMesh(int batch_index, ColorMesh& mesh)
         const CircleInfo& info = circle_infos[idx];
         for (int i = 0; i < CIRCLE_RESO; ++i)
         {
-            float angle = float(2.0f * M_PI * i) / CIRCLE_RESO;
+            float angle = float(2.0f * kMathPId * i) / CIRCLE_RESO;
             float px = info.center.x + std::cos(angle) * info.radius;
             float py = info.center.y + std::sin(angle) * info.radius;
             ColorVertex vert;

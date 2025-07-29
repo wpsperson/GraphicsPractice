@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Const.h"
+#include "Core/DefineStruct.h"
 #include "Components/SegmentMemory.h"
 #include "Core/Mesh.h"
 

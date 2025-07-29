@@ -3,7 +3,7 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include "Const.h"
+#include "Core/DefineStruct.h"
 
 class GLObject2D;
 class ProgramManager;

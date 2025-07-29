@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Const.h"
+#include "Core/DefineStruct.h"
 #include "Box.h"
 
 class ViewPort

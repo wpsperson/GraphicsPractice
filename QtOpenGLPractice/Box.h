@@ -1,5 +1,5 @@
 #pragma once
-#include "Const.h"
+#include "Core/DefineStruct.h"
 
 struct Box
 {

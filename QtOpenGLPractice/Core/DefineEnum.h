@@ -18,3 +18,18 @@ enum class LineStipple : unsigned char
     Dashed,
     Count,
 };
+
+enum class DrawMode : unsigned char
+{
+    Fill = 0,
+    Lines,
+    Points,
+};
+
+enum class SVGCmd : unsigned char
+{
+    MoveTo = 0,
+    LineTo,
+    Conic,
+    Cubic,
+};

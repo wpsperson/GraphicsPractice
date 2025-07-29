@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <string>
-#include "Const.h"
+#include "Core/DefineStruct.h"
 #include "Box.h"
 
 const int kOldFontDim = 32767;

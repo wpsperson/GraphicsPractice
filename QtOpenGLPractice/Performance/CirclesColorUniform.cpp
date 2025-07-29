@@ -2,7 +2,8 @@
 
 #include <cmath>
 #include <vector>
-#include "Const.h"
+#include "Core/DefineStruct.h"
+#include "Core/DefineConst.h"
 
 #include "OpenGLHeader.h"
 
@@ -113,7 +114,7 @@ void generate_vbo(const Circle& circle, VBOData &data) {
     vertex_buffer.push_back(Vertex(circle.position.x, circle.position.y));
     for (int i = 0; i < NUM_SEGMENTS; ++i) 
     {
-        float angle = float(2.0f * M_PI * i) / NUM_SEGMENTS;
+        float angle = float(2.0f * kMathPId * i) / NUM_SEGMENTS;
         float px = circle.position.x + std::cos(angle) * circle.radius;
         float py = circle.position.y + std::sin(angle) * circle.radius;
         vertex_buffer.push_back(Vertex(px, py));

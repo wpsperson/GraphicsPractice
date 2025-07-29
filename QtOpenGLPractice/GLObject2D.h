@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "Const.h"
+#include "Core/DefineStruct.h"
+#include "Core/DefineConst.h"
 
 class Renderer;
 // 2d mesh float mesh

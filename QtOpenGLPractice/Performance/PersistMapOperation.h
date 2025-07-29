@@ -5,7 +5,7 @@
 #include <array>
 
 #include "OpenGLHeader.h"
-#include "Const.h"
+#include "Core/DefineStruct.h"
 #include "Util/ManyCircles.h"
 #include "Core/Mesh.h"
 #include "Components/SegmentMemory.h"

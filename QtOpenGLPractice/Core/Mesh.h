@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Const.h"
 #include <vector>
+
+#include "Core/DefineStruct.h"
 
 class ColorMesh
 {

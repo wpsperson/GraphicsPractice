@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Const.h"
+#include "Core/DefineStruct.h"
 #include "Core/Mesh.h"
 #include "Core/DefineEnum.h"
 

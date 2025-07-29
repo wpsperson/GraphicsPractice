@@ -2,12 +2,14 @@
 
 #include <cmath>
 
+#include "Core/DefineConst.h"
+
 
 std::vector<Point> generateCircle(float centx, float centy, float radius, int num)
 {
     std::vector<Point> circlePoints;
     circlePoints.reserve(num);
-    float step = float(M_PI * 2) / num;
+    float step = float(kMathPId * 2) / num;
     for (int i = 0; i < num; i++)
     {
         float angle = i * step;
