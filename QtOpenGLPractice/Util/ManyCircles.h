@@ -3,7 +3,7 @@
 #include <array>
 
 #include "Const.h"
-#include "Model/Mesh.h"
+#include "Core/Mesh.h"
 
 struct CircleInfo {
     Point center;

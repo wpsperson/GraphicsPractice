@@ -60,8 +60,12 @@ add_executable(${TARGET_NAME}
     Util/FreeTypeUtils.cpp
     Util/ManyCircles.h
     Util/ManyCircles.cpp
-    Model/Mesh.h
-    Model/Mesh.cpp
+    Util/ManyRectangles.h
+    Util/ManyRectangles.cpp
+    Core/DefineEnum.h
+    Core/DefineStruct.h
+    Core/Mesh.h
+    Core/Mesh.cpp
     Components/StippleManager.h
     Components/StippleManager.cpp
     Components/StippleConst.h

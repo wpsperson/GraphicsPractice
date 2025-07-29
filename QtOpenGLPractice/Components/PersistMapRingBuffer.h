@@ -4,7 +4,7 @@
 
 #include "Const.h"
 #include "Components/SegmentMemory.h"
-#include "Model/Mesh.h"
+#include "Core/Mesh.h"
 
 constexpr std::size_t kSEG_NUM = 3;
 

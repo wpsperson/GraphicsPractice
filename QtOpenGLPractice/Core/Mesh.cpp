@@ -1,4 +1,4 @@
-#include "Model/Mesh.h"
+#include "Core/Mesh.h"
 
 const std::vector<ColorVertex>& ColorMesh::getVertices() const
 {

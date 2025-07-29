@@ -1,24 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-
-enum class PolyStipple : unsigned char
-{
-    Solid = 0,
-    PointHatch,
-    Count,
-};
-
-enum class LineStipple : unsigned char
-{
-    Solid = 0,
-    Hidden,
-    Phantom,
-    Dotted,
-    Center,
-    Dashed,
-    Count,
-};
+#include "Core/DefineEnum.h"
 
 struct LineStipInfo
 {

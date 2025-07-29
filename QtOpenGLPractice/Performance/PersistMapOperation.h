@@ -7,7 +7,7 @@
 #include "OpenGLHeader.h"
 #include "Const.h"
 #include "Util/ManyCircles.h"
-#include "Model/Mesh.h"
+#include "Core/Mesh.h"
 #include "Components/SegmentMemory.h"
 #include "Components/PersistMapRingBuffer.h"
 

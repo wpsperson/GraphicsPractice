@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Operations/Operation.h"
-#include "Model/Mesh.h"
+#include "Core/Mesh.h"
 #include "Util/ManyCircles.h"
 #include "Components/PersistMapRingBuffer.h"
 #include "Components/StippleManager.h"
