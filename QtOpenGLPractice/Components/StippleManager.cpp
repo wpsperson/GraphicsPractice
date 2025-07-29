@@ -2,7 +2,7 @@
 
 #include <array>
 #include "OpenGLHeader.h"
-#include "Components/StippleConst.h"
+#include "Data/StippleConst.h"
 #include "Util/Utils.h"
 
 

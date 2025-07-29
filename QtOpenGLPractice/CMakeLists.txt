@@ -30,7 +30,6 @@ add_executable(${TARGET_NAME}
     GlyphOutlineGenerator.h
     GlyphOutlineGenerator.cpp
     Const.h
-    ShaderSource.h
     Geometry.h
     Geometry.cpp
     Operations/Operation.h
@@ -68,7 +67,6 @@ add_executable(${TARGET_NAME}
     Core/Mesh.cpp
     Components/StippleManager.h
     Components/StippleManager.cpp
-    Components/StippleConst.h
     Components/SegmentMemory.h
     Components/SegmentMemory.cpp
     Components/PersistMapRingBuffer.h
@@ -79,7 +77,9 @@ add_executable(${TARGET_NAME}
     Components/ViewPort.cpp
     Components/Renderer.h
     Components/Renderer.cpp
-    AllChineseChar.h
+    Data/AllChineseChar.h
+    Data/ShaderSource.h
+    Data/StippleConst.h
 )
 
 get_target_property(ProjectSourceFiles ${TARGET_NAME} SOURCES)

@@ -8,7 +8,7 @@
 
 #include "Components/Renderer.h"
 #include "Components/ViewPort.h"
-#include "AllChineseChar.h"
+#include "Data/AllChineseChar.h"
 #include "OpenGLWidget.h"
 
 #pragma warning(disable: 4996)

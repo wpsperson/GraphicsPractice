@@ -6,7 +6,7 @@
 #include <exception>
 #include "OpenGLHeader.h"
 #include "Components/Renderer.h"
-#include "ShaderSource.h"
+#include "Data/ShaderSource.h"
 
 static constexpr int TwoDim = 2;
 static constexpr int Four = 4;
