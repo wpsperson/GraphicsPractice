@@ -6,12 +6,12 @@
 #include <QtGui/QMouseEvent>
 
 #include "Components/Renderer.h"
-#include "OpenGLHeader.h"
+#include "Core/OpenGLHeader.h"
 #include "Components/ViewPort.h"
 #include "Util/Utils.h"
 #include "Components/ProgramManager.h"
 #include "OpenGLWidget.h"
-#include "Geometry.h"
+#include "Util/MeshBuilder.h"
 
 FBOOperation::FBOOperation()
 {
@@ -215,9 +215,9 @@ void FBOOperation::drawStaticScene()
         m_static->upload(pts.data(), int(pts.size()));
 
 
-        std::vector<Point> circle1 = generateCircle(0.0f, 0.0f, 100000.0f, 32);
-        std::vector<Point> circle2 = generateCircle(100000.0f, 0.0f, 100000.0f, 32);
-        std::vector<Point> circle3 = generateCircle(200000.0f, 0.0f, 100000.0f, 32);
+        std::vector<Point> circle1 = MeshBuilder::generateCircle(0.0f, 0.0f, 100000.0f, 32);
+        std::vector<Point> circle2 = MeshBuilder::generateCircle(100000.0f, 0.0f, 100000.0f, 32);
+        std::vector<Point> circle3 = MeshBuilder::generateCircle(200000.0f, 0.0f, 100000.0f, 32);
         pts.clear();
         std::copy(circle1.begin(), circle1.end(), std::back_inserter(pts));
         std::copy(circle2.begin(), circle2.end(), std::back_inserter(pts));
@@ -227,7 +227,7 @@ void FBOOperation::drawStaticScene()
         m_sten_obj->setOpaque(0.5f);
         m_sten_obj->upload(pts.data(), int(pts.size()));
 
-        std::vector<Point> void_pts = generateCircle(0.0, 0.0f, 50000.0f, 32);
+        std::vector<Point> void_pts = MeshBuilder::generateCircle(0.0, 0.0f, 50000.0f, 32);
         m_sten_void = new GLObject2D(m_renderer, DrawMode::Fill);
         m_sten_void->upload(void_pts.data(), int(void_pts.size()));
     }

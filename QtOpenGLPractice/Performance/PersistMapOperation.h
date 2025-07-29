@@ -4,7 +4,6 @@
 
 #include <array>
 
-#include "OpenGLHeader.h"
 #include "Core/DefineStruct.h"
 #include "Util/ManyCircles.h"
 #include "Core/Mesh.h"

@@ -1,7 +1,7 @@
 #include "Components/StippleManager.h"
 
 #include <array>
-#include "OpenGLHeader.h"
+#include "Core/OpenGLHeader.h"
 #include "Data/StippleConst.h"
 #include "Util/Utils.h"
 

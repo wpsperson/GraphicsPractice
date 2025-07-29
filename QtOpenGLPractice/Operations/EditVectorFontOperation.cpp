@@ -8,8 +8,8 @@
 #include "Components/Renderer.h"
 #include "Components/ViewPort.h"
 #include "Components/ProgramManager.h"
-#include "FontManager.h"
-#include "OpenGLHeader.h"
+#include "Components/FontManager.h"
+#include "Core/OpenGLHeader.h"
 #include "OpenGLWidget.h"
 
 EditVectorFont::~EditVectorFont()

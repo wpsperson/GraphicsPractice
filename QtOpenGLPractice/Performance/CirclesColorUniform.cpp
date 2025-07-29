@@ -5,7 +5,7 @@
 #include "Core/DefineStruct.h"
 #include "Core/DefineConst.h"
 
-#include "OpenGLHeader.h"
+#include "Core/OpenGLHeader.h"
 
 // OpenGL Circle Renderer - Grouped by color, using uniform color and merged VBO per group
 

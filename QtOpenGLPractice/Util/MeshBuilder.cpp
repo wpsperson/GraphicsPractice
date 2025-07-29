@@ -1,15 +1,15 @@
-#include "Geometry.h"
+#include "Util/MeshBuilder.h"
 
 #include <cmath>
 
 #include "Core/DefineConst.h"
 
 
-std::vector<Point> generateCircle(float centx, float centy, float radius, int num)
+std::vector<Point> MeshBuilder::generateCircle(float centx, float centy, float radius, int num)
 {
     std::vector<Point> circlePoints;
     circlePoints.reserve(num);
-    float step = float(kMathPId * 2) / num;
+    float step = kMathPIf * 2 / num;
     for (int i = 0; i < num; i++)
     {
         float angle = i * step;

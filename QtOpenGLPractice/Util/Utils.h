@@ -5,7 +5,7 @@
 #include <cmath>
 #include <string>
 #include "Core/DefineStruct.h"
-#include "Box.h"
+#include "Core/Box.h"
 
 const int kOldFontDim = 32767;
 const int kNewFontDim = 100;

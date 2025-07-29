@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "GLObject2D.h"
+#include "Components/GLObject2D.h"
 #include "Util/Utils.h"
 
 

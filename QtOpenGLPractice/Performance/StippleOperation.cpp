@@ -1,7 +1,7 @@
 #include "Performance/StippleOperation.h"
 
 
-#include "OpenGLHeader.h"
+#include "Core/OpenGLHeader.h"
 #include "Components/Renderer.h"
 #include "Components/ViewPort.h"
 #include "Components/ProgramManager.h"

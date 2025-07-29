@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Operations/Operation.h"
-#include "GLObject2D.h"
-#include "OpenGLHeader.h"
+#include "Components/GLObject2D.h"
 
 
 class FBOOperation : public Operation

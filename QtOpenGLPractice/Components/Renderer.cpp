@@ -3,10 +3,10 @@
 #include <iostream>
 #include <chrono>
 #include <exception>
-#include "OpenGLHeader.h"
-#include "GLObject2D.h"
+#include "Core/OpenGLHeader.h"
+#include "Components/GLObject2D.h"
 #include "Components/ProgramManager.h"
-#include "FontManager.h"
+#include "Components/FontManager.h"
 #include "Components/ViewPort.h"
 #include "Util/Utils.h"
 #include "Operations/Operation.h"

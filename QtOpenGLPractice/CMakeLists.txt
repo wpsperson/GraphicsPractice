@@ -17,20 +17,47 @@ find_package(FreeType REQUIRED)
 #find_package(ZLIB REQUIRED)
 
 add_executable(${TARGET_NAME}
-    OpenGLHeader.h
-    main.cpp 
-    OpenGLWidget.h
-    OpenGLWidget.cpp
-    Box.h
-    Box.cpp
-    GLObject2D.h
-    GLObject2D.cpp
-    FontManager.cpp
-    FontManager.h
-    GlyphOutlineGenerator.h
-    GlyphOutlineGenerator.cpp
-    Geometry.h
-    Geometry.cpp
+    Core/OpenGLHeader.h
+    Core/DefineEnum.h
+    Core/DefineStruct.h
+    Core/DefineConst.h
+    Core/Mesh.h
+    Core/Mesh.cpp
+    Core/Box.h
+    Core/Box.cpp
+    Components/StippleManager.h
+    Components/StippleManager.cpp
+    Components/SegmentMemory.h
+    Components/SegmentMemory.cpp
+    Components/PersistMapRingBuffer.h
+    Components/PersistMapRingBuffer.cpp
+    Components/ProgramManager.cpp
+    Components/ProgramManager.h
+    Components/ViewPort.h
+    Components/ViewPort.cpp
+    Components/Renderer.h
+    Components/Renderer.cpp
+    Components/FontManager.cpp
+    Components/FontManager.h
+    Components/GLObject2D.h
+    Components/GLObject2D.cpp
+    Data/AllChineseChar.h
+    Data/ShaderSource.h
+    Data/StippleConst.h
+    Util/ArgumentUtil.h
+    Util/ArgumentUtil.cpp
+    Util/Utils.h
+    Util/Utils.cpp
+    Util/FreeTypeUtils.h
+    Util/FreeTypeUtils.cpp
+    Util/ManyCircles.h
+    Util/ManyCircles.cpp
+    Util/ManyRectangles.h
+    Util/ManyRectangles.cpp
+    Util/MeshBuilder.h
+    Util/MeshBuilder.cpp
+    Util/GlyphOutlineGenerator.h
+    Util/GlyphOutlineGenerator.cpp
     Operations/Operation.h
     Operations/Operation.cpp
     Operations/DemoOperation.h
@@ -50,36 +77,9 @@ add_executable(${TARGET_NAME}
     Performance/CirclesColorUniform.cpp
     Performance/StippleOperation.h
     Performance/StippleOperation.cpp
-    Util/ArgumentUtil.h
-    Util/ArgumentUtil.cpp
-    Util/Utils.h
-    Util/Utils.cpp
-    Util/FreeTypeUtils.h
-    Util/FreeTypeUtils.cpp
-    Util/ManyCircles.h
-    Util/ManyCircles.cpp
-    Util/ManyRectangles.h
-    Util/ManyRectangles.cpp
-    Core/DefineEnum.h
-    Core/DefineStruct.h
-    Core/DefineConst.h
-    Core/Mesh.h
-    Core/Mesh.cpp
-    Components/StippleManager.h
-    Components/StippleManager.cpp
-    Components/SegmentMemory.h
-    Components/SegmentMemory.cpp
-    Components/PersistMapRingBuffer.h
-    Components/PersistMapRingBuffer.cpp
-    Components/ProgramManager.cpp
-    Components/ProgramManager.h
-    Components/ViewPort.h
-    Components/ViewPort.cpp
-    Components/Renderer.h
-    Components/Renderer.cpp
-    Data/AllChineseChar.h
-    Data/ShaderSource.h
-    Data/StippleConst.h
+    main.cpp 
+    OpenGLWidget.h
+    OpenGLWidget.cpp
 )
 
 get_target_property(ProjectSourceFiles ${TARGET_NAME} SOURCES)
