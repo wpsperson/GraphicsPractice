@@ -6,45 +6,34 @@
 #include "Core/Mesh.h"
 #include "Core/DefineEnum.h"
 
-struct RectInfo
-{
-    Point center;
-    float length;
-    int color_index;
-    LineStipple line_stip;
-};
-
 class ManyRectangles
 {
 public:
-//    ManyRectangles();
-//
-//    ~ManyRectangles();
-//
-//    void setCircleNumInBatch(int num);
-//
-//    void setRange(float extent_range);
-//
-//    void rebuildInfos();
-//
-//    void rebuildRandomInfos();
-//
-//    int batchCount();
-//
-//    void buildBatchFillMesh(int batch_index, ColorMesh& mesh);
-//
-//    void buildBatchLineMesh(int batch_index, ColorMesh& mesh);
-//
-//    void setCircleNumDim(int num);
-//
-//private:
-//    float m_Range = 2.0;
-//    int NUMX = 100;
-//    int NUMY = 100;
-//    int NUMCOLOR = 10;
-//    std::array<Color4uc, 10> TABLE_COLORS;
-//
-//    std::vector<RectInfo> circle_infos;
-//    int index = 0;
-//    int CircleNumInBatch = 10;
+    ManyRectangles();
+
+    ~ManyRectangles();
+
+    void setRectNumInBatch(int num);
+
+    void setRange(float extent_range);
+
+    void rebuildRandomInfos();
+
+    int batchCount();
+
+    void buildBatchFillMesh(int batch_index, ColorMesh& mesh);
+
+    void buildBatchLineMesh(int batch_index, ColorMesh& mesh);
+
+    void setGridSize(int num);
+
+private:
+    float m_distribRange = 2.0;
+    int m_numx = 100;
+    int m_numy = 100;
+    const int m_color_num = 10;
+    std::array<Color4uc, 10> m_color_table;
+    std::vector<RectInfo> m_infos;
+    int m_batch_idx = 0;
+    int m_one_batch_num = 10; // how may rectangles in one build batch.
 };

@@ -21,9 +21,9 @@ public:
 
     void processMesh(const ColorMesh& mesh);
 
-    void drawCurrentSegmentBuffer();
+    void setCurrentDrawMode(DrawMode mode);
 
-    void drawCurrentSegmentLines();
+    void drawCurrentSegmentBuffer();
 
 
 private:
@@ -34,4 +34,5 @@ private:
     unsigned int* m_perMapIndices = nullptr;
     std::array<MemorySegment, kSEG_NUM> m_segments;
     int m_cur_seg_idx = 0;
+    DrawMode m_draw_mode = DrawMode::Fill;
 };

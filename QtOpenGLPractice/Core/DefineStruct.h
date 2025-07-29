@@ -89,3 +89,13 @@ struct GlyphOutlines
     int units_per_EM;
     std::vector<GlyphLoop> loops;
 };
+
+struct RectInfo
+{
+    Point center;
+    float width;
+    float height;
+    int color_index;
+};
+
+

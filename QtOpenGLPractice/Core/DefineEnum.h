@@ -21,9 +21,9 @@ enum class LineStipple : unsigned char
 
 enum class DrawMode : unsigned char
 {
-    Fill = 0,
-    Lines,
-    Points,
+    Points = 0x00,
+    Lines = 0x01,
+    Fill = 0x04,
 };
 
 enum class SVGCmd : unsigned char

@@ -88,6 +88,11 @@ void PersistMapRingBuffer::processMesh(const ColorMesh& mesh)
     current->advanceFillOffset(vertice_count, indice_count);
 }
 
+void PersistMapRingBuffer::setCurrentDrawMode(DrawMode mode)
+{
+    m_draw_mode = mode;
+}
+
 void PersistMapRingBuffer::drawCurrentSegmentBuffer()
 {
     MemorySegment* current = &(m_segments[m_cur_seg_idx]);
@@ -97,21 +102,8 @@ void PersistMapRingBuffer::drawCurrentSegmentBuffer()
         return;
     }
     std::size_t begin_offset_byte = current->globalDrawIndexOffset() * sizeof(unsigned int);
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(begin_offset_byte));
-
-    current->advanceDrawOffset();
-}
-
-void PersistMapRingBuffer::drawCurrentSegmentLines()
-{
-    MemorySegment* current = &(m_segments[m_cur_seg_idx]);
-    GLsizei count = int(current->drawElementCount());
-    if (0 == count)
-    {
-        return;
-    }
-    std::size_t begin_offset_byte = current->globalDrawIndexOffset() * sizeof(unsigned int);
-    glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, (void*)(begin_offset_byte));
+    int mode = static_cast<int>(m_draw_mode);
+    glDrawElements(mode, count, GL_UNSIGNED_INT, (void*)(begin_offset_byte));
 
     current->advanceDrawOffset();
 }
