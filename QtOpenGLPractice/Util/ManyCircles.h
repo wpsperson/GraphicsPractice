@@ -32,18 +32,17 @@ public:
 
     void buildBatchLineMesh(int batch_index, ColorMesh& mesh);
 
-    void setCircleNumDim(int num);
+    void setGridSize(int num);
 
 private:
-    float m_Range = 2.0;
-    int NUMX = 100;
-    int NUMY = 100;
-    int CIRCLE_RESO = 100;
-    int NUMCOLOR = 10;
+    float m_range = 2.0;
+    int m_numx = 100;
+    int m_numy = 100;
+    int m_resolution = 100;
+    const int m_color_num = 10;
     std::array<Color4uc, 10> TABLE_COLORS;
 
-    std::vector<CircleInfo> circle_infos;
-    int index = 0;
-    int CircleNumInBatch = 10;
+    std::vector<CircleInfo> m_circle_infos;
+    int m_one_batch_num = 10;
 };
 

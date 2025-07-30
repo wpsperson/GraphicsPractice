@@ -6,10 +6,17 @@
 #include "Components/ViewPort.h"
 #include "Components/ProgramManager.h"
 #include "Util/Utils.h"
+#include "Util/ArgumentUtil.h"
 
 StippleOperation::StippleOperation()
 {
-
+    // arguments:  StippleOperation  GridSize=100
+    int value = 0;
+    if (ArgumentUtil::getValueByKey("GridSize", value))
+    {
+        m_circles.setGridSize(value);
+        m_rects.setGridSize(value);
+    }
 }
 
 StippleOperation::~StippleOperation()

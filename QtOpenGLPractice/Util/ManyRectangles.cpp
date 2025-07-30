@@ -53,7 +53,7 @@ void ManyRectangles::rebuildRandomInfos()
             float pty = ybegin + (y + 0.5f) * spacingy;
             float random = norm_dist(engine);
             info.center = { ptx, pty };
-            info.width = spacingx * 0.4f + random * spacingx * 0.1f;
+            info.width = spacingx * 0.8f; // +random * spacingx * 0.2f;
             info.height = info.width;
             info.color_index = (x + y) % 10;
             m_infos.push_back(info);
@@ -99,10 +99,7 @@ void ManyRectangles::buildBatchLineMesh(int batch_index, ColorMesh& mesh)
     {
         end = int(m_infos.size());
     }
-
-    std::vector<ColorVertex>& vertices = mesh.verticesReference();
-    std::vector<unsigned int>& indices = mesh.indicesReference();
-    unsigned int base_idx = unsigned int(vertices.size());
+    constexpr int CrossNum = 5;
     for (int idx = start; idx < end; idx++)
     {
         const RectInfo& info = m_infos[idx];
@@ -110,25 +107,23 @@ void ManyRectangles::buildBatchLineMesh(int batch_index, ColorMesh& mesh)
         float xmax = info.center.x + info.width / 2;
         float ymin = info.center.y - info.height / 2;
         float ymax = info.center.y + info.height / 2;
-        Point point0{ xmin, ymin };
-        Point point1{ xmax, ymin };
-        Point point2{ xmax, ymax };
-        Point point3{ xmin, ymax };
+        float spacingx = info.width / CrossNum;
+        float spacingy = info.height / CrossNum;
         int color_index = idx % m_color_num;
         Color4uc color = m_color_table[color_index];
-        vertices.emplace_back(point0, color);
-        vertices.emplace_back(point1, color);
-        vertices.emplace_back(point2, color);
-        vertices.emplace_back(point3, color);
-        indices.emplace_back(base_idx + 0);
-        indices.emplace_back(base_idx + 1);
-        indices.emplace_back(base_idx + 1);
-        indices.emplace_back(base_idx + 2);
-        indices.emplace_back(base_idx + 2);
-        indices.emplace_back(base_idx + 3);
-        indices.emplace_back(base_idx + 3);
-        indices.emplace_back(base_idx + 0);
-        base_idx += 4;
+
+        for (int row = 0; row < CrossNum; row++)
+        {
+            float ycoord = ymin + (row + 0.5) * spacingy;
+            Point subcenter{ info.center.x, ycoord };
+            buildOneRect(subcenter, info.width, spacingy * 0.5, false, color, mesh);
+        }
+        for (int column = 0; column < CrossNum; column++)
+        {
+            float xcoord = xmin + (column + 0.5) * spacingx;
+            Point subcenter{ xcoord, info.center.y };
+            buildOneRect(subcenter, spacingx * 0.5, info.height, false, color, mesh);
+        }
     }
 }
 
@@ -136,4 +131,44 @@ void ManyRectangles::setGridSize(int num)
 {
     m_numx = num;
     m_numy = num;
+}
+
+void ManyRectangles::buildOneRect(const Point& cent, float width, float height, bool fill, const Color4uc& color, ColorMesh& mesh)
+{
+    float xmin = cent.x - width / 2;
+    float xmax = cent.x + width / 2;
+    float ymin = cent.y - height / 2;
+    float ymax = cent.y + height / 2;
+    Point point0{ xmin, ymin };
+    Point point1{ xmax, ymin };
+    Point point2{ xmax, ymax };
+    Point point3{ xmin, ymax };
+
+    std::vector<ColorVertex>& vertices = mesh.verticesReference();
+    std::vector<unsigned int>& indices = mesh.indicesReference();
+    unsigned int base_idx = unsigned int(vertices.size());
+    vertices.emplace_back(point0, color);
+    vertices.emplace_back(point1, color);
+    vertices.emplace_back(point2, color);
+    vertices.emplace_back(point3, color);
+    if (fill)
+    {
+        indices.emplace_back(base_idx + 0);
+        indices.emplace_back(base_idx + 1);
+        indices.emplace_back(base_idx + 2);
+        indices.emplace_back(base_idx + 2);
+        indices.emplace_back(base_idx + 3);
+        indices.emplace_back(base_idx + 0);
+    }
+    else
+    {
+        indices.emplace_back(base_idx + 0);
+        indices.emplace_back(base_idx + 1);
+        indices.emplace_back(base_idx + 1);
+        indices.emplace_back(base_idx + 2);
+        indices.emplace_back(base_idx + 2);
+        indices.emplace_back(base_idx + 3);
+        indices.emplace_back(base_idx + 3);
+        indices.emplace_back(base_idx + 0);
+    }
 }

@@ -11,11 +11,11 @@
 
 PersistMapOperation::PersistMapOperation()
 {
-    // arguments:  PersistMapOperation  CirNumDim=100 PersistMem=256
+    // arguments:  PersistMapOperation  GridSize=100 PersistMem=256
     int value = 0;
-    if (ArgumentUtil::getValueByKey("CirNumDim", value))
+    if (ArgumentUtil::getValueByKey("GridSize", value))
     {
-        m_circles.setCircleNumDim(value);
+        m_circles.setGridSize(value);
     }
     if (ArgumentUtil::getValueByKey("PersistMem", value))
     {
