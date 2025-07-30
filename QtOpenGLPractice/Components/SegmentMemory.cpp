@@ -57,6 +57,13 @@ void MemorySegment::advanceDrawOffset()
     indice_draw_offset = indice_fill_offset;
 }
 
+bool MemorySegment::needDraw(double cofficient)
+{
+    std::size_t need_draw = drawElementCount();
+    
+    return need_draw >= kSegmentIndiceNum * cofficient;
+}
+
 void MemorySegment::setSyncPoint()
 {
     sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -86,10 +93,10 @@ void MemorySegment::waitSync()
     double elapsed_ms = std::chrono::duration<double, std::milli>(end - start).count();
     total_wait_time += elapsed_ms;
 
-    if (trigger_count == 30)
+    if (trigger_count == 10)
     {
         double average_wait_time = total_wait_time / trigger_count;
-        std::cout << "wait count is (ms): " << average_wait_time << std::endl;
+        // std::cout << "wait count is (ms): " << average_wait_time << std::endl;
         trigger_count = 0;
         total_wait_time = 0.0;
     }

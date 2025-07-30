@@ -64,6 +64,12 @@ bool ProgramManager::initialize(std::string& err) noexcept
     }
     m_programs[ProgramType::LineStipple] = program;
 
+    if (!createProgram(kLineStippleAttributeVS, kLineStippleAttributeFS, AttribLoc{}, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::LineStippleAttribute] = program;
+
     return true;
 }
 

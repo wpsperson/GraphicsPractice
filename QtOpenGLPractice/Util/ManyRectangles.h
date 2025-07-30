@@ -21,13 +21,17 @@ public:
 
     int batchCount();
 
-    void buildBatchFillMesh(int batch_index, ColorMesh& mesh);
+    void getBatchInfos(int batch_index, std::vector<RectInfo>& batch_infos);
 
-    void buildBatchLineMesh(int batch_index, ColorMesh& mesh);
+    void buildInfosToMesh(const std::vector<RectInfo> &batch_infos, bool fill, ColorMesh& mesh);
+
+    void buildInfosToMesh2(const std::vector<RectInfo>& batch_infos, bool fill, unsigned int stipple, ColorStipMesh& mesh);
 
     void setGridSize(int num);
 
     static void buildOneRect(const Point& cent, float width, float height, bool fill, const Color4uc& color, ColorMesh& mesh);
+
+    static void buildOneRect2(const Point& cent, float width, float height, bool fill, const Color4uc& color, unsigned int stip, ColorStipMesh& mesh);
 
 private:
     float m_distribRange = 2.0;

@@ -16,13 +16,18 @@ public:
 
     void initialize(Renderer* renderer) noexcept override;
 
+    void resizeOperation(int width, int height) noexcept override;
+
     void paint(Renderer* renderer) noexcept override;
 
 private:
     PersistMapRingBuffer* m_ringbuffer = nullptr;
+    PersistMapStipple* m_ringbuffer2 = nullptr;
     StippleManager* m_stip_mgr = nullptr;
     ManyCircles m_circles;
     ManyRectangles m_rects;
     ColorMesh m_tempMesh;
-    glint64 hrange = 10000;
+    ColorStipMesh m_tempMesh2;
+    glint64 hrange = 10000; 
+    Renderer* m_renderer = nullptr;
 };

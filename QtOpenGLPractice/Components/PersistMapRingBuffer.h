@@ -36,3 +36,33 @@ private:
     int m_cur_seg_idx = 0;
     DrawMode m_draw_mode = DrawMode::Fill;
 };
+
+
+class PersistMapStipple
+{
+public:
+    PersistMapStipple();
+
+    ~PersistMapStipple();
+
+    void initBuffer();
+
+    void bindVAO();
+
+    void processMesh(const ColorStipMesh& mesh);
+
+    void setCurrentDrawMode(DrawMode mode);
+
+    void drawCurrentSegmentBuffer();
+
+
+private:
+    unsigned int m_vao = 0;
+    unsigned int m_vbo = 0;
+    unsigned int m_ebo = 0;
+    ColorStipVertex* m_perMapVertices = nullptr;
+    unsigned int* m_perMapIndices = nullptr;
+    std::array<MemorySegment, kSEG_NUM> m_segments;
+    int m_cur_seg_idx = 0;
+    DrawMode m_draw_mode = DrawMode::Fill;
+};

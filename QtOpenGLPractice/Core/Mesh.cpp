@@ -66,3 +66,32 @@ void ColorMesh::resetMesh()
     vertices.clear();
     indices.clear();
 }
+
+//=================================================================
+//=================================================================
+
+const std::vector<ColorStipVertex>& ColorStipMesh::getVertices() const
+{
+    return vertices;
+}
+
+const std::vector<unsigned int>& ColorStipMesh::getIndices() const
+{
+    return indices;
+}
+
+std::vector<ColorStipVertex>& ColorStipMesh::verticesReference()
+{
+    return vertices;
+}
+
+std::vector<unsigned int>& ColorStipMesh::indicesReference()
+{
+    return indices;
+}
+
+void ColorStipMesh::resetMesh()
+{
+    vertices.clear();
+    indices.clear();
+}

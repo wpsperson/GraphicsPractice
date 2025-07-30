@@ -28,3 +28,20 @@ private:
     std::vector<unsigned int> indices;
 };
 
+class ColorStipMesh
+{
+public:
+    const std::vector<ColorStipVertex>& getVertices() const;
+
+    const std::vector<unsigned int>& getIndices() const;
+
+    std::vector<ColorStipVertex>& verticesReference();
+
+    std::vector<unsigned int>& indicesReference();
+
+    void resetMesh();
+
+private:
+    std::vector<ColorStipVertex> vertices;
+    std::vector<unsigned int> indices;
+};

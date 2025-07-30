@@ -13,6 +13,7 @@ enum class ProgramType : unsigned char
     ColorVertex,
     PolygonStipple,
     LineStipple,
+    LineStippleAttribute,
 };
 
 using AttribLoc = std::vector<std::pair<int, const char*>>;

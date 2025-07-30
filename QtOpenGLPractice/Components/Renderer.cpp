@@ -91,7 +91,7 @@ void Renderer::beforeRender()
     // std::cout << "draw time(ms) is " << render_time << std::endl;
     m_start_time = finish;
 
-    if (trigger_count == 30)
+    if (trigger_count == 10)
     {
         std::cout << "draw time(ms) is: " << total_render_time / trigger_count << std::endl;
         trigger_count = 0;

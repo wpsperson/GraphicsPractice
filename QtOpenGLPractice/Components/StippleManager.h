@@ -22,6 +22,8 @@ public:
 
     const LineStipInfo &getLineStipInfo(LineStipple type);
 
+    static unsigned int mergeFactorPattern(const LineStipInfo& stipple_info);
+
 private:
     unsigned int m_point_hatch = 0;
     std::unordered_map<LineStipple, LineStipInfo> m_lineStipInfos;

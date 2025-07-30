@@ -78,6 +78,16 @@ struct ColorVertex
     ColorVertex(const Point& pt, Color4uc col) : point(pt), color(col) {}
 };
 
+
+struct ColorStipVertex
+{
+    Point point;
+    Color4uc color;
+    unsigned int stipple;
+    ColorStipVertex() = default;
+    ColorStipVertex(const Point& pt, Color4uc col, unsigned int stip) : point(pt), color(col), stipple(stip) {}
+};
+
 struct GlyphLoop
 {
     std::vector<SVGCmd> cmds;

@@ -50,3 +50,9 @@ const LineStipInfo &StippleManager::getLineStipInfo(LineStipple type)
 {
     return m_lineStipInfos.at(type);
 }
+
+unsigned int StippleManager::mergeFactorPattern(const LineStipInfo& stipple_info)
+{
+    unsigned int result = (stipple_info.factor << 16) | stipple_info.pattern;
+    return result;
+}

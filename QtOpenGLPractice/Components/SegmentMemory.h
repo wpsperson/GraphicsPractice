@@ -25,6 +25,8 @@ public:
 
     void advanceDrawOffset();
 
+    bool needDraw(double cofficient);
+
     void setSyncPoint();
 
     void waitSync();
