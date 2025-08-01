@@ -98,7 +98,7 @@ void Renderer::beforeRender()
         total_render_time = 0;
     }
 
-    glClearColor(kColorBG.r, kColorBG.g, kColorBG.b, 1.0f);
+    glClearColor(kColorBlack.r, kColorBlack.g, kColorBlack.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // legacyProjection();
 }

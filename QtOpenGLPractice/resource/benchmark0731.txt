@@ -1,57 +1,31 @@
-method 2   line stipple using vertex attribute,  delay draw batch buffer.（这组数据可能是有问题的，因为有时候能复现，有时候不能复现）
-2DRenderer.exe StippleOperation  GridSize=100  18~22 ms
-2DRenderer.exe StippleOperation  GridSize=200  53-60 ms
-2DRenderer.exe StippleOperation  GridSize=300  100-110 ms
-2DRenderer.exe StippleOperation  GridSize=400  310-340 ms
-2DRenderer.exe StippleOperation  GridSize=500  365 ms
-2DRenderer.exe StippleOperation  GridSize=600  680 ms
+method 1 :   line stipple using uniform. + ColorVertex
+2DRenderer.exe StippleOperation  GridSize=100 Method=1 17-19 ms
+2DRenderer.exe StippleOperation  GridSize=200 Method=1 53-60 ms
+2DRenderer.exe StippleOperation  GridSize=300 Method=1 100-110 ms
+2DRenderer.exe StippleOperation  GridSize=400 Method=1 180 ms
+2DRenderer.exe StippleOperation  GridSize=500 Method=1 214 ms
+2DRenderer.exe StippleOperation  GridSize=600 Method=1 412 ms.
+
+method 2   line stipple using vertex attribute ColorStipVertex,  delay draw batch buffer.
+2DRenderer.exe StippleOperation  GridSize=100 Method=2 18~22 ms
+2DRenderer.exe StippleOperation  GridSize=200 Method=2 53-60 ms
+2DRenderer.exe StippleOperation  GridSize=300 Method=2 104 ms
+2DRenderer.exe StippleOperation  GridSize=400 Method=2 168 ms
+2DRenderer.exe StippleOperation  GridSize=500 Method=2 205   ms
+2DRenderer.exe StippleOperation  GridSize=600 Method=2 397   ms
+
+method 22   line stipple using vertex attribute ColorStipVertex, direct draw batch buffer.
+2DRenderer.exe StippleOperation  GridSize=100 Method=22 19 ms
+2DRenderer.exe StippleOperation  GridSize=200 Method=22 58 ms
+2DRenderer.exe StippleOperation  GridSize=300 Method=22 110 ms
+2DRenderer.exe StippleOperation  GridSize=400 Method=22 170 ms
+2DRenderer.exe StippleOperation  GridSize=500 Method=22 210 ms
+2DRenderer.exe StippleOperation  GridSize=600 Method=22 408 ms
 
 
 
-
-
-2DRenderer.exe PersistMapOperation
-2DRenderer.exe StippleOperation
-
-
-
-method 1 : 
-2DRenderer.exe StippleOperation  GridSize=100  17-19 ms
-2DRenderer.exe StippleOperation  GridSize=200  53-60 ms
-2DRenderer.exe StippleOperation  GridSize=300  100-110 ms
-2DRenderer.exe StippleOperation  GridSize=400  180 ms
-2DRenderer.exe StippleOperation  GridSize=500  214 ms
-2DRenderer.exe StippleOperation  GridSize=600  428 ms.
-
-method 2   line stipple using vertex attribute,  delay draw batch buffer.
-2DRenderer.exe StippleOperation  GridSize=100  18~22 ms
-2DRenderer.exe StippleOperation  GridSize=200  53-60 ms
-2DRenderer.exe StippleOperation  GridSize=300  104 ms
-2DRenderer.exe StippleOperation  GridSize=400  174 ms
-2DRenderer.exe StippleOperation  GridSize=500  216   ms
-2DRenderer.exe StippleOperation  GridSize=600  410   ms
-
-method 2   line stipple using vertex attribute, direct draw batch buffer.
-2DRenderer.exe StippleOperation  GridSize=100  19 ms
-2DRenderer.exe StippleOperation  GridSize=200  58 ms
-2DRenderer.exe StippleOperation  GridSize=300  110 ms
-2DRenderer.exe StippleOperation  GridSize=400  185 ms
-2DRenderer.exe StippleOperation  GridSize=500  227 ms
-2DRenderer.exe StippleOperation  GridSize=600  422 ms
-
-
-
-
-coff test
-2DRenderer.exe StippleOperation  Coff=500 GridSize=600
-
-
-
-
-
-
-
-
+Method2 is better than 22, reasonable. reduce drawcall.
+Methd 2 is better than method 1 about 2%~4%
 
 
 

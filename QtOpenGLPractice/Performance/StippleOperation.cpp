@@ -11,6 +11,7 @@
 #include "OpenGLWidget.h"
 
 extern double g_cofficient;
+// int g_PolygonIndex = 0;
 
 StippleOperation::StippleOperation()
 {
@@ -18,14 +19,24 @@ StippleOperation::StippleOperation()
     int value = 0;
     if (ArgumentUtil::getValueByKey("GridSize", value))
     {
-        m_circles.setGridSize(value);
         m_rects.setGridSize(value);
     }
-    if (ArgumentUtil::getValueByKey("Coff", value))
+    if (ArgumentUtil::getValueByKey("Method", value))
     {
-        g_cofficient = 1.0 / value;
-        std::cout << "cofficent is " << g_cofficient << std::endl;
+        //g_cofficient = 1.0 / value;
+        m_method = value;
     }
+    //if (ArgumentUtil::getValueByKey("Polygon", value))
+    //{
+    //    //g_cofficient = 1.0 / value;
+    //    if (value >= 0 && value <= 10)
+    //    {
+    //        g_PolygonIndex = value;
+    //    }
+    //}
+    std::cout << "GridSize is " << m_rects.gridSize() << std::endl;
+    std::cout << "Method is " << m_method << std::endl;
+    // std::cout << "Polygon is " << g_PolygonIndex << std::endl;
 }
 
 StippleOperation::~StippleOperation()
@@ -47,8 +58,6 @@ void StippleOperation::initialize(Renderer* renderer) noexcept
     m_stip_mgr = new StippleManager;
     m_stip_mgr->initStippleManger();
 
-    m_circles.setRange(float(hrange));
-    m_circles.setCircleNumInBatch(10);
     m_rects.setRange(float(hrange));
     m_rects.setRectNumInBatch(10);
 }
@@ -61,86 +70,87 @@ void StippleOperation::resizeOperation(int width, int height) noexcept
 void StippleOperation::paint(Renderer* renderer) noexcept
 {
     // method 1 line stipple using uniform.
-    /*
-    */
-    m_rects.rebuildRandomInfos();
-    ProgramManager* progMgr = renderer->programMgr();
-    progMgr->applyProgram(ProgramType::LineStipple);
-    ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
-    llPoint screen = renderer->viewPort()->getViewPort();
-    double ratio = m_widget->devicePixelRatioF();
-    progMgr->uniformViewBox(viewbox);
-    progMgr->uniform2f("u_resolution", float(screen.x * ratio), float(screen.y * ratio));
-
-    m_ringbuffer->bindVAO();
-    m_ringbuffer->setCurrentDrawMode(DrawMode::Lines);
-    std::vector<RectInfo> batch_infos;
-    int batch_count = m_rects.batchCount();
-    for (int idx = 0; idx < batch_count; idx++)
+    if (1 == m_method)
     {
-        m_tempMesh.resetMesh();
-        m_rects.getBatchInfos(idx, batch_infos);
-        int count = static_cast<int>(LineStipple::Count);
-        LineStipple stipple = static_cast<LineStipple>(idx % count);
-        const LineStipInfo& info = m_stip_mgr->getLineStipInfo(stipple);
-        progMgr->uniform1f("u_factor", float(info.factor));
-        progMgr->uniform1ui("u_pattern", unsigned int(info.pattern));
-        m_rects.buildInfosToMesh(batch_infos, false, m_tempMesh);
-        m_ringbuffer->processMesh(m_tempMesh);
-        m_ringbuffer->drawCurrentSegmentBuffer();
+        m_rects.rebuildRandomInfos();
+        ProgramManager* progMgr = renderer->programMgr();
+        progMgr->applyProgram(ProgramType::LineStipple);
+        ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+        llPoint screen = renderer->viewPort()->getViewPort();
+        double ratio = m_widget->devicePixelRatioF();
+        progMgr->uniformViewBox(viewbox);
+        progMgr->uniform2f("u_resolution", float(screen.x * ratio), float(screen.y * ratio));
+
+        m_ringbuffer->bindVAO();
+        m_ringbuffer->setCurrentDrawMode(DrawMode::Lines);
+        std::vector<RectInfo> batch_infos;
+        int batch_count = m_rects.batchCount();
+        for (int idx = 0; idx < batch_count; idx++)
+        {
+            m_tempMesh.resetMesh();
+            m_rects.getBatchInfos(idx, batch_infos);
+            int count = static_cast<int>(LineStipple::Count);
+            LineStipple stipple = static_cast<LineStipple>(idx % count);
+            const LineStipInfo& info = m_stip_mgr->getLineStipInfo(stipple);
+            progMgr->uniform1f("u_factor", float(info.factor));
+            progMgr->uniform1ui("u_pattern", unsigned int(info.pattern));
+            m_rects.buildInfosToMesh(batch_infos, false, m_tempMesh);
+            m_ringbuffer->processMesh(m_tempMesh);
+            m_ringbuffer->drawCurrentSegmentBuffer();
+        }
     }
-    
-
-    // method 2. line stipple using vertex attribute.
-    /*
-    m_rects.rebuildRandomInfos();
-    ProgramManager* progMgr = renderer->programMgr();
-    progMgr->applyProgram(ProgramType::LineStippleAttribute);
-    ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
-    llPoint screen = renderer->viewPort()->getViewPort();
-    double ratio = m_widget->devicePixelRatioF();
-    progMgr->uniformViewBox(viewbox);
-    progMgr->uniform2f("u_resolution", float(screen.x * ratio), float(screen.y * ratio));
-
-    m_ringbuffer2->bindVAO();
-    m_ringbuffer2->setCurrentDrawMode(DrawMode::Lines);
-    int batch_count = m_rects.batchCount();
-    std::vector<RectInfo> batch_infos;
-    for (int idx = 0; idx < batch_count; idx++)
+    else if (2 == m_method)
     {
-        m_tempMesh2.resetMesh();
-        m_rects.getBatchInfos(idx, batch_infos);
-        int count = static_cast<int>(LineStipple::Count);
-        LineStipple stipple = static_cast<LineStipple>(idx % count);
-        const LineStipInfo& info = m_stip_mgr->getLineStipInfo(stipple);
-        unsigned int nstipple = StippleManager::mergeFactorPattern(info);
-        m_rects.buildInfosToMesh2(batch_infos, false, nstipple, m_tempMesh2);
-        m_ringbuffer2->processMesh(m_tempMesh2);
+        m_rects.rebuildRandomInfos();
+        ProgramManager* progMgr = renderer->programMgr();
+        progMgr->applyProgram(ProgramType::LineStippleAttribute);
+        ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+        llPoint screen = renderer->viewPort()->getViewPort();
+        double ratio = m_widget->devicePixelRatioF();
+        progMgr->uniformViewBox(viewbox);
+        progMgr->uniform2f("u_resolution", float(screen.x * ratio), float(screen.y * ratio));
+
+        m_ringbuffer2->bindVAO();
+        m_ringbuffer2->setCurrentDrawMode(DrawMode::Lines);
+        int batch_count = m_rects.batchCount();
+        std::vector<RectInfo> batch_infos;
+        for (int idx = 0; idx < batch_count; idx++)
+        {
+            m_tempMesh2.resetMesh();
+            m_rects.getBatchInfos(idx, batch_infos);
+            int count = static_cast<int>(LineStipple::Count);
+            LineStipple stipple = static_cast<LineStipple>(idx % count);
+            const LineStipInfo& info = m_stip_mgr->getLineStipInfo(stipple);
+            unsigned int nstipple = StippleManager::mergeFactorPattern(info);
+            m_rects.buildInfosToMesh2(batch_infos, false, nstipple, m_tempMesh2);
+            m_ringbuffer2->processMesh(m_tempMesh2);
+        }
+        m_ringbuffer2->drawCurrentSegmentBuffer();
     }
-    m_ringbuffer2->drawCurrentSegmentBuffer();
-    */
-
-    // method 3 
-    /*
-    m_circles.rebuildRandomInfos();
-
-    ProgramManager* progMgr = renderer->programMgr();
-    progMgr->applyProgram(ProgramType::PolygonStipple);
-    ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
-    progMgr->uniformViewBox(viewbox);
-    m_ringbuffer->bindVAO();
-    m_stip_mgr->setPolygonStipple(PolyStipple::PointHatch);
-
-    int batch_count = m_circles.batchCount();
-    for (int idx = 0; idx < batch_count; idx++)
+    else if (3 == m_method)
     {
-        m_tempMesh.resetMesh();
-        m_circles.buildBatchFillMesh(idx, m_tempMesh);
-        m_ringbuffer->processMesh(m_tempMesh);
+        m_rects.rebuildRandomInfos();
+
+        ProgramManager* progMgr = renderer->programMgr();
+        progMgr->applyProgram(ProgramType::PolygonStipple);
+        ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+        progMgr->uniformViewBox(viewbox);
+        m_ringbuffer->bindVAO();
+
+        std::vector<RectInfo> batch_infos;
+        int batch_count = m_rects.batchCount();
+        int count = static_cast<int>(PolyStipple::Count);
+        for (int idx = 0; idx < batch_count; idx++)
+        {
+            PolyStipple type = static_cast<PolyStipple>(idx % count);
+            m_stip_mgr->setPolygonStipple(type);
+
+            m_tempMesh.resetMesh();
+            m_rects.getBatchInfos(idx, batch_infos);
+            m_rects.buildInfosToMesh(batch_infos, true, m_tempMesh);
+            m_ringbuffer->processMesh(m_tempMesh);
+            m_ringbuffer->drawCurrentSegmentBuffer();
+        }
     }
-    m_ringbuffer->drawCurrentSegmentBuffer();
-    */
-
-
 }
 

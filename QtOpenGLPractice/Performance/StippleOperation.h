@@ -24,10 +24,10 @@ private:
     PersistMapRingBuffer* m_ringbuffer = nullptr;
     PersistMapStipple* m_ringbuffer2 = nullptr;
     StippleManager* m_stip_mgr = nullptr;
-    ManyCircles m_circles;
     ManyRectangles m_rects;
     ColorMesh m_tempMesh;
     ColorStipMesh m_tempMesh2;
     glint64 hrange = 10000; 
     Renderer* m_renderer = nullptr;
+    int m_method = 0;
 };

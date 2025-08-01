@@ -104,13 +104,13 @@ void ManyRectangles::buildInfosToMesh(const std::vector<RectInfo>& batch_infos, 
         {
             float ycoord = ymin + (row + 0.5f) * spacingy;
             Point subcenter{ info.center.x, ycoord };
-            buildOneRect(subcenter, info.width, spacingy * 0.5f, false, color, mesh);
+            buildOneRect(subcenter, info.width, spacingy * 0.5f, fill, color, mesh);
         }
         for (int column = 0; column < CrossNum; column++)
         {
             float xcoord = xmin + (column + 0.5f) * spacingx;
             Point subcenter{ xcoord, info.center.y };
-            buildOneRect(subcenter, spacingx * 0.5f, info.height, false, color, mesh);
+            buildOneRect(subcenter, spacingx * 0.5f, info.height, fill, color, mesh);
         }
     }
 }
@@ -134,13 +134,13 @@ void ManyRectangles::buildInfosToMesh2(const std::vector<RectInfo>& batch_infos,
         {
             float ycoord = ymin + (row + 0.5f) * spacingy;
             Point subcenter{ info.center.x, ycoord };
-            buildOneRect2(subcenter, info.width, spacingy * 0.5f, false, color, stipple, mesh);
+            buildOneRect2(subcenter, info.width, spacingy * 0.5f, fill, color, stipple, mesh);
         }
         for (int column = 0; column < CrossNum; column++)
         {
             float xcoord = xmin + (column + 0.5f) * spacingx;
             Point subcenter{ xcoord, info.center.y };
-            buildOneRect2(subcenter, spacingx * 0.5f, info.height, false, color, stipple, mesh);
+            buildOneRect2(subcenter, spacingx * 0.5f, info.height, fill, color, stipple, mesh);
         }
     }
 }
@@ -149,6 +149,11 @@ void ManyRectangles::setGridSize(int num)
 {
     m_numx = num;
     m_numy = num;
+}
+
+int ManyRectangles::gridSize() const
+{
+    return m_numx;
 }
 
 void ManyRectangles::buildOneRect(const Point& cent, float width, float height, bool fill, const Color4uc& color, ColorMesh& mesh)

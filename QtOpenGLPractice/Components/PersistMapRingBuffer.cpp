@@ -151,7 +151,7 @@ void PersistMapStipple::initBuffer()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ColorStipVertex), (void*)sizeof(Point));
     glEnableVertexAttribArray(1);
-    int offset = offsetof(ColorStipVertex, stipple);
+    std::size_t offset = offsetof(ColorStipVertex, stipple);
     glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, sizeof(ColorStipVertex), (void*)(offset));
     glEnableVertexAttribArray(2);
 

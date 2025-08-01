@@ -5,6 +5,15 @@ enum class PolyStipple : unsigned char
 {
     Solid = 0,
     PointHatch,
+    LeftSlash,
+    RightSlash,
+    HorizonLine,
+    VerticalLine,
+    Cross,
+    CrossHatch,
+    HorizonStrip,
+    VerticalStrip,
+    InterleaveRect,
     Count,
 };
 

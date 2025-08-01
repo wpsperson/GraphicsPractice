@@ -1,12 +1,18 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include "Core/DefineEnum.h"
 
 struct LineStipInfo
 {
     unsigned short pattern = 0xffff;
     unsigned char factor = 1;
+};
+
+struct PolyStipInfo
+{
+    const unsigned char* data = nullptr;
+    unsigned int texture = 0;
 };
 
 class StippleManager
@@ -25,7 +31,10 @@ public:
     static unsigned int mergeFactorPattern(const LineStipInfo& stipple_info);
 
 private:
-    unsigned int m_point_hatch = 0;
-    std::unordered_map<LineStipple, LineStipInfo> m_lineStipInfos;
+    void buildPolygonTexture();
+
+private:
+    std::map<PolyStipple, PolyStipInfo> m_polyStipInfos;
+    std::map<LineStipple, LineStipInfo> m_lineStipInfos;
 };
 

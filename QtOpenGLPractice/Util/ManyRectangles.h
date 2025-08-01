@@ -29,6 +29,8 @@ public:
 
     void setGridSize(int num);
 
+    int gridSize() const;
+
     static void buildOneRect(const Point& cent, float width, float height, bool fill, const Color4uc& color, ColorMesh& mesh);
 
     static void buildOneRect2(const Point& cent, float width, float height, bool fill, const Color4uc& color, unsigned int stip, ColorStipMesh& mesh);
