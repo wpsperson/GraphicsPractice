@@ -134,6 +134,51 @@ void main()
 }
 )";
 
+const char* const kPolyStippleAttributeVS = R"(
+#version 330 core
+layout(location = 0) in vec2 pos;
+layout(location = 1) in vec4 color;
+layout(location = 2) in uint stipple;
+uniform vec4 view;
+out vec4 vertexColor;
+flat out uint vertStippleIndex;
+
+vec2 transform2d(vec2 pos)
+{
+    vec2 result;
+    result.x = (pos.x - view.x) / (view.y - view.x);
+    result.y = (pos.y - view.z) / (view.w - view.z);
+    return result * 2.0 - 1.0;
+}
+
+void main()
+{
+    vertexColor = color;
+    vertStippleIndex = stipple;
+    vec4 pos  = vec4(transform2d(pos), 0.0, 1.0);
+    gl_Position = pos;
+}
+)";
+
+const char* const kPolygonStippleAttributeFS = R"(
+#version 330 core
+in vec4 vertexColor;
+uniform sampler2DArray uStippleTextureArray;
+flat in uint vertStippleIndex;
+
+void main()
+{
+    vec2 coord = mod(gl_FragCoord.xy, 32.0) / 32.0;
+    float mask = texture(uStippleTextureArray, vec3(coord, vertStippleIndex)).a;
+    if (mask < 0.5)
+        discard;
+    gl_FragColor = vertexColor;
+}
+)";
+
+
+
+// ==========================================================
 
 
 const char* const kLineStippleVS = R"(

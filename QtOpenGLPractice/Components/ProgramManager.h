@@ -13,7 +13,7 @@ enum class ProgramType : unsigned char
     ColorVertex,
     PolygonStipple,
     PolygonStippleArray,
-    // PolygonStippleAttribute,
+    PolygonStippleAttribute,
     LineStipple,
     LineStippleAttribute,
 };

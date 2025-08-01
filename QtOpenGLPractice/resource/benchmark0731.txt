@@ -28,13 +28,28 @@ Method2 is better than 22, reasonable. reduce drawcall.
 Methd 2 is better than method 1 about 2%~4%
 
 
+method 33: polygon stipple using multi textures + uniform + ColorVertex
+2DRenderer.exe StippleOperation GridSize=400 Method=33  76 ms
+2DRenderer.exe StippleOperation GridSize=500 Method=33  120  ms
+2DRenderer.exe StippleOperation GridSize=600 Method=33  159 ms
+2DRenderer.exe StippleOperation GridSize=700 Method=33  214  ms
+
+method 3: polygon stipple using texture array + uniform + ColorVertex
+2DRenderer.exe StippleOperation GridSize=400 Method=3   70 ms
+2DRenderer.exe StippleOperation GridSize=500 Method=3   104 ms
+2DRenderer.exe StippleOperation GridSize=600 Method=3   147 ms
+2DRenderer.exe StippleOperation GridSize=700 Method=3   200 ms
 
 
+method 4: polygon stipple using texture array + ColorStipVertex
+2DRenderer.exe StippleOperation GridSize=400 Method=4   67 ms
+2DRenderer.exe StippleOperation GridSize=500 Method=4   100 ms
+2DRenderer.exe StippleOperation GridSize=600 Method=4   142 ms
+2DRenderer.exe StippleOperation GridSize=700 Method=4   187 ms
 
 
-
-
-
+method 33(multi textures) is slower than method 3(texture array) about 10 %
+Methd 4 is a very little better than method 3 about 2%
 
 
 

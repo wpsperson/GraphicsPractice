@@ -146,8 +146,6 @@ void StippleOperation::paint(Renderer* renderer) noexcept
         {
             unsigned int stp_idx = (idx % count);
             progMgr->uniform1ui("uStippleIndex", stp_idx); // GL_TEXTURE0
-            //PolyStipple type = static_cast<PolyStipple>(idx % count);
-            //m_stip_mgr->setPolygonStipple(type);
 
             m_tempMesh.resetMesh();
             m_rects.getBatchInfos(idx, batch_infos);
@@ -155,6 +153,56 @@ void StippleOperation::paint(Renderer* renderer) noexcept
             m_ringbuffer->processMesh(m_tempMesh);
             m_ringbuffer->drawCurrentSegmentBuffer();
         }
+    }
+    else if (33 == m_method)
+    {
+        m_rects.rebuildRandomInfos();
+
+        ProgramManager* progMgr = renderer->programMgr();
+        progMgr->applyProgram(ProgramType::PolygonStipple);
+        ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+        progMgr->uniformViewBox(viewbox);
+        m_ringbuffer->bindVAO();
+
+        std::vector<RectInfo> batch_infos;
+        int batch_count = m_rects.batchCount();
+        int count = static_cast<int>(PolyStipple::Count);
+        for (int idx = 0; idx < batch_count; idx++)
+        {
+            PolyStipple type = static_cast<PolyStipple>(idx % count);
+            m_stip_mgr->setPolygonStipple(type);
+
+            m_tempMesh.resetMesh();
+            m_rects.getBatchInfos(idx, batch_infos);
+            m_rects.buildInfosToMesh(batch_infos, true, m_tempMesh);
+            m_ringbuffer->processMesh(m_tempMesh);
+            m_ringbuffer->drawCurrentSegmentBuffer();
+        }
+    }
+    else if (4 == m_method)
+    {
+        m_rects.rebuildRandomInfos();
+
+        ProgramManager* progMgr = renderer->programMgr();
+        progMgr->applyProgram(ProgramType::PolygonStippleAttribute);
+        ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
+        progMgr->uniformViewBox(viewbox);
+        progMgr->uniform1ui("uStippleTextureArray", 0); // GL_TEXTURE0
+        m_stip_mgr->usePolygonStippleTextureArray();
+        m_ringbuffer2->bindVAO();
+
+        std::vector<RectInfo> batch_infos;
+        int batch_count = m_rects.batchCount();
+        int count = static_cast<int>(PolyStipple::Count);
+        for (int idx = 0; idx < batch_count; idx++)
+        {
+            unsigned int stp_idx = (idx % count);
+            m_tempMesh2.resetMesh();
+            m_rects.getBatchInfos(idx, batch_infos);
+            m_rects.buildInfosToMesh2(batch_infos, true, stp_idx, m_tempMesh2);
+            m_ringbuffer2->processMesh(m_tempMesh2);
+        }
+        m_ringbuffer2->drawCurrentSegmentBuffer();
     }
 }
 
