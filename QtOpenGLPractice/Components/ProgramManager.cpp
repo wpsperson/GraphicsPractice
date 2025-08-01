@@ -58,6 +58,12 @@ bool ProgramManager::initialize(std::string& err) noexcept
     }
     m_programs[ProgramType::PolygonStipple] = program;
 
+    if (!createProgram(kColorVertexVS, kPolygonStippleArrayFS, AttribLoc{}, program, err))
+    {
+        return false;
+    }
+    m_programs[ProgramType::PolygonStippleArray] = program;
+
     if (!createProgram(kLineStippleVS, kLineStippleFS, AttribLoc{}, program, err))
     {
         return false;

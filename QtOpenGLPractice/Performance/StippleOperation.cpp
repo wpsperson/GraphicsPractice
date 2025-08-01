@@ -132,9 +132,11 @@ void StippleOperation::paint(Renderer* renderer) noexcept
         m_rects.rebuildRandomInfos();
 
         ProgramManager* progMgr = renderer->programMgr();
-        progMgr->applyProgram(ProgramType::PolygonStipple);
+        progMgr->applyProgram(ProgramType::PolygonStippleArray);
         ViewBox viewbox = Utils::toViewBox(renderer->viewPort()->getView());
         progMgr->uniformViewBox(viewbox);
+        progMgr->uniform1ui("uStippleTextureArray", 0); // GL_TEXTURE0
+        m_stip_mgr->usePolygonStippleTextureArray();
         m_ringbuffer->bindVAO();
 
         std::vector<RectInfo> batch_infos;
@@ -142,8 +144,10 @@ void StippleOperation::paint(Renderer* renderer) noexcept
         int count = static_cast<int>(PolyStipple::Count);
         for (int idx = 0; idx < batch_count; idx++)
         {
-            PolyStipple type = static_cast<PolyStipple>(idx % count);
-            m_stip_mgr->setPolygonStipple(type);
+            unsigned int stp_idx = (idx % count);
+            progMgr->uniform1ui("uStippleIndex", stp_idx); // GL_TEXTURE0
+            //PolyStipple type = static_cast<PolyStipple>(idx % count);
+            //m_stip_mgr->setPolygonStipple(type);
 
             m_tempMesh.resetMesh();
             m_rects.getBatchInfos(idx, batch_infos);

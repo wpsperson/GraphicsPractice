@@ -12,6 +12,8 @@ enum class ProgramType : unsigned char
     Texture2D,
     ColorVertex,
     PolygonStipple,
+    PolygonStippleArray,
+    // PolygonStippleAttribute,
     LineStipple,
     LineStippleAttribute,
 };

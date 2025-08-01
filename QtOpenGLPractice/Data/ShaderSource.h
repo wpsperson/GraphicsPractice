@@ -118,6 +118,22 @@ void main()
 }
 )";
 
+const char* const kPolygonStippleArrayFS = R"(
+#version 330 core
+in vec4 vertexColor;
+uniform sampler2DArray uStippleTextureArray;
+uniform uint uStippleIndex;
+
+void main()
+{
+    vec2 coord = mod(gl_FragCoord.xy, 32.0) / 32.0;
+    float mask = texture(uStippleTextureArray, vec3(coord, uStippleIndex)).a;
+    if (mask < 0.5)
+        discard;
+    gl_FragColor = vertexColor;
+}
+)";
+
 
 
 const char* const kLineStippleVS = R"(

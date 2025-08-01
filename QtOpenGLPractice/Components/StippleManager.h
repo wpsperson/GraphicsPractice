@@ -26,6 +26,8 @@ public:
 
     void setPolygonStipple(PolyStipple type);
 
+    void usePolygonStippleTextureArray();
+
     const LineStipInfo &getLineStipInfo(LineStipple type);
 
     static unsigned int mergeFactorPattern(const LineStipInfo& stipple_info);
@@ -33,7 +35,10 @@ public:
 private:
     void buildPolygonTexture();
 
+    void buildTextureArray();
+
 private:
+    unsigned int m_texture_array_id = 0;
     std::map<PolyStipple, PolyStipInfo> m_polyStipInfos;
     std::map<LineStipple, LineStipInfo> m_lineStipInfos;
 };
