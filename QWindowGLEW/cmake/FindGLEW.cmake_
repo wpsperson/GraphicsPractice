@@ -1,0 +1,32 @@
+SET(GLEW_FOUND "NO")
+IF (WIN32)
+	find_path(GLEW_INCLUDE_DIR 
+		NAMES "GL/glew.h"
+		PATHS 
+        "C:/3rdparty/glew-2.2.0/include"
+		)
+	message(STATUS "GLEW_INCLUDE_DIR => ${GLEW_INCLUDE_DIR}")
+	find_path(GLEW_LIB_DIR 
+		NAMES libglew32.lib
+		PATHS 
+            "C:/3rdparty/glew-2.2.0/lib"
+		)
+	message(STATUS "GLEW_LIB_DIR => ${GLEW_LIB_DIR}")
+	find_library(GLEW_LIB 
+			NAMES libglew32
+			PATHS
+            "C:/3rdparty/glew-2.2.0/lib"
+			)
+	message(STATUS "GLEW_LIB => ${GLEW_LIB}")
+ELSE (WIN32)
+# I have not touched any Linux or Mac OS projects, however a explicit framework or architecture is prevailing
+
+#	find_path(GLUT_INCLUDE_DIR 
+#		
+#	...	
+ENDIF (WIN32)
+
+
+IF(GLEW_INCLUDE_DIR AND GLEW_LIB_DIR AND GLEW_LIB)
+  SET(GLEW_FOUND "YES")
+ENDIF(GLEW_INCLUDE_DIR AND GLEW_LIB_DIR AND GLEW_LIB)
