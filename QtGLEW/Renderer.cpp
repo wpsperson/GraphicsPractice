@@ -55,7 +55,12 @@ void Renderer::init()
         }
         exit(EXIT_FAILURE);
     }
-
+    char* vendor = (char*)glGetString(GL_VENDOR);
+    char* renderer = (char*)glGetString(GL_RENDERER);
+    char *version = (char*)glGetString(GL_VERSION);
+    std::cout << vendor << std::endl;
+    std::cout << renderer << std::endl;
+    std::cout << version << std::endl;
     if (!GLEW_VERSION_2_0)
     {
         throw std::exception("Required OpenGL 2.0 Features are not available!");
