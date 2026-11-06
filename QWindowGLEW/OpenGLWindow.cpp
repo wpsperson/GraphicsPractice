@@ -9,6 +9,9 @@
 #include <QPainter>
 #include <QDebug>
 #include <QCoreApplication>
+#include <QtGui/QOpenGLTimerQuery>
+#include <QtCore/QEvent>
+#include <QtGui/QPlatformSurfaceEvent>
 
 
 
@@ -29,7 +32,19 @@ OpenGLWindow::OpenGLWindow(QWindow* parent)
 
 OpenGLWindow::~OpenGLWindow()
 {
-    delete m_context;
+    cleanupGL();
+}
+
+void OpenGLWindow::cleanupGL()
+{
+    if (!m_query)
+    {
+        return;
+    }
+    m_context->makeCurrent(this);
+    delete m_query;
+    m_query = nullptr;
+    m_context->doneCurrent();
 }
 
 void OpenGLWindow::render()
@@ -55,6 +70,8 @@ void OpenGLWindow::render()
             exit(EXIT_FAILURE);
         }
         qDebug() << "OpenGL initialized:" << (const char*)glGetString(GL_VERSION);
+        m_query = new QOpenGLTimerQuery;
+        m_query->create();
     }
     // 初始化（只执行一次）
     static bool initialized = false;
@@ -117,6 +134,15 @@ bool OpenGLWindow::event(QEvent* event)
     case QEvent::UpdateRequest:
         renderNow();
         return true;
+    case QEvent::PlatformSurface:
+    {
+        QPlatformSurfaceEvent* surfaceEvent = static_cast<QPlatformSurfaceEvent*>(event);
+        if (surfaceEvent->surfaceEventType() == QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed)
+        {
+            cleanupGL();
+        }
+        // not break;
+    }
     default:
         return QWindow::event(event);
     }

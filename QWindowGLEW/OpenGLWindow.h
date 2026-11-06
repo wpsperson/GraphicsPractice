@@ -5,6 +5,7 @@
 
 QT_BEGIN_NAMESPACE
 class QOpenGLContext;
+class QOpenGLTimerQuery;
 QT_END_NAMESPACE
 
 class OpenGLWindow : public QWindow
@@ -14,6 +15,8 @@ class OpenGLWindow : public QWindow
 public:
     explicit OpenGLWindow(QWindow* parent = nullptr);
     ~OpenGLWindow();
+
+    void cleanupGL();
 
     virtual void render();
     virtual void initialize();
@@ -29,6 +32,7 @@ protected:
 
 private:
     QOpenGLContext* m_context;
+    QOpenGLTimerQuery *m_query;
     bool m_update_pending;
 };
 
